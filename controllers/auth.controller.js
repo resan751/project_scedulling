@@ -1,6 +1,6 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
-import { createHmac, pbkdf2, timingSafeEqual } from 'node:crypto'
+import { createHmac, pbkdf2, randomBytes, timingSafeEqual } from 'node:crypto'
 import { promisify } from 'node:util'
 import { prisma } from '../prisma/lib/prisma.js'
 
@@ -75,8 +75,46 @@ async function verifyPassword(inputPassword, storedPassword) {
     return storedHashBuffer.length === inputHash.length && timingSafeEqual(storedHashBuffer, inputHash)
 }
 
+async function hashPassword(password) {
+    const iterations = 100000
+    const salt = randomBytes(16).toString('base64')
+    const hash = await pbkdf2Async(password, salt, iterations, 32, 'sha256')
+
+    return `pbkdf2$${iterations}$${salt}$${hash.toString('base64')}`
+}
+
 function setNoCache(res) {
     res.set('Cache-Control', 'no-store')
+}
+
+function requireManager(req, res) {
+    const session = readSession(req)
+    if (!session) {
+        res.redirect('/login.html')
+        return null
+    }
+
+    if (session.role !== 'manager') {
+        res.status(403).send('Akses ditolak. Halaman ini hanya untuk manager.')
+        return null
+    }
+
+    return session
+}
+
+function requireManagerApi(req, res) {
+    const session = readSession(req)
+    if (!session) {
+        res.status(401).json({ message: 'Belum login.' })
+        return null
+    }
+
+    if (session.role !== 'manager') {
+        res.status(403).json({ message: 'Akses ditolak. Hanya manager yang dapat membuat user.' })
+        return null
+    }
+
+    return session
 }
 
 export const loginPage = (req, res) => {
@@ -159,6 +197,65 @@ export const dashboardPage = (role) => (req, res) => {
     }
 
     res.sendFile(path.join(__dirname, '..', 'page', role, 'dashboard.html'))
+}
+
+export const userCreatePage = (req, res) => {
+    setNoCache(res)
+
+    if (!requireManager(req, res)) return
+
+    res.sendFile(path.join(__dirname, '..', 'page', 'manager', 'user-create.html'))
+}
+
+export const createUser = async (req, res) => {
+    if (!requireManagerApi(req, res)) return
+
+    const nama_karyawan = String(req.body.nama_karyawan || '').trim()
+    const email = String(req.body.email || '').trim()
+    const password = String(req.body.password || '')
+    const role = normalizeRole(req.body.role)
+    const validRoles = new Set(['manager', 'admin', 'karyawan'])
+
+    if (!nama_karyawan || !email || !password || !role) {
+        return res.status(400).json({ message: 'Semua field wajib diisi.' })
+    }
+
+    if (!validRoles.has(role)) {
+        return res.status(400).json({ message: 'Role harus manager, admin, atau karyawan.' })
+    }
+
+    const existingUser = await prisma.user.findFirst({
+        where: {
+            OR: [
+                { nama_karyawan },
+                { email },
+            ],
+        },
+    })
+
+    if (existingUser) {
+        return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+    }
+
+    const user = await prisma.user.create({
+        data: {
+            nama_karyawan,
+            email,
+            role,
+            password: await hashPassword(password),
+        },
+        select: {
+            id_user: true,
+            nama_karyawan: true,
+            email: true,
+            role: true,
+        },
+    })
+
+    res.status(201).json({
+        message: 'User berhasil dibuat.',
+        user,
+    })
 }
 
 export const protectedPageFallback = (req, res) => {

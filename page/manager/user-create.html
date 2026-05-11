@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create User</title>
+    <link rel="stylesheet" href="/css/user-create.css">
+</head>
+
+<body>
+    <header>
+        <h1>Create User</h1>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/manager/dashboard.html">Dashboard</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <form class="form-card" id="createUserForm">
+            <label for="nama_karyawan">Nama Karyawan</label>
+            <input type="text" id="nama_karyawan" name="nama_karyawan" autocomplete="name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="">Pilih role</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
+                <option value="karyawan">Karyawan</option>
+            </select>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" autocomplete="new-password" required>
+
+            <p class="message" id="formMessage" aria-live="polite"></p>
+            <button class="submit-btn" id="submitBtn" type="submit">Simpan User</button>
+        </form>
+    </main>
+
+    <script>
+        const createUserForm = document.getElementById('createUserForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formMessage = document.getElementById('formMessage');
+
+        createUserForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(createUserForm);
+            const payload = Object.fromEntries(formData.entries());
+
+            formMessage.textContent = '';
+            formMessage.className = 'message';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Menyimpan...';
+
+            try {
+                const response = await fetch('/api/users', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'User gagal dibuat.');
+                }
+
+                createUserForm.reset();
+                formMessage.textContent = result.message;
+                formMessage.classList.add('success');
+            } catch (error) {
+                formMessage.textContent = error.message;
+                formMessage.classList.add('error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Simpan User';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/login.html';
+        });
+    </script>
+</body>
+
+</html>

@@ -5,53 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Manager</title>
-    <style>
-        body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #1f2937;
-        }
-
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 28px;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 24px;
-        }
-
-        .logout-btn {
-            border: 0;
-            border-radius: 6px;
-            padding: 10px 16px;
-            background: #b91c1c;
-            color: #ffffff;
-            font-weight: 700;
-            cursor: pointer;
-        }
-
-        .logout-btn:hover {
-            background: #991b1b;
-        }
-
-        main {
-            padding: 28px;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/dashboard-manager.css">
 </head>
 
 <body>
     <header>
         <h1>Manager</h1>
-        <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/manager/user-create.html">Create User</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
     </header>
 
     <main>
