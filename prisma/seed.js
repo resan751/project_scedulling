@@ -6,19 +6,19 @@ const pbkdf2Async = promisify(pbkdf2);
 
 const users = [
   {
-    nama: "Admin",
+    nama_karyawan: "Admin",
     role: "manager",
-    email: "admin@gmail.com",
+    email: "admin123@gmail.com",
     password: "admin123",
   },
   {
-    nama: "aan",
+    nama_karyawan: "aan",
     role: "admin",
     email: "aangaming@gmail.com",
     password: "podowingi",
   },
   {
-    nama: "rio",
+    nama_karyawan: "rio",
     role: "user",
     email: "riobelly@gmail.com",
     password: "semarang",

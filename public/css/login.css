@@ -175,6 +175,15 @@ input[type="password"] {
     margin-bottom: 16px;
 }
 
+.login-message {
+    min-height: 20px;
+    margin: -4px 0 12px;
+    color: #7b1e13;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+}
+
 input::placeholder {
     color: #bbb;
 }
@@ -221,6 +230,12 @@ input:focus {
 
 .btn:active {
     transform: translateY(0);
+}
+
+.btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+    transform: none;
 }
 
 @keyframes shake {

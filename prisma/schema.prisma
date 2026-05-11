@@ -8,8 +8,18 @@ datasource db {
 
 model user {
   id_user  Int    @id @default(autoincrement())
-  nama     String @db.VarChar(100)
+  nama_karyawan     String @db.VarChar(100)
   role     String @db.VarChar(100)
   email    String @db.VarChar(100)
   password String @db.VarChar(100)
+}
+
+model projects{
+  id_project  Int    @id @default(autoincrement())
+  nama_project        String @db.VarChar(100)
+  nama_karyawan       String @db.VarChar(100)
+  tgl_mulai       DateTime @db.DateTime
+  deadline       DateTime @db.DateTime
+  status_project String @db.VarChar(100)
+  deskripsi   String @db.VarChar(100)
 }

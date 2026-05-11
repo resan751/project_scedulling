@@ -13,6 +13,8 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', AuthRouter)
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`server e wes mlaku mas ${port}`)
 })
+
+export { app, server }

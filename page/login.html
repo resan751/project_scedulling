@@ -130,19 +130,62 @@
                     <span>N</span>
                 </div>
 
-                <label for="uname">Unsername</label>
-                <input type="text" id="uname" placeholder="Enter your unsername" autocomplete="username" />
+                <form id="loginForm">
+                    <label for="nama_karyawan">Nama Karyawan</label>
+                    <input type="text" id="nama_karyawan" name="nama_karyawan" placeholder="Masukkan nama karyawan"
+                        autocomplete="username" />
 
-                <label for="pw">Password</label>
-                <input type="password" id="pw" placeholder="Enter your password" autocomplete="current-password" />
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Masukkan password"
+                        autocomplete="current-password" />
 
-                <span class="forgot" id="forgotBtn">Forgot Password</span>
-                <button class="btn" id="loginBtn" onclick="doLogin()">LOGIN</button>
+                    <p class="login-message" id="loginMessage" aria-live="polite"></p>
+                    <span class="forgot" id="forgotBtn">Forgot Password</span>
+                    <button class="btn" id="loginBtn" type="submit">LOGIN</button>
+                </form>
             </div>
         </div>
 
     </div>
 
+    <script>
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const loginMessage = document.getElementById('loginMessage');
+
+        loginForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const nama_karyawan = document.getElementById('nama_karyawan').value.trim();
+            const password = document.getElementById('password').value;
+
+            loginMessage.textContent = '';
+            loginBtn.disabled = true;
+            loginBtn.textContent = 'MASUK...';
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ nama_karyawan, password }),
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Login gagal.');
+                }
+
+                window.location.href = result.redirectTo;
+            } catch (error) {
+                loginMessage.textContent = error.message;
+            } finally {
+                loginBtn.disabled = false;
+                loginBtn.textContent = 'LOGIN';
+            }
+        });
+    </script>
 </body>
 
 </html>
