@@ -71,9 +71,7 @@
                     throw new Error(result.message || 'User gagal dibuat.');
                 }
 
-                createUserForm.reset();
-                formMessage.textContent = result.message;
-                formMessage.classList.add('success');
+                window.location.href = result.redirectTo || '/page/manager/user-create.html';
             } catch (error) {
                 formMessage.textContent = error.message;
                 formMessage.classList.add('error');

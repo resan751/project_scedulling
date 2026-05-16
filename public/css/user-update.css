@@ -16,20 +16,9 @@ header {
     border-bottom: 1px solid #e5e7eb;
 }
 
-h1,
-h2,
-p {
-    margin-top: 0;
-}
-
 h1 {
-    margin-bottom: 0;
+    margin: 0;
     font-size: 24px;
-}
-
-h2 {
-    margin-bottom: 6px;
-    font-size: 22px;
 }
 
 .header-actions {
@@ -39,7 +28,7 @@ h2 {
 
 .link-btn,
 .logout-btn,
-.action-btn {
+.submit-btn {
     border: 0;
     border-radius: 6px;
     padding: 10px 16px;
@@ -54,38 +43,43 @@ h2 {
     background: #374151;
 }
 
-.logout-btn,
-.delete-btn {
+.logout-btn {
     background: #b91c1c;
 }
 
-.logout-btn:hover,
-.delete-btn:hover {
-    background: #991b1b;
+.submit-btn {
+    width: 100%;
+    background: #166534;
+    margin-top: 8px;
 }
 
 main {
     padding: 28px;
 }
 
-.table-section {
+.form-card {
+    max-width: 520px;
     background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     padding: 24px;
 }
 
-.section-heading {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 16px;
-    margin-bottom: 16px;
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
 }
 
-.section-heading p {
-    margin-bottom: 0;
-    color: #6b7280;
+input,
+select {
+    box-sizing: border-box;
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 15px;
 }
 
 .message {
@@ -102,64 +96,7 @@ main {
     color: #b91c1c;
 }
 
-.table-wrap {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 720px;
-}
-
-th,
-td {
-    padding: 14px 12px;
-    border-bottom: 1px solid #e5e7eb;
-    text-align: left;
-    vertical-align: middle;
-}
-
-th {
-    background: #f9fafb;
-    color: #374151;
-    font-size: 13px;
-    text-transform: uppercase;
-}
-
-tr:last-child td {
-    border-bottom: 0;
-}
-
-.role-badge {
-    display: inline-block;
-    border-radius: 999px;
-    padding: 5px 10px;
-    background: #e0f2fe;
-    color: #075985;
-    font-size: 13px;
-    font-weight: 700;
-    text-transform: capitalize;
-}
-
-.row-actions {
-    display: flex;
-    gap: 8px;
-}
-
-.action-btn {
-    padding: 8px 12px;
-}
-
-.update-btn {
-    background: #166534;
-}
-
-.update-btn:hover {
-    background: #14532d;
-}
-
-.delete-btn:disabled {
+.submit-btn:disabled {
     cursor: wait;
     opacity: 0.7;
 }
@@ -181,10 +118,6 @@ tr:last-child td {
     }
 
     main {
-        padding: 18px;
-    }
-
-    .table-section {
         padding: 18px;
     }
 }

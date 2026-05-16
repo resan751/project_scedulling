@@ -171,7 +171,10 @@
                     },
                     body: JSON.stringify({ nama_karyawan, password }),
                 });
-                const result = await response.json();
+                const contentType = response.headers.get('content-type') || '';
+                const result = contentType.includes('application/json')
+                    ? await response.json()
+                    : { message: 'Server mengirim response yang tidak valid. Periksa log server.' };
 
                 if (!response.ok) {
                     throw new Error(result.message || 'Login gagal.');

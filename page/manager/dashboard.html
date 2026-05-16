@@ -18,14 +18,156 @@
     </header>
 
     <main>
-        <p>Selamat datang di dashboard manager.</p>
+        <section class="table-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Table Karyawan</h2>
+                    <p>Data user yang terdaftar di sistem.</p>
+                </div>
+            </div>
+
+            <p class="message" id="tableMessage" aria-live="polite">Memuat data karyawan...</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Karyawan</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <tr>
+                            <td colspan="5">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
     </main>
 
     <script>
+        const userTableBody = document.getElementById('userTableBody');
+        const tableMessage = document.getElementById('tableMessage');
+
+        async function readJson(response) {
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return response.json();
+            }
+
+            return { message: 'Server mengirim response yang tidak valid.' };
+        }
+
+        function setMessage(message, type = '') {
+            tableMessage.textContent = message;
+            tableMessage.className = `message ${type}`.trim();
+        }
+
+        function renderUsers(users) {
+            if (!users.length) {
+                userTableBody.innerHTML = '<tr><td colspan="5">Belum ada data karyawan.</td></tr>';
+                return;
+            }
+
+            userTableBody.innerHTML = '';
+
+            users.forEach((user) => {
+                const row = document.createElement('tr');
+                const idCell = document.createElement('td');
+                const nameCell = document.createElement('td');
+                const emailCell = document.createElement('td');
+                const roleCell = document.createElement('td');
+                const actionCell = document.createElement('td');
+                const roleBadge = document.createElement('span');
+                const rowActions = document.createElement('div');
+                const updateLink = document.createElement('a');
+                const deleteButton = document.createElement('button');
+
+                idCell.textContent = user.id_user;
+                nameCell.textContent = user.nama_karyawan;
+                emailCell.textContent = user.email;
+                roleBadge.className = 'role-badge';
+                roleBadge.textContent = user.role;
+                roleCell.appendChild(roleBadge);
+
+                rowActions.className = 'row-actions';
+                updateLink.className = 'action-btn update-btn';
+                updateLink.href = `/page/manager/user-update.html?id=${user.id_user}`;
+                updateLink.textContent = 'Update';
+
+                deleteButton.className = 'action-btn delete-btn';
+                deleteButton.type = 'button';
+                deleteButton.dataset.id = user.id_user;
+                deleteButton.dataset.name = user.nama_karyawan;
+                deleteButton.textContent = 'Delete';
+
+                rowActions.append(updateLink, deleteButton);
+                actionCell.appendChild(rowActions);
+                row.append(idCell, nameCell, emailCell, roleCell, actionCell);
+                userTableBody.appendChild(row);
+            });
+        }
+
+        async function loadUsers() {
+            setMessage('Memuat data karyawan...');
+
+            try {
+                const response = await fetch('/api/users');
+                const result = await readJson(response);
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Data karyawan gagal dimuat.');
+                }
+
+                renderUsers(result.users || []);
+                setMessage('');
+            } catch (error) {
+                userTableBody.innerHTML = '<tr><td colspan="5">Data gagal dimuat.</td></tr>';
+                setMessage(error.message, 'error');
+            }
+        }
+
+        userTableBody.addEventListener('click', async (event) => {
+            const deleteButton = event.target.closest('.delete-btn');
+            if (!deleteButton) return;
+
+            const id = deleteButton.dataset.id;
+            const name = deleteButton.dataset.name;
+            const confirmed = confirm(`Hapus data karyawan "${name}"?`);
+            if (!confirmed) return;
+
+            deleteButton.disabled = true;
+            deleteButton.textContent = 'Menghapus...';
+
+            try {
+                const response = await fetch(`/api/users/${id}`, {
+                    method: 'DELETE',
+                });
+                const result = await readJson(response);
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'User gagal dihapus.');
+                }
+
+                setMessage(result.message, 'success');
+                await loadUsers();
+            } catch (error) {
+                setMessage(error.message, 'error');
+                deleteButton.disabled = false;
+                deleteButton.textContent = 'Delete';
+            }
+        });
+
         document.getElementById('logoutBtn').addEventListener('click', async () => {
             await fetch('/api/logout', { method: 'POST' });
             window.location.href = '/login.html';
         });
+
+        loadUsers();
     </script>
 </body>
 

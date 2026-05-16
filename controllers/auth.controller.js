@@ -14,7 +14,7 @@ const roleRedirects = {
     karyawan: '/page/karyawan/dashboard.html',
 }
 
-function normalizeRole(role) {
+export function normalizeRole(role) {
     const normalized = String(role || '').trim().toLowerCase()
     return normalized === 'user' ? 'karyawan' : normalized
 }
@@ -43,7 +43,7 @@ function createSessionToken(user) {
     return `${payload}.${signPayload(payload)}`
 }
 
-function readSession(req) {
+export function readSession(req) {
     const { auth_token: token } = parseCookies(req.headers.cookie)
     if (!token) return null
 
@@ -75,7 +75,7 @@ async function verifyPassword(inputPassword, storedPassword) {
     return storedHashBuffer.length === inputHash.length && timingSafeEqual(storedHashBuffer, inputHash)
 }
 
-async function hashPassword(password) {
+export async function hashPassword(password) {
     const iterations = 100000
     const salt = randomBytes(16).toString('base64')
     const hash = await pbkdf2Async(password, salt, iterations, 32, 'sha256')
@@ -83,38 +83,8 @@ async function hashPassword(password) {
     return `pbkdf2$${iterations}$${salt}$${hash.toString('base64')}`
 }
 
-function setNoCache(res) {
+export function setNoCache(res) {
     res.set('Cache-Control', 'no-store')
-}
-
-function requireManager(req, res) {
-    const session = readSession(req)
-    if (!session) {
-        res.redirect('/login.html')
-        return null
-    }
-
-    if (session.role !== 'manager') {
-        res.status(403).send('Akses ditolak. Halaman ini hanya untuk manager.')
-        return null
-    }
-
-    return session
-}
-
-function requireManagerApi(req, res) {
-    const session = readSession(req)
-    if (!session) {
-        res.status(401).json({ message: 'Belum login.' })
-        return null
-    }
-
-    if (session.role !== 'manager') {
-        res.status(403).json({ message: 'Akses ditolak. Hanya manager yang dapat membuat user.' })
-        return null
-    }
-
-    return session
 }
 
 export const loginPage = (req, res) => {
@@ -129,45 +99,50 @@ export const loginPage = (req, res) => {
 }
 
 export const login = async (req, res) => {
-    const { nama_karyawan, password } = req.body
+    try {
+        const { nama_karyawan, password } = req.body
 
-    if (!nama_karyawan || !password) {
-        return res.status(400).json({ message: 'Nama karyawan dan password wajib diisi.' })
+        if (!nama_karyawan || !password) {
+            return res.status(400).json({ message: 'Nama karyawan dan password wajib diisi.' })
+        }
+
+        const user = await prisma.user.findFirst({
+            where: {
+                nama_karyawan,
+            },
+        })
+
+        if (!user || !(await verifyPassword(password, user.password))) {
+            return res.status(401).json({ message: 'Nama karyawan atau password salah.' })
+        }
+
+        const role = normalizeRole(user.role)
+        const redirectTo = roleRedirects[role]
+
+        if (!redirectTo) {
+            return res.status(403).json({ message: 'Role user tidak dikenali.' })
+        }
+
+        res.cookie('auth_token', createSessionToken(user), {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 1000 * 60 * 60 * 8,
+        })
+
+        res.json({
+            message: 'Login berhasil.',
+            redirectTo,
+            user: {
+                id_user: user.id_user,
+                nama_karyawan: user.nama_karyawan,
+                role,
+            },
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Server tidak bisa mengakses database. Periksa koneksi MariaDB.' })
     }
-
-    const user = await prisma.user.findFirst({
-        where: {
-            nama_karyawan,
-        },
-    })
-
-    if (!user || !(await verifyPassword(password, user.password))) {
-        return res.status(401).json({ message: 'Nama karyawan atau password salah.' })
-    }
-
-    const role = normalizeRole(user.role)
-    const redirectTo = roleRedirects[role]
-
-    if (!redirectTo) {
-        return res.status(403).json({ message: 'Role user tidak dikenali.' })
-    }
-
-    res.cookie('auth_token', createSessionToken(user), {
-        httpOnly: true,
-        sameSite: 'lax',
-        path: '/',
-        maxAge: 1000 * 60 * 60 * 8,
-    })
-
-    res.json({
-        message: 'Login berhasil.',
-        redirectTo,
-        user: {
-            id_user: user.id_user,
-            nama_karyawan: user.nama_karyawan,
-            role,
-        },
-    })
 }
 
 export const logout = (req, res) => {
@@ -199,64 +174,6 @@ export const dashboardPage = (role) => (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', role, 'dashboard.html'))
 }
 
-export const userCreatePage = (req, res) => {
-    setNoCache(res)
-
-    if (!requireManager(req, res)) return
-
-    res.sendFile(path.join(__dirname, '..', 'page', 'manager', 'user-create.html'))
-}
-
-export const createUser = async (req, res) => {
-    if (!requireManagerApi(req, res)) return
-
-    const nama_karyawan = String(req.body.nama_karyawan || '').trim()
-    const email = String(req.body.email || '').trim()
-    const password = String(req.body.password || '')
-    const role = normalizeRole(req.body.role)
-    const validRoles = new Set(['manager', 'admin', 'karyawan'])
-
-    if (!nama_karyawan || !email || !password || !role) {
-        return res.status(400).json({ message: 'Semua field wajib diisi.' })
-    }
-
-    if (!validRoles.has(role)) {
-        return res.status(400).json({ message: 'Role harus manager, admin, atau karyawan.' })
-    }
-
-    const existingUser = await prisma.user.findFirst({
-        where: {
-            OR: [
-                { nama_karyawan },
-                { email },
-            ],
-        },
-    })
-
-    if (existingUser) {
-        return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
-    }
-
-    const user = await prisma.user.create({
-        data: {
-            nama_karyawan,
-            email,
-            role,
-            password: await hashPassword(password),
-        },
-        select: {
-            id_user: true,
-            nama_karyawan: true,
-            email: true,
-            role: true,
-        },
-    })
-
-    res.status(201).json({
-        message: 'User berhasil dibuat.',
-        user,
-    })
-}
 
 export const protectedPageFallback = (req, res) => {
     const session = readSession(req)

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+    <link rel="stylesheet" href="/css/user-update.css">
+</head>
+
+<body>
+    <header>
+        <h1>Update User</h1>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/manager/dashboard.html">Dashboard</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <form class="form-card" id="updateUserForm">
+            <label for="nama_karyawan">Nama Karyawan</label>
+            <input type="text" id="nama_karyawan" name="nama_karyawan" autocomplete="name" required>
+
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" autocomplete="email" required>
+
+            <label for="role">Role</label>
+            <select id="role" name="role" required>
+                <option value="">Pilih role</option>
+                <option value="manager">Manager</option>
+                <option value="admin">Admin</option>
+                <option value="karyawan">Karyawan</option>
+            </select>
+
+            <label for="password">Password Baru</label>
+            <input type="password" id="password" name="password" autocomplete="new-password" placeholder="Kosongkan jika tidak diganti">
+
+            <p class="message" id="formMessage" aria-live="polite"></p>
+            <button class="submit-btn" id="submitBtn" type="submit">Update User</button>
+        </form>
+    </main>
+
+    <script>
+        const updateUserForm = document.getElementById('updateUserForm');
+        const submitBtn = document.getElementById('submitBtn');
+        const formMessage = document.getElementById('formMessage');
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get('id');
+
+        async function readJson(response) {
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                return response.json();
+            }
+
+            return { message: 'Server mengirim response yang tidak valid.' };
+        }
+
+        function setMessage(message, type = '') {
+            formMessage.textContent = message;
+            formMessage.className = `message ${type}`.trim();
+        }
+
+        async function loadUser() {
+            if (!userId) {
+                setMessage('ID user tidak ditemukan.', 'error');
+                submitBtn.disabled = true;
+                return;
+            }
+
+            try {
+                const response = await fetch(`/api/users/${userId}`);
+                const result = await readJson(response);
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'Data user gagal dimuat.');
+                }
+
+                document.getElementById('nama_karyawan').value = result.user.nama_karyawan;
+                document.getElementById('email').value = result.user.email;
+                document.getElementById('role').value = result.user.role;
+            } catch (error) {
+                setMessage(error.message, 'error');
+                submitBtn.disabled = true;
+            }
+        }
+
+        updateUserForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(updateUserForm);
+            const payload = Object.fromEntries(formData.entries());
+
+            setMessage('');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Mengupdate...';
+
+            try {
+                const response = await fetch(`/api/users/${userId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const result = await readJson(response);
+
+                if (!response.ok) {
+                    throw new Error(result.message || 'User gagal diupdate.');
+                }
+
+                window.location.href = result.redirectTo || '/page/manager/dashboard.html';
+            } catch (error) {
+                setMessage(error.message, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Update User';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await fetch('/api/logout', { method: 'POST' });
+            window.location.href = '/login.html';
+        });
+
+        loadUser();
+    </script>
+</body>
+
+</html>
