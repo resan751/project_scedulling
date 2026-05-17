@@ -1,0 +1,165 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, sans-serif;
+    background: #f5f6f8;
+    color: #1f2937;
+}
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 28px;
+    background: #ffffff;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+h1 {
+    margin: 0;
+    font-size: 24px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.link-btn,
+.logout-btn,
+.submit-btn {
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 16px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.link-btn {
+    background: #374151;
+}
+
+.logout-btn {
+    background: #b91c1c;
+}
+
+.submit-btn {
+    width: 100%;
+    background: #166534;
+    margin-top: 8px;
+}
+
+main {
+    padding: 28px;
+}
+
+.form-card {
+    max-width: 560px;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    padding: 24px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    margin-bottom: 16px;
+    padding: 11px 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 15px;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.employee-list {
+    display: grid;
+    gap: 8px;
+    max-height: 190px;
+    margin-bottom: 16px;
+    overflow-y: auto;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    padding: 10px;
+    background: #ffffff;
+}
+
+.employee-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.employee-option:hover {
+    background: #f3f4f6;
+}
+
+.employee-option input {
+    width: auto;
+    margin: 0;
+}
+
+.empty-text {
+    margin: 0;
+    color: #6b7280;
+}
+
+.message {
+    min-height: 22px;
+    margin: 0 0 14px;
+    font-weight: 700;
+}
+
+.message.success {
+    color: #166534;
+}
+
+.message.error {
+    color: #b91c1c;
+}
+
+.submit-btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    main {
+        padding: 18px 16px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+}

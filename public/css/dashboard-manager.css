@@ -65,6 +65,8 @@ h2 {
 }
 
 main {
+    display: grid;
+    gap: 24px;
     padding: 28px;
 }
 
@@ -142,9 +144,65 @@ tr:last-child td {
     text-transform: capitalize;
 }
 
+.status-badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 5px 10px;
+    background: #f3f4f6;
+    color: #374151;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: capitalize;
+}
+
+.status-badge.waiting {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.pending {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.status-badge.progress {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.done {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.employee-details {
+    width: max-content;
+    max-width: 220px;
+}
+
+.employee-details summary {
+    border-radius: 6px;
+    padding: 7px 10px;
+    background: #f3f4f6;
+    color: #374151;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.employee-name-list {
+    display: grid;
+    gap: 6px;
+    margin: 8px 0 0;
+    padding: 8px 10px 8px 28px;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    background: #ffffff;
+}
+
 .row-actions {
     display: flex;
     gap: 8px;
+    flex-wrap: wrap;
 }
 
 .action-btn {
@@ -162,6 +220,28 @@ tr:last-child td {
 .delete-btn:disabled {
     cursor: wait;
     opacity: 0.7;
+}
+
+.approve-btn {
+    background: #2563eb;
+}
+
+.approve-btn:hover {
+    background: #1d4ed8;
+}
+
+.finish-btn {
+    background: #166534;
+}
+
+.finish-btn:hover {
+    background: #14532d;
+}
+
+.disabled-text {
+    color: #6b7280;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 @media (max-width: 640px) {

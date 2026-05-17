@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Project</title>
+    <link rel="stylesheet" href="/css/project-create.css">
+</head>
+
+<body>
+    <header>
+        <h1>Create Project</h1>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/admin/dashboard.html">Dashboard</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <form class="form-card" id="createProjectForm">
+            <label for="nama_project">Nama Project</label>
+            <input type="text" id="nama_project" name="nama_project" required>
+
+            <label>Nama Karyawan</label>
+            <div class="employee-list" id="employeeList" aria-live="polite">
+                <p class="empty-text">Memuat data karyawan...</p>
+            </div>
+
+            <label for="tgl_mulai">Tanggal Mulai</label>
+            <input type="date" id="tgl_mulai" name="tgl_mulai" required>
+
+            <label for="deadline">Deadline</label>
+            <input type="date" id="deadline" name="deadline" required>
+
+            <label for="deskripsi">Deskripsi</label>
+            <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea>
+
+            <p class="message" id="formMessage" aria-live="polite"></p>
+            <button class="submit-btn" id="submitBtn" type="submit">Simpan Project</button>
+        </form>
+    </main>
+
+    <script src="/js/project-create.js"></script>
+</body>
+
+</html>

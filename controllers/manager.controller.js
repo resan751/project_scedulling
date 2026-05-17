@@ -46,6 +46,45 @@ function getUserId(req, res) {
     return id_user
 }
 
+function getProjectId(req, res) {
+    const id_project = Number(req.params.id)
+    if (!Number.isInteger(id_project) || id_project <= 0) {
+        res.status(400).json({ message: 'ID project tidak valid.' })
+        return null
+    }
+
+    return id_project
+}
+
+function getApprovedStatus(tgl_mulai) {
+    const today = new Date()
+    const startDate = new Date(tgl_mulai)
+    today.setHours(0, 0, 0, 0)
+    startDate.setHours(0, 0, 0, 0)
+
+    return today >= startDate ? 'sedang dikerjakan' : 'belum dimulai'
+}
+
+async function syncProjectStatus(project) {
+    if (!['belum dimulai', 'sedang dikerjakan'].includes(project.status_project)) {
+        return project
+    }
+
+    const status_project = getApprovedStatus(project.tgl_mulai)
+    if (project.status_project === status_project) {
+        return project
+    }
+
+    return prisma.projects.update({
+        where: {
+            id_project: project.id_project,
+        },
+        data: {
+            status_project,
+        },
+    })
+}
+
 export const userCreatePage = (req, res) => {
     setNoCache(res)
 
@@ -280,5 +319,113 @@ export const deleteUser = async (req, res) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'User gagal dihapus.' })
+    }
+}
+
+export const getProjects = async (req, res) => {
+    if (!requireManagerApi(req, res)) return
+
+    try {
+        const projects = await prisma.projects.findMany({
+            orderBy: [
+                {
+                    status_project: 'asc',
+                },
+                {
+                    tgl_mulai: 'asc',
+                },
+                {
+                    id_project: 'asc',
+                },
+            ],
+        })
+        const syncedProjects = await Promise.all(projects.map(syncProjectStatus))
+
+        res.json({ projects: syncedProjects })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data project gagal dimuat.' })
+    }
+}
+
+export const approveProject = async (req, res) => {
+    if (!requireManagerApi(req, res)) return
+
+    const id_project = getProjectId(req, res)
+    if (!id_project) return
+
+    try {
+        const project = await prisma.projects.findUnique({
+            where: {
+                id_project,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        if (project.status_project !== 'menunggu approve') {
+            return res.status(400).json({ message: 'Project ini tidak berada dalam status menunggu approve.' })
+        }
+
+        const updatedProject = await prisma.projects.update({
+            where: {
+                id_project,
+            },
+            data: {
+                status_project: getApprovedStatus(project.tgl_mulai),
+            },
+        })
+
+        res.json({
+            message: 'Project berhasil di-approve.',
+            project: updatedProject,
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Project gagal di-approve.' })
+    }
+}
+
+export const finishProject = async (req, res) => {
+    if (!requireManagerApi(req, res)) return
+
+    const id_project = getProjectId(req, res)
+    if (!id_project) return
+
+    try {
+        const project = await prisma.projects.findUnique({
+            where: {
+                id_project,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        const syncedProject = await syncProjectStatus(project)
+
+        if (syncedProject.status_project !== 'sedang dikerjakan') {
+            return res.status(400).json({ message: 'Hanya project yang sedang dikerjakan yang dapat diselesaikan.' })
+        }
+
+        const updatedProject = await prisma.projects.update({
+            where: {
+                id_project,
+            },
+            data: {
+                status_project: 'selesai',
+            },
+        })
+
+        res.json({
+            message: 'Project berhasil diselesaikan.',
+            project: updatedProject,
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Status project gagal diubah.' })
     }
 }

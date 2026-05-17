@@ -8,8 +8,16 @@ import {
   protectedPageFallback,
 } from '../controllers/auth.controller.js';
 import {
+  createProject,
+  getProjectKaryawanOptions,
+  projectCreatePage,
+} from '../controllers/admin.controller.js';
+import {
   createUser,
   deleteUser,
+  approveProject,
+  finishProject,
+  getProjects,
   getUser,
   getUsers,
   updateUser,
@@ -31,7 +39,13 @@ AuthRouter.get('/api/users/:id', getUser)
 AuthRouter.post('/api/users', createUser)
 AuthRouter.put('/api/users/:id', updateUser)
 AuthRouter.delete('/api/users/:id', deleteUser)
+AuthRouter.get('/api/project-karyawan', getProjectKaryawanOptions)
+AuthRouter.post('/api/projects', createProject)
+AuthRouter.get('/api/manager/projects', getProjects)
+AuthRouter.put('/api/manager/projects/:id/approve', approveProject)
+AuthRouter.put('/api/manager/projects/:id/finish', finishProject)
 
+AuthRouter.get('/page/admin/project-create.html', projectCreatePage)
 AuthRouter.get('/page/manager/user-create.html', userCreatePage)
 AuthRouter.get('/page/manager/user-update.html', userUpdatePage)
 AuthRouter.get('/page/manager/dashboard.html', dashboardPage('manager'))

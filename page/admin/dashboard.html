@@ -4,26 +4,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-     <link rel="stylesheet" href="/css/dashboard-admin.css">
+    <link rel="stylesheet" href="/css/dashboard-admin.css">
     <title>Dashboard Admin</title>
 </head>
 
 <body>
     <header>
         <h1>Admin</h1>
-        <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/admin/project-create.html">Create Project</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
     </header>
 
     <main>
-        <p>Selamat datang di dashboard admin.</p>
+        <section class="dashboard-intro">
+            <p>Selamat datang di dashboard admin.</p>
+        </section>
+
+        <section class="calendar-panel" aria-labelledby="calendarTitle">
+            <div class="calendar-header">
+                <div>
+                    <p class="section-label">Kalender</p>
+                    <h2 id="calendarTitle">Jadwal Bulanan</h2>
+                </div>
+
+                <div class="calendar-controls" aria-label="Kontrol kalender">
+                    <button class="calendar-nav" id="prevMonthBtn" type="button" aria-label="Bulan sebelumnya">&lt;</button>
+                    <select id="monthSelect" aria-label="Pilih bulan"></select>
+                    <select id="yearSelect" aria-label="Pilih tahun"></select>
+                    <button class="calendar-nav" id="nextMonthBtn" type="button" aria-label="Bulan berikutnya">&gt;</button>
+                </div>
+            </div>
+
+            <div class="calendar-current" id="calendarCurrent" aria-live="polite"></div>
+
+            <div class="calendar-grid calendar-weekdays" aria-hidden="true">
+                <span>Min</span>
+                <span>Sen</span>
+                <span>Sel</span>
+                <span>Rab</span>
+                <span>Kam</span>
+                <span>Jum</span>
+                <span>Sab</span>
+            </div>
+
+            <div class="calendar-grid calendar-days" id="calendarDays"></div>
+        </section>
     </main>
 
-    <script>
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await fetch('/api/logout', { method: 'POST' });
-            window.location.href = '/login.html';
-        });
-    </script>
+    <script src="/js/dashboard-admin.js"></script>
 </body>
 
 </html>
