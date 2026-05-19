@@ -9,6 +9,7 @@ import {
 } from '../controllers/auth.controller.js';
 import {
   createProject,
+  getProjects as getAdminProjects,
   getProjectKaryawanOptions,
   projectCreatePage,
 } from '../controllers/admin.controller.js';
@@ -41,6 +42,7 @@ AuthRouter.put('/api/users/:id', updateUser)
 AuthRouter.delete('/api/users/:id', deleteUser)
 AuthRouter.get('/api/project-karyawan', getProjectKaryawanOptions)
 AuthRouter.post('/api/projects', createProject)
+AuthRouter.get('/api/admin/projects', getAdminProjects)
 AuthRouter.get('/api/manager/projects', getProjects)
 AuthRouter.put('/api/manager/projects/:id/approve', approveProject)
 AuthRouter.put('/api/manager/projects/:id/finish', finishProject)

@@ -41,6 +41,35 @@ function parseProjectDate(value) {
     return Number.isNaN(date.getTime()) ? null : date
 }
 
+function getApprovedStatus(tgl_mulai) {
+    const today = new Date()
+    const startDate = new Date(tgl_mulai)
+    today.setHours(0, 0, 0, 0)
+    startDate.setHours(0, 0, 0, 0)
+
+    return today >= startDate ? 'sedang dikerjakan' : 'belum dimulai'
+}
+
+async function syncProjectStatus(project) {
+    if (!['belum dimulai', 'sedang dikerjakan'].includes(project.status_project)) {
+        return project
+    }
+
+    const status_project = getApprovedStatus(project.tgl_mulai)
+    if (project.status_project === status_project) {
+        return project
+    }
+
+    return prisma.projects.update({
+        where: {
+            id_project: project.id_project,
+        },
+        data: {
+            status_project,
+        },
+    })
+}
+
 export const projectCreatePage = (req, res) => {
     setNoCache(res)
 
@@ -70,6 +99,32 @@ export const getProjectKaryawanOptions = async (req, res) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Data karyawan gagal dimuat.' })
+    }
+}
+
+export const getProjects = async (req, res) => {
+    if (!requireAdminApi(req, res)) return
+
+    try {
+        const projects = await prisma.projects.findMany({
+            orderBy: [
+                {
+                    status_project: 'asc',
+                },
+                {
+                    tgl_mulai: 'asc',
+                },
+                {
+                    id_project: 'asc',
+                },
+            ],
+        })
+        const syncedProjects = await Promise.all(projects.map(syncProjectStatus))
+
+        res.json({ projects: syncedProjects })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data project gagal dimuat.' })
     }
 }
 

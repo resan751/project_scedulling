@@ -22,6 +22,37 @@
             <p>Selamat datang di dashboard admin.</p>
         </section>
 
+        <section class="table-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Table Project</h2>
+                    <p>Data project yang terdaftar di sistem.</p>
+                </div>
+            </div>
+
+            <p class="message" id="projectMessage" aria-live="polite">Memuat data project...</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Project</th>
+                            <th>Karyawan</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Deadline</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projectTableBody">
+                        <tr>
+                            <td colspan="6">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
         <section class="calendar-panel" aria-labelledby="calendarTitle">
             <div class="calendar-header">
                 <div>

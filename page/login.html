@@ -136,8 +136,12 @@
                         autocomplete="username" />
 
                     <label for="password">Password</label>
-                    <input type="password" id="password" name="password" placeholder="Masukkan password"
-                        autocomplete="current-password" />
+                    <div class="password-field">
+                        <input type="password" id="password" name="password" placeholder="Masukkan password"
+                            autocomplete="current-password" />
+                        <button class="password-toggle" id="togglePasswordBtn" type="button"
+                            aria-label="Tampilkan password" aria-pressed="false">Lihat</button>
+                    </div>
 
                     <p class="login-message" id="loginMessage" aria-live="polite"></p>
                     <span class="forgot" id="forgotBtn">Forgot Password</span>
@@ -152,6 +156,17 @@
         const loginForm = document.getElementById('loginForm');
         const loginBtn = document.getElementById('loginBtn');
         const loginMessage = document.getElementById('loginMessage');
+        const passwordInput = document.getElementById('password');
+        const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+
+        togglePasswordBtn.addEventListener('click', () => {
+            const isPasswordVisible = passwordInput.type === 'text';
+            passwordInput.type = isPasswordVisible ? 'password' : 'text';
+            togglePasswordBtn.textContent = isPasswordVisible ? 'Lihat' : 'Sembunyikan';
+            togglePasswordBtn.setAttribute('aria-label', isPasswordVisible ? 'Tampilkan password' : 'Sembunyikan password');
+            togglePasswordBtn.setAttribute('aria-pressed', String(!isPasswordVisible));
+            passwordInput.focus();
+        });
 
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();

@@ -175,6 +175,39 @@ input[type="password"] {
     margin-bottom: 16px;
 }
 
+.password-field {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.password-field input[type="text"],
+.password-field input[type="password"] {
+    padding-right: 92px;
+    margin-bottom: 0;
+}
+
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    transform: translateY(-50%);
+    min-width: 76px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 50px;
+    background: #1f110a;
+    color: #ffffff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.password-toggle:hover,
+.password-toggle:focus-visible {
+    background: #6b3e26;
+}
+
 .login-message {
     min-height: 20px;
     margin: -4px 0 12px;
