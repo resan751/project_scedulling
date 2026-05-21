@@ -175,6 +175,11 @@ tr:last-child td {
     color: #374151;
 }
 
+.status-badge.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
 .employee-details {
     width: max-content;
     max-width: 220px;
@@ -228,6 +233,14 @@ tr:last-child td {
 
 .approve-btn:hover {
     background: #1d4ed8;
+}
+
+.reject-btn {
+    background: #b91c1c;
+}
+
+.reject-btn:hover {
+    background: #991b1b;
 }
 
 .finish-btn {

@@ -27,10 +27,11 @@ function formatDate(value) {
 }
 
 function getStatusClass(status) {
-    if (status === 'menunggu approve') return 'waiting';
+    if (status === 'pending') return 'waiting';
     if (status === 'belum dimulai') return 'pending';
     if (status === 'sedang dikerjakan') return 'progress';
     if (status === 'selesai') return 'done';
+    if (status === 'ditolak') return 'rejected';
     return '';
 }
 
@@ -120,14 +121,23 @@ function renderProjectAction(project, actionCell) {
     const rowActions = document.createElement('div');
     rowActions.className = 'row-actions';
 
-    if (project.status_project === 'menunggu approve') {
+    if (project.status_project === 'pending') {
         const approveButton = document.createElement('button');
+        const rejectButton = document.createElement('button');
+
         approveButton.className = 'action-btn approve-btn';
         approveButton.type = 'button';
         approveButton.dataset.id = project.id_project;
         approveButton.dataset.name = project.nama_project;
         approveButton.textContent = 'Approve';
-        rowActions.appendChild(approveButton);
+
+        rejectButton.className = 'action-btn reject-btn';
+        rejectButton.type = 'button';
+        rejectButton.dataset.id = project.id_project;
+        rejectButton.dataset.name = project.nama_project;
+        rejectButton.textContent = 'Tolak';
+
+        rowActions.append(approveButton, rejectButton);
     } else if (project.status_project === 'sedang dikerjakan') {
         const finishButton = document.createElement('button');
         finishButton.className = 'action-btn finish-btn';
@@ -251,23 +261,28 @@ userTableBody.addEventListener('click', async (event) => {
 
 projectTableBody.addEventListener('click', async (event) => {
     const approveButton = event.target.closest('.approve-btn');
+    const rejectButton = event.target.closest('.reject-btn');
     const finishButton = event.target.closest('.finish-btn');
-    const actionButton = approveButton || finishButton;
+    const actionButton = approveButton || rejectButton || finishButton;
     if (!actionButton) return;
 
     const isApprove = Boolean(approveButton);
+    const isReject = Boolean(rejectButton);
     const id = actionButton.dataset.id;
     const name = actionButton.dataset.name;
     const confirmed = confirm(isApprove
         ? `Approve project "${name}"?`
-        : `Ubah project "${name}" menjadi selesai?`);
+        : isReject
+            ? `Tolak project "${name}"?`
+            : `Ubah project "${name}" menjadi selesai?`);
     if (!confirmed) return;
 
     actionButton.disabled = true;
-    actionButton.textContent = isApprove ? 'Approve...' : 'Menyimpan...';
+    actionButton.textContent = isApprove ? 'Approve...' : isReject ? 'Menolak...' : 'Menyimpan...';
 
     try {
-        const response = await fetch(`/api/manager/projects/${id}/${isApprove ? 'approve' : 'finish'}`, {
+        const action = isApprove ? 'approve' : isReject ? 'reject' : 'finish';
+        const response = await fetch(`/api/manager/projects/${id}/${action}`, {
             method: 'PUT',
         });
         const result = await readJson(response);
@@ -281,7 +296,7 @@ projectTableBody.addEventListener('click', async (event) => {
     } catch (error) {
         setMessage(projectMessage, error.message, 'error');
         actionButton.disabled = false;
-        actionButton.textContent = isApprove ? 'Approve' : 'Selesai';
+        actionButton.textContent = isApprove ? 'Approve' : isReject ? 'Tolak' : 'Selesai';
     }
 });
 

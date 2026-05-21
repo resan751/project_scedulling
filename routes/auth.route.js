@@ -9,9 +9,11 @@ import {
 } from '../controllers/auth.controller.js';
 import {
   createProject,
+  deleteProject,
   getProjects as getAdminProjects,
   getProjectKaryawanOptions,
   projectCreatePage,
+  updateProject,
 } from '../controllers/admin.controller.js';
 import {
   createUser,
@@ -21,6 +23,7 @@ import {
   getProjects,
   getUser,
   getUsers,
+  rejectProject,
   updateUser,
   userCreatePage,
   userUpdatePage,
@@ -43,8 +46,11 @@ AuthRouter.delete('/api/users/:id', deleteUser)
 AuthRouter.get('/api/project-karyawan', getProjectKaryawanOptions)
 AuthRouter.post('/api/projects', createProject)
 AuthRouter.get('/api/admin/projects', getAdminProjects)
+AuthRouter.put('/api/admin/projects/:id', updateProject)
+AuthRouter.delete('/api/admin/projects/:id', deleteProject)
 AuthRouter.get('/api/manager/projects', getProjects)
 AuthRouter.put('/api/manager/projects/:id/approve', approveProject)
+AuthRouter.put('/api/manager/projects/:id/reject', rejectProject)
 AuthRouter.put('/api/manager/projects/:id/finish', finishProject)
 
 AuthRouter.get('/page/admin/project-create.html', projectCreatePage)

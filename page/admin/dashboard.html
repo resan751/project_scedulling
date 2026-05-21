@@ -22,6 +22,21 @@
             <p>Selamat datang di dashboard admin.</p>
         </section>
 
+        <section class="summary-grid" aria-label="Ringkasan project">
+            <article class="summary-card">
+                <span>Total Project</span>
+                <strong id="totalProjectCount">0</strong>
+            </article>
+            <article class="summary-card">
+                <span>Belum Di-approve</span>
+                <strong id="waitingProjectCount">0</strong>
+            </article>
+            <article class="summary-card">
+                <span>Sudah Di-approve</span>
+                <strong id="approvedProjectCount">0</strong>
+            </article>
+        </section>
+
         <section class="table-section">
             <div class="section-heading">
                 <div>
@@ -42,16 +57,60 @@
                             <th>Tanggal Mulai</th>
                             <th>Deadline</th>
                             <th>Status</th>
+                            <th>Aksi</th>
                         </tr>
                     </thead>
                     <tbody id="projectTableBody">
                         <tr>
-                            <td colspan="6">Memuat data...</td>
+                            <td colspan="7">Memuat data...</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </section>
+
+        <div class="modal-backdrop" id="editProjectModal" hidden>
+            <form class="modal-card" id="editProjectForm">
+                <div class="modal-heading">
+                    <div>
+                        <p class="section-label">Edit Project</p>
+                        <h2 id="editProjectTitle">Update Project</h2>
+                    </div>
+                    <button class="icon-btn" id="closeEditModalBtn" type="button" aria-label="Tutup form edit">&times;</button>
+                </div>
+
+                <input type="hidden" id="editProjectId">
+
+                <label for="editNamaProject">Nama Project</label>
+                <input type="text" id="editNamaProject" name="nama_project" required>
+
+                <label>Nama Karyawan</label>
+                <div class="employee-list" id="editEmployeeList" aria-live="polite">
+                    <p class="empty-text">Memuat data karyawan...</p>
+                </div>
+
+                <div class="form-grid">
+                    <div>
+                        <label for="editTanggalMulai">Tanggal Mulai</label>
+                        <input type="date" id="editTanggalMulai" name="tgl_mulai" required>
+                    </div>
+                    <div>
+                        <label for="editDeadline">Deadline</label>
+                        <input type="date" id="editDeadline" name="deadline" required>
+                    </div>
+                </div>
+
+                <label for="editDeskripsi">Deskripsi</label>
+                <textarea id="editDeskripsi" name="deskripsi" rows="4" required></textarea>
+
+                <p class="message" id="editProjectMessage" aria-live="polite"></p>
+
+                <div class="modal-actions">
+                    <button class="secondary-btn" id="cancelEditBtn" type="button">Batal</button>
+                    <button class="submit-btn" id="saveEditBtn" type="submit">Simpan</button>
+                </div>
+            </form>
+        </div>
 
         <section class="calendar-panel" aria-labelledby="calendarTitle">
             <div class="calendar-header">

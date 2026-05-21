@@ -5,6 +5,7 @@ import { hashPassword, normalizeRole, readSession, setNoCache } from './auth.con
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
+const pendingStatuses = new Set(['pending', 'menunggu approve'])
 
 function requireManager(req, res) {
     const session = readSession(req)
@@ -66,6 +67,17 @@ function getApprovedStatus(tgl_mulai) {
 }
 
 async function syncProjectStatus(project) {
+    if (project.status_project === 'menunggu approve') {
+        return prisma.projects.update({
+            where: {
+                id_project: project.id_project,
+            },
+            data: {
+                status_project: 'pending',
+            },
+        })
+    }
+
     if (!['belum dimulai', 'sedang dikerjakan'].includes(project.status_project)) {
         return project
     }
@@ -365,8 +377,8 @@ export const approveProject = async (req, res) => {
             return res.status(404).json({ message: 'Project tidak ditemukan.' })
         }
 
-        if (project.status_project !== 'menunggu approve') {
-            return res.status(400).json({ message: 'Project ini tidak berada dalam status menunggu approve.' })
+        if (!pendingStatuses.has(project.status_project)) {
+            return res.status(400).json({ message: 'Project ini tidak berada dalam status pending.' })
         }
 
         const updatedProject = await prisma.projects.update({
@@ -385,6 +397,46 @@ export const approveProject = async (req, res) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Project gagal di-approve.' })
+    }
+}
+
+export const rejectProject = async (req, res) => {
+    if (!requireManagerApi(req, res)) return
+
+    const id_project = getProjectId(req, res)
+    if (!id_project) return
+
+    try {
+        const project = await prisma.projects.findUnique({
+            where: {
+                id_project,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        if (!pendingStatuses.has(project.status_project)) {
+            return res.status(400).json({ message: 'Hanya project pending yang dapat ditolak.' })
+        }
+
+        const updatedProject = await prisma.projects.update({
+            where: {
+                id_project,
+            },
+            data: {
+                status_project: 'ditolak',
+            },
+        })
+
+        res.json({
+            message: 'Project berhasil ditolak.',
+            project: updatedProject,
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Project gagal ditolak.' })
     }
 }
 
