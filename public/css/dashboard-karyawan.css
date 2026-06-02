@@ -1,39 +1,356 @@
+/* =========================================
+   1. CSS VARIABLES & THEME CONFIGURATION
+   ========================================= */
+:root {
+    /* Industrial Light Theme (Default) */
+    --bg-primary: #f5f6f8;
+    --bg-card: #ffffff;
+    --text-primary: #1f2937;
+    --text-secondary: #4b5563;
+    --border-color: #e5e7eb;
+    --accent-primary: #d97706; /* Industrial Amber (Safety Yellow) */
+    --accent-hover: #b45309;
+    --danger-color: #b91c1c;
+    --danger-hover: #991b1b;
+    --success-color: #166534;
+    --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    --transition: all 0.2s ease-in-out;
+}
+
+/* Industrial Dark Theme (Otomatis aktif jika perangkat dalam mode gelap) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #0f172a;
+        --bg-card: #1e293b;
+        --text-primary: #f1f5f9;
+        --text-secondary: #94a3b8;
+        --border-color: #334155;
+        --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* =========================================
+   2. RESET & BASE STYLES
+   ========================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
 body {
-            margin: 0;
-            min-height: 100vh;
-            font-family: Arial, sans-serif;
-            background: #f5f6f8;
-            color: #1f2937;
-        }
+    min-height: 100vh;
+    /* FONT DISERAGAMKAN DI SINI */
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-        header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 18px 28px;
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-        }
+/* =========================================
+   3. HEADER & NAVIGATION
+   ========================================= */
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 28px;
+    background: var(--bg-card);
+    border-bottom: 2px solid var(--accent-primary); /* Sentuhan tema industri */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 
-        h1 {
-            margin: 0;
-            font-size: 24px;
-        }
+h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+}
 
-        .logout-btn {
-            border: 0;
-            border-radius: 6px;
-            padding: 10px 16px;
-            background: #b91c1c;
-            color: #ffffff;
-            font-weight: 700;
-            cursor: pointer;
-        }
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
 
-        .logout-btn:hover {
-            background: #991b1b;
-        }
+/* =========================================
+   4. BUTTONS
+   ========================================= */
+.link-btn,
+.logout-btn,
+.submit-btn {
+    border: 0;
+    border-radius: 6px;
+    padding: 10px 16px;
+    color: #ffffff;
+    font-weight: 700;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 14px;
+    font-family: inherit; /* Mengikuti font body yang sudah diseragamkan */
+    transition: var(--transition);
+}
 
-        main {
-            padding: 28px;
-        }
+.link-btn {
+    background: #374151;
+}
+
+.link-btn:hover {
+    background: #4b5563;
+}
+
+.logout-btn {
+    background: var(--danger-color);
+}
+
+.logout-btn:hover {
+    background: var(--danger-hover);
+    transform: translateY(-1px);
+}
+
+.submit-btn {
+    width: 100%;
+    background: var(--accent-primary);
+    color: #0f172a; /* Teks gelap agar kontras dengan kuning amber */
+    margin-top: 8px;
+    font-size: 16px;
+    padding: 12px 16px;
+}
+
+.submit-btn:hover:not(:disabled) {
+    background: var(--accent-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.submit-btn:disabled {
+    cursor: wait;
+    opacity: 0.7;
+    transform: none;
+}
+
+/* =========================================
+   5. MAIN LAYOUT & CENTERED FORM
+   ========================================= */
+main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+.form-card {
+    width: 100%;
+    max-width: 20cm; /* Ukuran proporsional ~20cm untuk Desktop/Tablet */
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 32px;
+    box-shadow: var(--shadow-md);
+}
+
+.form-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.form-header h2 {
+    margin: 0 0 8px 0;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.form-header p {
+    margin: 0;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   6. FORM ELEMENTS
+   ========================================= */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 700;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-family: inherit; /* Mengikuti font body yang sudah diseragamkan */
+    font-size: 15px;
+    background: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* =========================================
+   7. EMPLOYEE LIST
+   ========================================= */
+.employee-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 190px;
+    overflow-y: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 10px;
+    background: var(--bg-primary);
+}
+
+/* Custom Scrollbar */
+.employee-list::-webkit-scrollbar { width: 8px; }
+.employee-list::-webkit-scrollbar-track { background: var(--bg-card); border-radius: 4px; }
+.employee-list::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
+.employee-list::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+.employee-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+    color: var(--text-primary);
+}
+
+.employee-option:hover {
+    background: var(--border-color);
+}
+
+.employee-option input {
+    width: auto;
+    margin: 0;
+    accent-color: var(--accent-primary);
+    cursor: pointer;
+}
+
+.empty-text, .loading-text {
+    margin: 0;
+    color: var(--text-secondary);
+    text-align: center;
+    font-style: italic;
+    padding: 10px;
+    font-size: 0.9rem;
+}
+
+/* =========================================
+   8. MESSAGES & FEEDBACK
+   ========================================= */
+.message {
+    min-height: 22px;
+    margin: 0 0 14px;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 6px;
+    text-align: center;
+    display: none;
+}
+
+.message:not(:empty) {
+    display: block;
+}
+
+.message.success {
+    color: var(--success-color);
+    background: rgba(22, 101, 52, 0.1);
+    border: 1px solid rgba(22, 101, 52, 0.3);
+}
+
+.message.error {
+    color: var(--danger-color);
+    background: rgba(185, 28, 28, 0.1);
+    border: 1px solid rgba(185, 28, 28, 0.3);
+}
+
+/* =========================================
+   9. RESPONSIVE DESIGN (Mobile & Tablet)
+   ========================================= */
+@media (max-width: 768px) {
+    header {
+        align-items: flex-start;
+        flex-direction: column;
+        padding: 16px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .header-actions {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .header-actions .link-btn,
+    .header-actions .logout-btn {
+        flex: 1;
+        text-align: center;
+    }
+    
+    main {
+        padding: 20px 16px;
+        align-items: flex-start; /* Mencegah form terpotong di layar HP pendek */
+    }
+    
+    .form-card {
+        max-width: 100%; /* Seukuran lebar layar pada mobile */
+        padding: 24px 20px;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr; /* Tanggal ditumpuk vertikal di mobile */
+        gap: 0;
+    }
+}
+
+/* Penyesuaian khusus untuk layar mobile yang sangat pendek (landscape atau keyboard virtual muncul) */
+@media (max-height: 700px) {
+    main {
+        align-items: flex-start;
+        padding-top: 20px;
+    }
+}

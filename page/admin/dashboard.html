@@ -4,22 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/dashboard-admin.css">
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
     <title>Dashboard Admin</title>
 </head>
 
 <body>
     <header>
-        <h1>Admin</h1>
+        <h1>Dashboard Admin</h1>
         <div class="header-actions">
-            <a class="link-btn" href="/page/admin/project-create.html">Create Project</a>
+            <a class="link-btn" href="/page/admin/project-create.html">Create Project</a>   
             <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
         </div>
     </header>
 
     <main>
         <section class="dashboard-intro">
-            <p>Selamat datang di dashboard admin.</p>
+            <p>Selamat datang di Dashboard Admin.</p>
         </section>
 
         <section class="summary-grid" aria-label="Ringkasan project">
@@ -28,11 +28,11 @@
                 <strong id="totalProjectCount">0</strong>
             </article>
             <article class="summary-card">
-                <span>Belum Di-approve</span>
+                <span>Belum di-Approve</span>
                 <strong id="waitingProjectCount">0</strong>
             </article>
             <article class="summary-card">
-                <span>Sudah Di-approve</span>
+                <span>Sudah di-Approve</span>
                 <strong id="approvedProjectCount">0</strong>
             </article>
         </section>
@@ -143,7 +143,7 @@
         </section>
     </main>
 
-    <script src="/js/dashboard-admin.js"></script>
+    <script src="/public/js/dashboard-admin.js"></script>
 </body>
 
 </html>
