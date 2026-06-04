@@ -36,8 +36,8 @@ function signPayload(payload) {
 function createSessionToken(user) {
     const payload = Buffer.from(JSON.stringify({
         id_user: user.id_user,
-        nama_karyawan: user.nama_karyawan,
-        role: normalizeRole(user.role),
+        nama_user: user.nama_user,
+        role: normalizeRole(user.role_user),
     })).toString('base64url')
 
     return `${payload}.${signPayload(payload)}`
@@ -100,15 +100,15 @@ export const loginPage = (req, res) => {
 
 export const login = async (req, res) => {
     try {
-        const { nama_karyawan, password } = req.body
+        const { nama_user, password } = req.body
 
-        if (!nama_karyawan || !password) {
+        if (!nama_user || !password) {
             return res.status(400).json({ message: 'Nama karyawan dan password wajib diisi.' })
         }
 
         const user = await prisma.user.findFirst({
             where: {
-                nama_karyawan,
+                nama_user,
             },
         })
 
@@ -116,7 +116,7 @@ export const login = async (req, res) => {
             return res.status(401).json({ message: 'Nama karyawan atau password salah.' })
         }
 
-        const role = normalizeRole(user.role)
+        const role = normalizeRole(user.role_user)
         const redirectTo = roleRedirects[role]
 
         if (!redirectTo) {
@@ -135,7 +135,7 @@ export const login = async (req, res) => {
             redirectTo,
             user: {
                 id_user: user.id_user,
-                nama_karyawan: user.nama_karyawan,
+                nama_user: user.nama_user,
                 role,
             },
         })

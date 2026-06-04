@@ -6,20 +6,20 @@ const pbkdf2Async = promisify(pbkdf2);
 
 const users = [
   {
-    nama_karyawan: "Admin",
-    role: "manager",
+    nama_user: "Admin",
+    role_user: "manager",
     email: "admin123@gmail.com",
     password: "admin123",
   },
   {
-    nama_karyawan: "aan",
-    role: "admin",
+    nama_user: "aan",
+    role_user: "admin",
     email: "aangaming@gmail.com",
     password: "podowingi",
   },
   {
-    nama_karyawan: "rio",
-    role: "user",
+    nama_user: "rio",
+    role_user: "user",
     email: "riobelly@gmail.com",
     password: "semarang",
   },
@@ -34,6 +34,10 @@ async function hashPassword(password) {
 }
 
 async function main() {
+  await prisma.laporan.deleteMany();
+  await prisma.project.deleteMany();
+  await prisma.user.deleteMany();
+
   let created = 0;
   let updated = 0;
 

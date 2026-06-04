@@ -7,19 +7,36 @@ datasource db {
 }
 
 model user {
-  id_user  Int    @id @default(autoincrement())
-  nama_karyawan     String @unique @db.VarChar(100)
-  role     String @db.VarChar(100)
-  email    String @db.VarChar(100)
-  password String @db.VarChar(100)
+  id_user   Int    @id @default(autoincrement())
+  nama_user String @unique @db.VarChar(100)
+  role_user String @db.VarChar(100)
+  email     String @db.VarChar(100)
+  password  String @db.VarChar(100)
 }
 
-model projects{
-  id_project  Int    @id @default(autoincrement())
-  nama_project        String @db.VarChar(100)
-  nama_karyawan       Json
-  tgl_mulai       DateTime @db.DateTime
-  deadline       DateTime @db.DateTime
-  status_project String @db.VarChar(100)
-  deskripsi   String @db.VarChar(100)
+model project {
+  id_project        Int      @id @default(autoincrement())
+  nama_project      String   @db.VarChar(100)
+  nama_user         String   @db.VarChar(100)
+  role_project      String   @db.VarChar(100)
+  tgl_mulai         DateTime @db.DateTime
+  deadline          DateTime @db.DateTime
+  status_project    String   @db.VarChar(100)
+  deskripsi_project String   @db.VarChar(255)
+
+  @@index([nama_user])
+  @@index([nama_project, role_project])
+}
+
+model laporan {
+  id_laporan         Int    @id @default(autoincrement())
+  nama_project       String @db.VarChar(100)
+  nama_user          String @db.VarChar(100)
+  role_project       String @db.VarChar(100)
+  bukti              String @db.VarChar(255)
+  jenis_laporan      String @db.VarChar(100)
+  deskripsi_laporan  String @db.VarChar(255)
+
+  @@index([nama_user])
+  @@index([nama_project, role_project])
 }

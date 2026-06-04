@@ -68,7 +68,7 @@ function getApprovedStatus(tgl_mulai) {
 
 async function syncProjectStatus(project) {
     if (project.status_project === 'menunggu approve') {
-        return prisma.projects.update({
+        return prisma.project.update({
             where: {
                 id_project: project.id_project,
             },
@@ -87,7 +87,7 @@ async function syncProjectStatus(project) {
         return project
     }
 
-    return prisma.projects.update({
+    return prisma.project.update({
         where: {
             id_project: project.id_project,
         },
@@ -117,17 +117,23 @@ export const getUsers = async (req, res) => {
     if (!requireManagerApi(req, res)) return
 
     try {
-        const users = await prisma.user.findMany({
+        const dbUsers = await prisma.user.findMany({
             orderBy: {
                 id_user: 'asc',
             },
             select: {
                 id_user: true,
-                nama_karyawan: true,
+                nama_user: true,
                 email: true,
-                role: true,
+                role_user: true,
             },
         })
+        const users = dbUsers.map((user) => ({
+            id_user: user.id_user,
+            nama_user: user.nama_user,
+            email: user.email,
+            role: user.role_user,
+        }))
 
         res.json({ users })
     } catch (error) {
@@ -143,20 +149,27 @@ export const getUser = async (req, res) => {
     if (!id_user) return
 
     try {
-        const user = await prisma.user.findUnique({
+        const dbUser = await prisma.user.findUnique({
             where: {
                 id_user,
             },
             select: {
                 id_user: true,
-                nama_karyawan: true,
+                nama_user: true,
                 email: true,
-                role: true,
+                role_user: true,
             },
         })
 
-        if (!user) {
+        if (!dbUser) {
             return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
+        const user = {
+            id_user: dbUser.id_user,
+            nama_user: dbUser.nama_user,
+            email: dbUser.email,
+            role: dbUser.role_user,
         }
 
         res.json({ user })
@@ -170,13 +183,13 @@ export const createUser = async (req, res) => {
     if (!requireManagerApi(req, res)) return
 
     try {
-        const nama_karyawan = String(req.body.nama_karyawan || '').trim()
+        const nama_user = String(req.body.nama_user || '').trim()
         const email = String(req.body.email || '').trim()
         const password = String(req.body.password || '')
         const role = normalizeRole(req.body.role)
         const validRoles = new Set(['manager', 'admin', 'karyawan'])
 
-        if (!nama_karyawan || !email || !password || !role) {
+        if (!nama_user || !email || !password || !role) {
             return res.status(400).json({ message: 'Semua field wajib diisi.' })
         }
 
@@ -187,7 +200,7 @@ export const createUser = async (req, res) => {
         const existingUser = await prisma.user.findFirst({
             where: {
                 OR: [
-                    { nama_karyawan },
+                    { nama_user },
                     { email },
                 ],
             },
@@ -199,23 +212,28 @@ export const createUser = async (req, res) => {
 
         const user = await prisma.user.create({
             data: {
-                nama_karyawan,
+                nama_user,
                 email,
-                role,
+                role_user: role,
                 password: await hashPassword(password),
             },
             select: {
                 id_user: true,
-                nama_karyawan: true,
+                nama_user: true,
                 email: true,
-                role: true,
+                role_user: true,
             },
         })
 
         res.status(201).json({
             message: 'User berhasil dibuat.',
             redirectTo: '/page/manager/dashboard.html',
-            user,
+            user: {
+                id_user: user.id_user,
+                nama_user: user.nama_user,
+                email: user.email,
+                role: user.role_user,
+            },
         })
     } catch (error) {
         console.error(error)
@@ -230,13 +248,13 @@ export const updateUser = async (req, res) => {
     if (!id_user) return
 
     try {
-        const nama_karyawan = String(req.body.nama_karyawan || '').trim()
+        const nama_user = String(req.body.nama_user || '').trim()
         const email = String(req.body.email || '').trim()
         const password = String(req.body.password || '')
         const role = normalizeRole(req.body.role)
         const validRoles = new Set(['manager', 'admin', 'karyawan'])
 
-        if (!nama_karyawan || !email || !role) {
+        if (!nama_user || !email || !role) {
             return res.status(400).json({ message: 'Nama karyawan, email, dan role wajib diisi.' })
         }
 
@@ -260,7 +278,7 @@ export const updateUser = async (req, res) => {
                     not: id_user,
                 },
                 OR: [
-                    { nama_karyawan },
+                    { nama_user },
                     { email },
                 ],
             },
@@ -271,9 +289,9 @@ export const updateUser = async (req, res) => {
         }
 
         const data = {
-            nama_karyawan,
+            nama_user,
             email,
-            role,
+            role_user: role,
         }
 
         if (password) {
@@ -287,16 +305,21 @@ export const updateUser = async (req, res) => {
             data,
             select: {
                 id_user: true,
-                nama_karyawan: true,
+                nama_user: true,
                 email: true,
-                role: true,
+                role_user: true,
             },
         })
 
         res.json({
             message: 'User berhasil diupdate.',
             redirectTo: '/page/manager/dashboard.html',
-            user,
+            user: {
+                id_user: user.id_user,
+                nama_user: user.nama_user,
+                email: user.email,
+                role: user.role_user,
+            },
         })
     } catch (error) {
         console.error(error)
@@ -338,7 +361,7 @@ export const getProjects = async (req, res) => {
     if (!requireManagerApi(req, res)) return
 
     try {
-        const projects = await prisma.projects.findMany({
+        const projects = await prisma.project.findMany({
             orderBy: [
                 {
                     status_project: 'asc',
@@ -367,7 +390,7 @@ export const approveProject = async (req, res) => {
     if (!id_project) return
 
     try {
-        const project = await prisma.projects.findUnique({
+        const project = await prisma.project.findUnique({
             where: {
                 id_project,
             },
@@ -381,7 +404,7 @@ export const approveProject = async (req, res) => {
             return res.status(400).json({ message: 'Project ini tidak berada dalam status pending.' })
         }
 
-        const updatedProject = await prisma.projects.update({
+        const updatedProject = await prisma.project.update({
             where: {
                 id_project,
             },
@@ -407,7 +430,7 @@ export const rejectProject = async (req, res) => {
     if (!id_project) return
 
     try {
-        const project = await prisma.projects.findUnique({
+        const project = await prisma.project.findUnique({
             where: {
                 id_project,
             },
@@ -421,7 +444,7 @@ export const rejectProject = async (req, res) => {
             return res.status(400).json({ message: 'Hanya project pending yang dapat ditolak.' })
         }
 
-        const updatedProject = await prisma.projects.update({
+        const updatedProject = await prisma.project.update({
             where: {
                 id_project,
             },
@@ -447,7 +470,7 @@ export const finishProject = async (req, res) => {
     if (!id_project) return
 
     try {
-        const project = await prisma.projects.findUnique({
+        const project = await prisma.project.findUnique({
             where: {
                 id_project,
             },
@@ -463,7 +486,7 @@ export const finishProject = async (req, res) => {
             return res.status(400).json({ message: 'Hanya project yang sedang dikerjakan yang dapat diselesaikan.' })
         }
 
-        const updatedProject = await prisma.projects.update({
+        const updatedProject = await prisma.project.update({
             where: {
                 id_project,
             },

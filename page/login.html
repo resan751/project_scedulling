@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Management System</title>
-    <link rel="stylesheet" href="/public/css/login.css">
+    <link rel="stylesheet" href="/css/login.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap"
@@ -131,8 +131,8 @@
                 </div>
 
                 <form id="loginForm">
-                    <label for="nama_karyawan">Nama Karyawan</label>
-                    <input type="text" id="nama_karyawan" name="nama_karyawan" placeholder="Masukkan nama karyawan"
+                    <label for="nama_user">Nama Karyawan</label>
+                    <input type="text" id="nama_user" name="nama_user" placeholder="Masukkan nama karyawan"
                         autocomplete="username" />
 
                     <label for="password">Password</label>
@@ -171,7 +171,7 @@
         loginForm.addEventListener('submit', async (event) => {
             event.preventDefault();
 
-            const nama_karyawan = document.getElementById('nama_karyawan').value.trim();
+            const nama_user = document.getElementById('nama_user').value.trim();
             const password = document.getElementById('password').value;
 
             loginMessage.textContent = '';
@@ -184,7 +184,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ nama_karyawan, password }),
+                    body: JSON.stringify({ nama_user, password }),
                 });
                 const contentType = response.headers.get('content-type') || '';
                 const result = contentType.includes('application/json')

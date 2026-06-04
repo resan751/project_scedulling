@@ -137,10 +137,10 @@ function buildEmployeeCheckboxes(selectedNames = []) {
 
         label.className = 'employee-option';
         checkbox.type = 'checkbox';
-        checkbox.name = 'nama_karyawan';
-        checkbox.value = user.nama_karyawan;
-        checkbox.checked = selectedNameSet.has(user.nama_karyawan);
-        name.textContent = user.nama_karyawan;
+        checkbox.name = 'nama_user';
+        checkbox.value = user.nama_user;
+        checkbox.checked = selectedNameSet.has(user.nama_user);
+        name.textContent = user.nama_user;
 
         label.append(checkbox, name);
         editEmployeeList.appendChild(label);
@@ -148,7 +148,7 @@ function buildEmployeeCheckboxes(selectedNames = []) {
 }
 
 function renderEmployeeToggle(project, employeeCell) {
-    const employeeNames = getEmployeeNames(project.nama_karyawan);
+    const employeeNames = getEmployeeNames(project.nama_user);
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     const list = document.createElement('ul');
@@ -172,8 +172,8 @@ function openEditProjectModal(project) {
     editNamaProject.value = project.nama_project;
     editTanggalMulai.value = formatDateInput(project.tgl_mulai);
     editDeadline.value = formatDateInput(project.deadline);
-    editDeskripsi.value = project.deskripsi || '';
-    buildEmployeeCheckboxes(getEmployeeNames(project.nama_karyawan));
+    editDeskripsi.value = project.deskripsi_project || '';
+    buildEmployeeCheckboxes(getEmployeeNames(project.nama_user));
     setMessage(editProjectMessage, '');
     editProjectModal.hidden = false;
     editNamaProject.focus();
@@ -437,9 +437,9 @@ if (editProjectForm) {
 
         const formData = new FormData(editProjectForm);
         const payload = Object.fromEntries(formData.entries());
-        payload.nama_karyawan = formData.getAll('nama_karyawan');
+        payload.nama_user = formData.getAll('nama_user');
 
-        if (!payload.nama_karyawan.length) {
+        if (!payload.nama_user.length) {
             setMessage(editProjectMessage, 'Pilih minimal satu karyawan.', 'error');
             return;
         }

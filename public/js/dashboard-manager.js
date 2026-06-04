@@ -53,7 +53,7 @@ function getEmployeeNames(value) {
 }
 
 function renderEmployeeToggle(project, employeeCell) {
-    const employeeNames = getEmployeeNames(project.nama_karyawan);
+    const employeeNames = getEmployeeNames(project.nama_user);
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     const list = document.createElement('ul');
@@ -93,7 +93,7 @@ function renderUsers(users) {
         const deleteButton = document.createElement('button');
 
         idCell.textContent = user.id_user;
-        nameCell.textContent = user.nama_karyawan;
+        nameCell.textContent = user.nama_user;
         emailCell.textContent = user.email;
         roleBadge.className = 'role-badge';
         roleBadge.textContent = user.role;
@@ -107,7 +107,7 @@ function renderUsers(users) {
         deleteButton.className = 'action-btn delete-btn';
         deleteButton.type = 'button';
         deleteButton.dataset.id = user.id_user;
-        deleteButton.dataset.name = user.nama_karyawan;
+        deleteButton.dataset.name = user.nama_user;
         deleteButton.textContent = 'Delete';
 
         rowActions.append(updateLink, deleteButton);

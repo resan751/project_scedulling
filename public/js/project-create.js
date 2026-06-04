@@ -36,9 +36,9 @@ async function loadKaryawanOptions() {
 
             label.className = 'employee-option';
             checkbox.type = 'checkbox';
-            checkbox.name = 'nama_karyawan';
-            checkbox.value = user.nama_karyawan;
-            name.textContent = user.nama_karyawan;
+            checkbox.name = 'nama_user';
+            checkbox.value = user.nama_user;
+            name.textContent = user.nama_user;
 
             label.append(checkbox, name);
             employeeList.appendChild(label);
@@ -55,11 +55,11 @@ createProjectForm.addEventListener('submit', async (event) => {
 
     const formData = new FormData(createProjectForm);
     const payload = Object.fromEntries(formData.entries());
-    payload.nama_karyawan = formData.getAll('nama_karyawan');
+    payload.nama_user = formData.getAll('nama_user');
 
     setMessage('');
 
-    if (!payload.nama_karyawan.length) {
+    if (!payload.nama_user.length) {
         setMessage('Pilih minimal satu karyawan.', 'error');
         return;
     }

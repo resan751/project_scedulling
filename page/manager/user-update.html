@@ -19,8 +19,8 @@
 
     <main>
         <form class="form-card" id="updateUserForm">
-            <label for="nama_karyawan">Nama Karyawan</label>
-            <input type="text" id="nama_karyawan" name="nama_karyawan" autocomplete="name" required>
+            <label for="nama_user">Nama Karyawan</label>
+            <input type="text" id="nama_user" name="nama_user" autocomplete="name" required>
 
             <label for="email">Email</label>
             <input type="email" id="email" name="email" autocomplete="email" required>
@@ -77,7 +77,7 @@
                     throw new Error(result.message || 'Data user gagal dimuat.');
                 }
 
-                document.getElementById('nama_karyawan').value = result.user.nama_karyawan;
+                document.getElementById('nama_user').value = result.user.nama_user;
                 document.getElementById('email').value = result.user.email;
                 document.getElementById('role').value = result.user.role;
             } catch (error) {

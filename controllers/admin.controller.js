@@ -63,7 +63,7 @@ function getApprovedStatus(tgl_mulai) {
 
 async function syncProjectStatus(project) {
     if (project.status_project === 'menunggu approve') {
-        return prisma.projects.update({
+        return prisma.project.update({
             where: {
                 id_project: project.id_project,
             },
@@ -82,7 +82,7 @@ async function syncProjectStatus(project) {
         return project
     }
 
-    return prisma.projects.update({
+    return prisma.project.update({
         where: {
             id_project: project.id_project,
         },
@@ -106,14 +106,14 @@ export const getProjectKaryawanOptions = async (req, res) => {
     try {
         const users = await prisma.user.findMany({
             where: {
-                role: 'karyawan',
+                role_user: 'karyawan',
             },
             orderBy: {
-                nama_karyawan: 'asc',
+                nama_user: 'asc',
             },
             select: {
                 id_user: true,
-                nama_karyawan: true,
+                nama_user: true,
             },
         })
 
@@ -128,7 +128,7 @@ export const getProjects = async (req, res) => {
     if (!requireAdminApi(req, res)) return
 
     try {
-        const projects = await prisma.projects.findMany({
+        const projects = await prisma.project.findMany({
             orderBy: [
                 {
                     status_project: 'asc',
@@ -155,9 +155,9 @@ export const createProject = async (req, res) => {
 
     try {
         const nama_project = String(req.body.nama_project || '').trim()
-        const namaKaryawanList = Array.isArray(req.body.nama_karyawan)
-            ? req.body.nama_karyawan.map((nama) => String(nama || '').trim()).filter(Boolean)
-            : [String(req.body.nama_karyawan || '').trim()].filter(Boolean)
+        const namaKaryawanList = Array.isArray(req.body.nama_user)
+            ? req.body.nama_user.map((nama) => String(nama || '').trim()).filter(Boolean)
+            : [String(req.body.nama_user || '').trim()].filter(Boolean)
         const tgl_mulai = parseProjectDate(req.body.tgl_mulai)
         const deadline = parseProjectDate(req.body.deadline)
         const deskripsi = String(req.body.deskripsi || '').trim()
@@ -167,37 +167,42 @@ export const createProject = async (req, res) => {
             return res.status(400).json({ message: 'Semua field wajib diisi.' })
         }
 
+        if (uniqueNamaKaryawan.length > 1) {
+            return res.status(400).json({ message: 'Project hanya dapat memiliki satu nama user.' })
+        }
+
         if (deadline < tgl_mulai) {
             return res.status(400).json({ message: 'Deadline tidak boleh lebih awal dari tanggal mulai.' })
         }
 
         const validUsers = await prisma.user.findMany({
             where: {
-                nama_karyawan: {
+                nama_user: {
                     in: uniqueNamaKaryawan,
                 },
-                role: 'karyawan',
+                role_user: 'karyawan',
             },
             select: {
-                nama_karyawan: true,
-                role: true,
+                nama_user: true,
+                role_user: true,
             },
         })
-        const validNames = new Set(validUsers.map((user) => user.nama_karyawan))
+        const validNames = new Set(validUsers.map((user) => user.nama_user))
         const invalidNames = uniqueNamaKaryawan.filter((nama) => !validNames.has(nama))
 
         if (invalidNames.length > 0) {
             return res.status(400).json({ message: 'Pilihan karyawan tidak valid.' })
         }
 
-        const project = await prisma.projects.create({
+        const project = await prisma.project.create({
             data: {
                 nama_project,
-                nama_karyawan: uniqueNamaKaryawan,
+                nama_user: validUsers[0].nama_user,
+                role_project: validUsers[0].role_user,
                 tgl_mulai,
                 deadline,
                 status_project: 'pending',
-                deskripsi,
+                deskripsi_project: deskripsi,
             },
         })
 
@@ -220,9 +225,9 @@ export const updateProject = async (req, res) => {
 
     try {
         const nama_project = String(req.body.nama_project || '').trim()
-        const namaKaryawanList = Array.isArray(req.body.nama_karyawan)
-            ? req.body.nama_karyawan.map((nama) => String(nama || '').trim()).filter(Boolean)
-            : [String(req.body.nama_karyawan || '').trim()].filter(Boolean)
+        const namaKaryawanList = Array.isArray(req.body.nama_user)
+            ? req.body.nama_user.map((nama) => String(nama || '').trim()).filter(Boolean)
+            : [String(req.body.nama_user || '').trim()].filter(Boolean)
         const tgl_mulai = parseProjectDate(req.body.tgl_mulai)
         const deadline = parseProjectDate(req.body.deadline)
         const deskripsi = String(req.body.deskripsi || '').trim()
@@ -232,11 +237,15 @@ export const updateProject = async (req, res) => {
             return res.status(400).json({ message: 'Semua field wajib diisi.' })
         }
 
+        if (uniqueNamaKaryawan.length > 1) {
+            return res.status(400).json({ message: 'Project hanya dapat memiliki satu nama user.' })
+        }
+
         if (deadline < tgl_mulai) {
             return res.status(400).json({ message: 'Deadline tidak boleh lebih awal dari tanggal mulai.' })
         }
 
-        const existingProject = await prisma.projects.findUnique({
+        const existingProject = await prisma.project.findUnique({
             where: {
                 id_project,
             },
@@ -252,16 +261,17 @@ export const updateProject = async (req, res) => {
 
         const validUsers = await prisma.user.findMany({
             where: {
-                nama_karyawan: {
+                nama_user: {
                     in: uniqueNamaKaryawan,
                 },
-                role: 'karyawan',
+                role_user: 'karyawan',
             },
             select: {
-                nama_karyawan: true,
+                nama_user: true,
+                role_user: true,
             },
         })
-        const validNames = new Set(validUsers.map((user) => user.nama_karyawan))
+        const validNames = new Set(validUsers.map((user) => user.nama_user))
         const invalidNames = uniqueNamaKaryawan.filter((nama) => !validNames.has(nama))
 
         if (invalidNames.length > 0) {
@@ -270,14 +280,15 @@ export const updateProject = async (req, res) => {
 
         const data = {
             nama_project,
-            nama_karyawan: uniqueNamaKaryawan,
+            nama_user: validUsers[0].nama_user,
+            role_project: validUsers[0].role_user,
             tgl_mulai,
             deadline,
-            deskripsi,
+            deskripsi_project: deskripsi,
             status_project: 'pending',
         }
 
-        const project = await prisma.projects.update({
+        const project = await prisma.project.update({
             where: {
                 id_project,
             },
@@ -301,7 +312,7 @@ export const deleteProject = async (req, res) => {
     if (!id_project) return
 
     try {
-        const existingProject = await prisma.projects.findUnique({
+        const existingProject = await prisma.project.findUnique({
             where: {
                 id_project,
             },
@@ -315,7 +326,7 @@ export const deleteProject = async (req, res) => {
             return res.status(400).json({ message: 'Project hanya dapat dihapus sebelum di-approve manager.' })
         }
 
-        await prisma.projects.delete({
+        await prisma.project.delete({
             where: {
                 id_project,
             },
