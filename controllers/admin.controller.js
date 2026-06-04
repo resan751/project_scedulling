@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { prisma } from '../prisma/lib/prisma.js'
-import { readSession, setNoCache } from './auth.controller.js'
+import { hashPassword, normalizeRole, readSession, setNoCache } from './auth.controller.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -35,6 +35,16 @@ function requireAdminApi(req, res) {
     }
 
     return session
+}
+
+function getUserId(req, res) {
+    const id_user = Number(req.params.id)
+    if (!Number.isInteger(id_user) || id_user <= 0) {
+        res.status(400).json({ message: 'ID user tidak valid.' })
+        return null
+    }
+
+    return id_user
 }
 
 function parseProjectDate(value) {
@@ -98,6 +108,316 @@ export const projectCreatePage = (req, res) => {
     if (!requireAdmin(req, res)) return
 
     res.sendFile(path.join(__dirname, '..', 'page', 'admin', 'project-create.html'))
+}
+
+export const userCreatePage = (req, res) => {
+    setNoCache(res)
+
+    if (!requireAdmin(req, res)) return
+
+    res.sendFile(path.join(__dirname, '..', 'page', 'admin', 'user-create.html'))
+}
+
+export const userUpdatePage = (req, res) => {
+    setNoCache(res)
+
+    if (!requireAdmin(req, res)) return
+
+    res.sendFile(path.join(__dirname, '..', 'page', 'admin', 'user-update.html'))
+}
+
+export const registerPage = (req, res) => {
+    setNoCache(res)
+    res.sendFile(path.join(__dirname, '..', 'page', 'register.html'))
+}
+
+export const getUsers = async (req, res) => {
+    if (!requireAdminApi(req, res)) return
+
+    try {
+        const dbUsers = await prisma.user.findMany({
+            orderBy: {
+                id_user: 'asc',
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                email: true,
+                role_user: true,
+            },
+        })
+        const users = dbUsers.map((user) => ({
+            id_user: user.id_user,
+            nama_user: user.nama_user,
+            email: user.email,
+            role: normalizeRole(user.role_user),
+        }))
+
+        res.json({ users })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data user gagal dimuat.' })
+    }
+}
+
+export const getUser = async (req, res) => {
+    if (!requireAdminApi(req, res)) return
+
+    const id_user = getUserId(req, res)
+    if (!id_user) return
+
+    try {
+        const dbUser = await prisma.user.findUnique({
+            where: {
+                id_user,
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                email: true,
+                role_user: true,
+            },
+        })
+
+        if (!dbUser) {
+            return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
+        res.json({
+            user: {
+                id_user: dbUser.id_user,
+                nama_user: dbUser.nama_user,
+                email: dbUser.email,
+                role: normalizeRole(dbUser.role_user),
+            },
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data user gagal dimuat.' })
+    }
+}
+
+async function ensureUniqueUser(nama_user, email, ignoredId = null) {
+    return prisma.user.findFirst({
+        where: {
+            ...(ignoredId
+                ? {
+                    id_user: {
+                        not: ignoredId,
+                    },
+                }
+                : {}),
+            OR: [
+                { nama_user },
+                { email },
+            ],
+        },
+    })
+}
+
+export const createUser = async (req, res) => {
+    if (!requireAdminApi(req, res)) return
+
+    try {
+        const nama_user = String(req.body.nama_user || '').trim()
+        const email = String(req.body.email || '').trim()
+        const password = String(req.body.password || '')
+        const role = normalizeRole(req.body.role)
+        const validRoles = new Set(['admin', 'karyawan'])
+
+        if (!nama_user || !email || !password || !role) {
+            return res.status(400).json({ message: 'Semua field wajib diisi.' })
+        }
+
+        if (!validRoles.has(role)) {
+            return res.status(400).json({ message: 'Role harus admin atau karyawan.' })
+        }
+
+        const existingUser = await ensureUniqueUser(nama_user, email)
+        if (existingUser) {
+            return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+        }
+
+        const user = await prisma.user.create({
+            data: {
+                nama_user,
+                email,
+                role_user: role,
+                password: await hashPassword(password),
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                email: true,
+                role_user: true,
+            },
+        })
+
+        res.status(201).json({
+            message: 'User berhasil dibuat.',
+            redirectTo: '/page/admin/dashboard.html',
+            user: {
+                id_user: user.id_user,
+                nama_user: user.nama_user,
+                email: user.email,
+                role: user.role_user,
+            },
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'User gagal dibuat.' })
+    }
+}
+
+export const registerUser = async (req, res) => {
+    try {
+        const nama_user = String(req.body.nama_user || '').trim()
+        const email = String(req.body.email || '').trim()
+        const password = String(req.body.password || '')
+
+        if (!nama_user || !email || !password) {
+            return res.status(400).json({ message: 'Nama karyawan, email, dan password wajib diisi.' })
+        }
+
+        const existingUser = await ensureUniqueUser(nama_user, email)
+        if (existingUser) {
+            return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+        }
+
+        const user = await prisma.user.create({
+            data: {
+                nama_user,
+                email,
+                role_user: 'karyawan',
+                password: await hashPassword(password),
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                email: true,
+                role_user: true,
+            },
+        })
+
+        res.status(201).json({
+            message: 'Registrasi berhasil. Silakan login.',
+            redirectTo: '/login.html',
+            user: {
+                id_user: user.id_user,
+                nama_user: user.nama_user,
+                email: user.email,
+                role: user.role_user,
+            },
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Registrasi gagal.' })
+    }
+}
+
+export const updateUser = async (req, res) => {
+    if (!requireAdminApi(req, res)) return
+
+    const id_user = getUserId(req, res)
+    if (!id_user) return
+
+    try {
+        const nama_user = String(req.body.nama_user || '').trim()
+        const email = String(req.body.email || '').trim()
+        const password = String(req.body.password || '')
+        const role = normalizeRole(req.body.role)
+        const validRoles = new Set(['admin', 'karyawan'])
+
+        if (!nama_user || !email || !role) {
+            return res.status(400).json({ message: 'Nama karyawan, email, dan role wajib diisi.' })
+        }
+
+        if (!validRoles.has(role)) {
+            return res.status(400).json({ message: 'Role harus admin atau karyawan.' })
+        }
+
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                id_user,
+            },
+        })
+
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
+        const duplicateUser = await ensureUniqueUser(nama_user, email, id_user)
+        if (duplicateUser) {
+            return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+        }
+
+        const data = {
+            nama_user,
+            email,
+            role_user: role,
+        }
+
+        if (password) {
+            data.password = await hashPassword(password)
+        }
+
+        const user = await prisma.user.update({
+            where: {
+                id_user,
+            },
+            data,
+            select: {
+                id_user: true,
+                nama_user: true,
+                email: true,
+                role_user: true,
+            },
+        })
+
+        res.json({
+            message: 'User berhasil diupdate.',
+            redirectTo: '/page/admin/dashboard.html',
+            user: {
+                id_user: user.id_user,
+                nama_user: user.nama_user,
+                email: user.email,
+                role: user.role_user,
+            },
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'User gagal diupdate.' })
+    }
+}
+
+export const deleteUser = async (req, res) => {
+    if (!requireAdminApi(req, res)) return
+
+    const id_user = getUserId(req, res)
+    if (!id_user) return
+
+    try {
+        const existingUser = await prisma.user.findUnique({
+            where: {
+                id_user,
+            },
+        })
+
+        if (!existingUser) {
+            return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
+        await prisma.user.delete({
+            where: {
+                id_user,
+            },
+        })
+
+        res.json({ message: 'User berhasil dihapus.' })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'User gagal dihapus.' })
+    }
 }
 
 export const getProjectKaryawanOptions = async (req, res) => {
@@ -256,7 +576,7 @@ export const updateProject = async (req, res) => {
         }
 
         if (!pendingStatuses.has(existingProject.status_project)) {
-            return res.status(400).json({ message: 'Project hanya dapat diupdate sebelum di-approve manager.' })
+            return res.status(400).json({ message: 'Project hanya dapat diupdate saat status pending.' })
         }
 
         const validUsers = await prisma.user.findMany({
@@ -323,7 +643,7 @@ export const deleteProject = async (req, res) => {
         }
 
         if (!pendingStatuses.has(existingProject.status_project)) {
-            return res.status(400).json({ message: 'Project hanya dapat dihapus sebelum di-approve manager.' })
+            return res.status(400).json({ message: 'Project hanya dapat dihapus saat status pending.' })
         }
 
         await prisma.project.delete({

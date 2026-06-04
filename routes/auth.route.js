@@ -9,25 +9,21 @@ import {
 } from '../controllers/auth.controller.js';
 import {
   createProject,
+  createUser,
   deleteProject,
+  deleteUser,
+  getUser,
+  getUsers,
   getProjects as getAdminProjects,
   getProjectKaryawanOptions,
   projectCreatePage,
+  registerPage,
+  registerUser,
   updateProject,
-} from '../controllers/admin.controller.js';
-import {
-  createUser,
-  deleteUser,
-  approveProject,
-  finishProject,
-  getProjects,
-  getUser,
-  getUsers,
-  rejectProject,
   updateUser,
   userCreatePage,
   userUpdatePage,
-} from '../controllers/manager.controller.js';
+} from '../controllers/admin.controller.js';
 
 const AuthRouter = express.Router();
 
@@ -38,30 +34,27 @@ AuthRouter.get('/page/login.html', loginPage)
 AuthRouter.post('/api/login', login)
 AuthRouter.post('/api/logout', logout)
 AuthRouter.get('/api/me', me)
-AuthRouter.get('/api/users', getUsers)
-AuthRouter.get('/api/users/:id', getUser)
-AuthRouter.post('/api/users', createUser)
-AuthRouter.put('/api/users/:id', updateUser)
-AuthRouter.delete('/api/users/:id', deleteUser)
+AuthRouter.post('/api/register', registerUser)
+AuthRouter.get('/api/admin/users', getUsers)
+AuthRouter.get('/api/admin/users/:id', getUser)
+AuthRouter.post('/api/admin/users', createUser)
+AuthRouter.put('/api/admin/users/:id', updateUser)
+AuthRouter.delete('/api/admin/users/:id', deleteUser)
 AuthRouter.get('/api/project-karyawan', getProjectKaryawanOptions)
 AuthRouter.post('/api/projects', createProject)
 AuthRouter.get('/api/admin/projects', getAdminProjects)
 AuthRouter.put('/api/admin/projects/:id', updateProject)
 AuthRouter.delete('/api/admin/projects/:id', deleteProject)
-AuthRouter.get('/api/manager/projects', getProjects)
-AuthRouter.put('/api/manager/projects/:id/approve', approveProject)
-AuthRouter.put('/api/manager/projects/:id/reject', rejectProject)
-AuthRouter.put('/api/manager/projects/:id/finish', finishProject)
 
 AuthRouter.get('/page/admin/project-create.html', projectCreatePage)
-AuthRouter.get('/page/manager/user-create.html', userCreatePage)
-AuthRouter.get('/page/manager/user-update.html', userUpdatePage)
-AuthRouter.get('/page/manager/dashboard.html', dashboardPage('manager'))
+AuthRouter.get('/page/admin/user-create.html', userCreatePage)
+AuthRouter.get('/page/admin/user-update.html', userUpdatePage)
+AuthRouter.get('/register.html', registerPage)
+AuthRouter.get('/page/register.html', registerPage)
 AuthRouter.get('/page/admin/dashboard.html', dashboardPage('admin'))
 AuthRouter.get('/page/karyawan/dashboard.html', dashboardPage('karyawan'))
-AuthRouter.get('/manager/dashboard.html', dashboardPage('manager'))
 AuthRouter.get('/admin/dashboard.html', dashboardPage('admin'))
 AuthRouter.get('/karyawan/dashboard.html', dashboardPage('karyawan'))
-AuthRouter.get(/^\/page\/(?!login\.html$).*/, protectedPageFallback)
+AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 
 export default AuthRouter

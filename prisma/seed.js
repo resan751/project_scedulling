@@ -7,22 +7,11 @@ const pbkdf2Async = promisify(pbkdf2);
 const users = [
   {
     nama_user: "Admin",
-    role_user: "manager",
+    role_user: "admin",
     email: "admin123@gmail.com",
     password: "admin123",
   },
-  {
-    nama_user: "aan",
-    role_user: "admin",
-    email: "aangaming@gmail.com",
-    password: "podowingi",
-  },
-  {
-    nama_user: "rio",
-    role_user: "user",
-    email: "riobelly@gmail.com",
-    password: "semarang",
-  },
+  
 ];
 
 async function hashPassword(password) {

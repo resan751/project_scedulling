@@ -12,6 +12,7 @@
     <header>
         <h1>Dashboard Admin</h1>
         <div class="header-actions">
+            <a class="link-btn" href="/page/admin/user-create.html">Create User</a>
             <a class="link-btn" href="/page/admin/project-create.html">Create Project</a>   
             <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
         </div>
@@ -28,13 +29,43 @@
                 <strong id="totalProjectCount">0</strong>
             </article>
             <article class="summary-card">
-                <span>Belum di-Approve</span>
+                <span>Status Pending</span>
                 <strong id="waitingProjectCount">0</strong>
             </article>
             <article class="summary-card">
-                <span>Sudah di-Approve</span>
+                <span>Aktif / Selesai</span>
                 <strong id="approvedProjectCount">0</strong>
             </article>
+        </section>
+
+        <section class="table-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Table User</h2>
+                    <p>Data user yang terdaftar di sistem.</p>
+                </div>
+            </div>
+
+            <p class="message" id="userMessage" aria-live="polite">Memuat data user...</p>
+
+            <div class="table-wrap">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nama Karyawan</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="userTableBody">
+                        <tr>
+                            <td colspan="5">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <section class="table-section">
@@ -143,7 +174,7 @@
         </section>
     </main>
 
-    <script src="/public/js/dashboard-admin.js"></script>
+    <script src="/js/dashboard-admin.js"></script>
 </body>
 
 </html>

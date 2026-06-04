@@ -5,14 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Update User</title>
-    <link rel="stylesheet" href="/public/css/user-update.css">
+    <link rel="stylesheet" href="/css/user-update.css">
 </head>
 
 <body>
     <header>
         <h1>Update User</h1>
         <div class="header-actions">
-            <a class="link-btn" href="/page/manager/dashboard.html">Dashboard</a>
+            <a class="link-btn" href="/page/admin/dashboard.html">Dashboard</a>
             <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
         </div>
     </header>
@@ -28,7 +28,6 @@
             <label for="role">Role</label>
             <select id="role" name="role" required>
                 <option value="">Pilih role</option>
-                <option value="manager">Manager</option>
                 <option value="admin">Admin</option>
                 <option value="karyawan">Karyawan</option>
             </select>
@@ -70,7 +69,7 @@
             }
 
             try {
-                const response = await fetch(`/api/users/${userId}`);
+                const response = await fetch(`/api/admin/users/${userId}`);
                 const result = await readJson(response);
 
                 if (!response.ok) {
@@ -97,7 +96,7 @@
             submitBtn.textContent = 'Mengupdate...';
 
             try {
-                const response = await fetch(`/api/users/${userId}`, {
+                const response = await fetch(`/api/admin/users/${userId}`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
@@ -110,7 +109,7 @@
                     throw new Error(result.message || 'User gagal diupdate.');
                 }
 
-                window.location.href = result.redirectTo || '/page/manager/dashboard.html';
+                window.location.href = result.redirectTo || '/page/admin/dashboard.html';
             } catch (error) {
                 setMessage(error.message, 'error');
             } finally {

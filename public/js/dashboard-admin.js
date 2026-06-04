@@ -5,6 +5,8 @@ const monthSelect = document.getElementById('monthSelect');
 const yearSelect = document.getElementById('yearSelect');
 const prevMonthBtn = document.getElementById('prevMonthBtn');
 const nextMonthBtn = document.getElementById('nextMonthBtn');
+const userTableBody = document.getElementById('userTableBody');
+const userMessage = document.getElementById('userMessage');
 const projectTableBody = document.getElementById('projectTableBody');
 const projectMessage = document.getElementById('projectMessage');
 const totalProjectCount = document.getElementById('totalProjectCount');
@@ -167,6 +169,51 @@ function renderEmployeeToggle(project, employeeCell) {
     employeeCell.appendChild(details);
 }
 
+function renderUsers(users) {
+    if (!users.length) {
+        userTableBody.innerHTML = '<tr><td colspan="5">Belum ada data user.</td></tr>';
+        return;
+    }
+
+    userTableBody.innerHTML = '';
+
+    users.forEach((user) => {
+        const row = document.createElement('tr');
+        const idCell = document.createElement('td');
+        const nameCell = document.createElement('td');
+        const emailCell = document.createElement('td');
+        const roleCell = document.createElement('td');
+        const actionCell = document.createElement('td');
+        const roleBadge = document.createElement('span');
+        const rowActions = document.createElement('div');
+        const updateLink = document.createElement('a');
+        const deleteButton = document.createElement('button');
+
+        idCell.textContent = user.id_user;
+        nameCell.textContent = user.nama_user;
+        emailCell.textContent = user.email;
+        roleBadge.className = 'role-badge';
+        roleBadge.textContent = user.role;
+        roleCell.appendChild(roleBadge);
+
+        rowActions.className = 'row-actions';
+        updateLink.className = 'action-btn update';
+        updateLink.href = `/page/admin/user-update.html?id=${user.id_user}`;
+        updateLink.textContent = 'Update';
+
+        deleteButton.className = 'action-btn delete user-delete-btn';
+        deleteButton.type = 'button';
+        deleteButton.dataset.id = user.id_user;
+        deleteButton.dataset.name = user.nama_user;
+        deleteButton.textContent = 'Delete';
+
+        rowActions.append(updateLink, deleteButton);
+        actionCell.appendChild(rowActions);
+        row.append(idCell, nameCell, emailCell, roleCell, actionCell);
+        userTableBody.appendChild(row);
+    });
+}
+
 function openEditProjectModal(project) {
     editProjectId.value = project.id_project;
     editNamaProject.value = project.nama_project;
@@ -296,6 +343,25 @@ async function loadProjects(successMessage = '', successType = '') {
     } catch (error) {
         projectTableBody.innerHTML = '<tr><td colspan="7">Data gagal dimuat.</td></tr>';
         setMessage(projectMessage, error.message, 'error');
+    }
+}
+
+async function loadUsers(successMessage = '', successType = '') {
+    setMessage(userMessage, 'Memuat data user...');
+
+    try {
+        const response = await fetch('/api/admin/users');
+        const result = await readJson(response);
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Data user gagal dimuat.');
+        }
+
+        renderUsers(result.users || []);
+        setMessage(userMessage, successMessage, successType);
+    } catch (error) {
+        userTableBody.innerHTML = '<tr><td colspan="5">Data gagal dimuat.</td></tr>';
+        setMessage(userMessage, error.message, 'error');
     }
 }
 
@@ -429,6 +495,42 @@ if (calendarDays && calendarCurrent && monthSelect && yearSelect && prevMonthBtn
 
 if (projectTableBody && projectMessage) {
     loadKaryawanOptions().then(() => loadProjects());
+}
+
+if (userTableBody && userMessage) {
+    loadUsers();
+
+    userTableBody.addEventListener('click', async (event) => {
+        const deleteButton = event.target.closest('.user-delete-btn');
+        if (!deleteButton) return;
+
+        const id = deleteButton.dataset.id;
+        const name = deleteButton.dataset.name;
+        const confirmed = confirm(`Hapus data user "${name}"?`);
+        if (!confirmed) return;
+
+        deleteButton.disabled = true;
+        deleteButton.textContent = 'Menghapus...';
+
+        try {
+            const response = await fetch(`/api/admin/users/${id}`, {
+                method: 'DELETE',
+            });
+            const result = await readJson(response);
+
+            if (!response.ok) {
+                throw new Error(result.message || 'User gagal dihapus.');
+            }
+
+            await loadUsers(result.message || 'User berhasil dihapus.', 'success');
+            await loadKaryawanOptions();
+            await loadProjects();
+        } catch (error) {
+            setMessage(userMessage, error.message, 'error');
+            deleteButton.disabled = false;
+            deleteButton.textContent = 'Delete';
+        }
+    });
 }
 
 if (editProjectForm) {

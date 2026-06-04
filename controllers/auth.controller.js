@@ -9,13 +9,13 @@ const __dirname = path.dirname(__filename)
 const pbkdf2Async = promisify(pbkdf2)
 const sessionSecret = process.env.SESSION_SECRET || 'project-scedulling-session-secret'
 const roleRedirects = {
-    manager: '/page/manager/dashboard.html',
     admin: '/page/admin/dashboard.html',
     karyawan: '/page/karyawan/dashboard.html',
 }
 
 export function normalizeRole(role) {
     const normalized = String(role || '').trim().toLowerCase()
+    if (normalized === 'manager') return 'admin'
     return normalized === 'user' ? 'karyawan' : normalized
 }
 
