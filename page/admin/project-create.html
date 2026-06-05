@@ -22,10 +22,13 @@
             <label for="nama_project">Nama Project</label>
             <input type="text" id="nama_project" name="nama_project" required>
 
-            <label>Nama Karyawan</label>
-            <div class="employee-list" id="employeeList" aria-live="polite">
-                <p class="empty-text">Memuat data karyawan...</p>
+            <label for="roleProjectInput0">Role Project</label>
+            <div class="role-project-list" id="roleProjectList">
+                <div class="role-project-row">
+                    <input type="text" id="roleProjectInput0" name="role_project" placeholder="Contoh: frontend" required>
+                </div>
             </div>
+            <button class="secondary-btn" id="addRoleProjectBtn" type="button">Tambah Role Project</button>
 
             <label for="tgl_mulai">Tanggal Mulai</label>
             <input type="date" id="tgl_mulai" name="tgl_mulai" required>

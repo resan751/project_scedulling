@@ -62,6 +62,35 @@ function getProjectId(req, res) {
     return id_project
 }
 
+function parseStringList(value) {
+    const values = Array.isArray(value) ? value : [value]
+
+    return [...new Set(values.map((item) => String(item || '').trim()).filter(Boolean))]
+}
+
+function parseProjectRoles(value) {
+    const roles = parseStringList(value)
+
+    return roles.map((role) => role.slice(0, 100))
+}
+
+function stringifyProjectRoles(roles) {
+    const roleProject = JSON.stringify(roles)
+
+    return roleProject.length <= 255 ? roleProject : null
+}
+
+function validateRoleProjectLength(roles, res) {
+    const roleProject = stringifyProjectRoles(roles)
+    if (!roleProject) {
+        res.status(400).json({ message: 'Role project terlalu panjang untuk disimpan.' })
+        return null
+    }
+
+    return roleProject
+}
+
+
 function getApprovedStatus(tgl_mulai) {
     const today = new Date()
     const startDate = new Date(tgl_mulai)
@@ -223,19 +252,19 @@ export const createUser = async (req, res) => {
         const email = String(req.body.email || '').trim()
         const password = String(req.body.password || '')
         const role = normalizeRole(req.body.role)
-        const validRoles = new Set(['admin', 'karyawan'])
+        const validRoles = new Set(['admin', 'freelance'])
 
         if (!nama_user || !email || !password || !role) {
             return res.status(400).json({ message: 'Semua field wajib diisi.' })
         }
 
         if (!validRoles.has(role)) {
-            return res.status(400).json({ message: 'Role harus admin atau karyawan.' })
+            return res.status(400).json({ message: 'Role harus admin atau freelance.' })
         }
 
         const existingUser = await ensureUniqueUser(nama_user, email)
         if (existingUser) {
-            return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+            return res.status(409).json({ message: 'Nama user atau email sudah digunakan.' })
         }
 
         const user = await prisma.user.create({
@@ -276,19 +305,19 @@ export const registerUser = async (req, res) => {
         const password = String(req.body.password || '')
 
         if (!nama_user || !email || !password) {
-            return res.status(400).json({ message: 'Nama karyawan, email, dan password wajib diisi.' })
+            return res.status(400).json({ message: 'Nama user, email, dan password wajib diisi.' })
         }
 
         const existingUser = await ensureUniqueUser(nama_user, email)
         if (existingUser) {
-            return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+            return res.status(409).json({ message: 'Nama user atau email sudah digunakan.' })
         }
 
         const user = await prisma.user.create({
             data: {
                 nama_user,
                 email,
-                role_user: 'karyawan',
+                role_user: 'freelance',
                 password: await hashPassword(password),
             },
             select: {
@@ -326,14 +355,14 @@ export const updateUser = async (req, res) => {
         const email = String(req.body.email || '').trim()
         const password = String(req.body.password || '')
         const role = normalizeRole(req.body.role)
-        const validRoles = new Set(['admin', 'karyawan'])
+        const validRoles = new Set(['admin', 'freelance'])
 
         if (!nama_user || !email || !role) {
-            return res.status(400).json({ message: 'Nama karyawan, email, dan role wajib diisi.' })
+            return res.status(400).json({ message: 'Nama user, email, dan role wajib diisi.' })
         }
 
         if (!validRoles.has(role)) {
-            return res.status(400).json({ message: 'Role harus admin atau karyawan.' })
+            return res.status(400).json({ message: 'Role harus admin atau freelance.' })
         }
 
         const existingUser = await prisma.user.findUnique({
@@ -348,7 +377,7 @@ export const updateUser = async (req, res) => {
 
         const duplicateUser = await ensureUniqueUser(nama_user, email, id_user)
         if (duplicateUser) {
-            return res.status(409).json({ message: 'Nama karyawan atau email sudah digunakan.' })
+            return res.status(409).json({ message: 'Nama user atau email sudah digunakan.' })
         }
 
         const data = {
@@ -426,7 +455,9 @@ export const getProjectKaryawanOptions = async (req, res) => {
     try {
         const users = await prisma.user.findMany({
             where: {
-                role_user: 'karyawan',
+                role_user: {
+                    in: ['freelance', 'karyawan'],
+                },
             },
             orderBy: {
                 nama_user: 'asc',
@@ -440,7 +471,7 @@ export const getProjectKaryawanOptions = async (req, res) => {
         res.json({ users })
     } catch (error) {
         console.error(error)
-        res.status(500).json({ message: 'Data karyawan gagal dimuat.' })
+        res.status(500).json({ message: 'Data freelance gagal dimuat.' })
     }
 }
 
@@ -471,54 +502,32 @@ export const getProjects = async (req, res) => {
 }
 
 export const createProject = async (req, res) => {
-    if (!requireAdminApi(req, res)) return
+    const session = requireAdminApi(req, res)
+    if (!session) return
 
     try {
         const nama_project = String(req.body.nama_project || '').trim()
-        const namaKaryawanList = Array.isArray(req.body.nama_user)
-            ? req.body.nama_user.map((nama) => String(nama || '').trim()).filter(Boolean)
-            : [String(req.body.nama_user || '').trim()].filter(Boolean)
+        const roleProjectList = parseProjectRoles(req.body.role_project)
         const tgl_mulai = parseProjectDate(req.body.tgl_mulai)
         const deadline = parseProjectDate(req.body.deadline)
         const deskripsi = String(req.body.deskripsi || '').trim()
-        const uniqueNamaKaryawan = [...new Set(namaKaryawanList)]
 
-        if (!nama_project || uniqueNamaKaryawan.length === 0 || !tgl_mulai || !deadline || !deskripsi) {
+        if (!nama_project || roleProjectList.length === 0 || !tgl_mulai || !deadline || !deskripsi) {
             return res.status(400).json({ message: 'Semua field wajib diisi.' })
-        }
-
-        if (uniqueNamaKaryawan.length > 1) {
-            return res.status(400).json({ message: 'Project hanya dapat memiliki satu nama user.' })
         }
 
         if (deadline < tgl_mulai) {
             return res.status(400).json({ message: 'Deadline tidak boleh lebih awal dari tanggal mulai.' })
         }
 
-        const validUsers = await prisma.user.findMany({
-            where: {
-                nama_user: {
-                    in: uniqueNamaKaryawan,
-                },
-                role_user: 'karyawan',
-            },
-            select: {
-                nama_user: true,
-                role_user: true,
-            },
-        })
-        const validNames = new Set(validUsers.map((user) => user.nama_user))
-        const invalidNames = uniqueNamaKaryawan.filter((nama) => !validNames.has(nama))
-
-        if (invalidNames.length > 0) {
-            return res.status(400).json({ message: 'Pilihan karyawan tidak valid.' })
-        }
+        const roleProject = validateRoleProjectLength(roleProjectList, res)
+        if (!roleProject) return
 
         const project = await prisma.project.create({
             data: {
                 nama_project,
-                nama_user: validUsers[0].nama_user,
-                role_project: validUsers[0].role_user,
+                nama_user: session.nama_user,
+                role_project: roleProject,
                 tgl_mulai,
                 deadline,
                 status_project: 'pending',
@@ -538,32 +547,29 @@ export const createProject = async (req, res) => {
 }
 
 export const updateProject = async (req, res) => {
-    if (!requireAdminApi(req, res)) return
+    const session = requireAdminApi(req, res)
+    if (!session) return
 
     const id_project = getProjectId(req, res)
     if (!id_project) return
 
     try {
         const nama_project = String(req.body.nama_project || '').trim()
-        const namaKaryawanList = Array.isArray(req.body.nama_user)
-            ? req.body.nama_user.map((nama) => String(nama || '').trim()).filter(Boolean)
-            : [String(req.body.nama_user || '').trim()].filter(Boolean)
+        const roleProjectList = parseProjectRoles(req.body.role_project)
         const tgl_mulai = parseProjectDate(req.body.tgl_mulai)
         const deadline = parseProjectDate(req.body.deadline)
         const deskripsi = String(req.body.deskripsi || '').trim()
-        const uniqueNamaKaryawan = [...new Set(namaKaryawanList)]
 
-        if (!nama_project || uniqueNamaKaryawan.length === 0 || !tgl_mulai || !deadline || !deskripsi) {
+        if (!nama_project || roleProjectList.length === 0 || !tgl_mulai || !deadline || !deskripsi) {
             return res.status(400).json({ message: 'Semua field wajib diisi.' })
-        }
-
-        if (uniqueNamaKaryawan.length > 1) {
-            return res.status(400).json({ message: 'Project hanya dapat memiliki satu nama user.' })
         }
 
         if (deadline < tgl_mulai) {
             return res.status(400).json({ message: 'Deadline tidak boleh lebih awal dari tanggal mulai.' })
         }
+
+        const roleProject = validateRoleProjectLength(roleProjectList, res)
+        if (!roleProject) return
 
         const existingProject = await prisma.project.findUnique({
             where: {
@@ -579,29 +585,10 @@ export const updateProject = async (req, res) => {
             return res.status(400).json({ message: 'Project hanya dapat diupdate saat status pending.' })
         }
 
-        const validUsers = await prisma.user.findMany({
-            where: {
-                nama_user: {
-                    in: uniqueNamaKaryawan,
-                },
-                role_user: 'karyawan',
-            },
-            select: {
-                nama_user: true,
-                role_user: true,
-            },
-        })
-        const validNames = new Set(validUsers.map((user) => user.nama_user))
-        const invalidNames = uniqueNamaKaryawan.filter((nama) => !validNames.has(nama))
-
-        if (invalidNames.length > 0) {
-            return res.status(400).json({ message: 'Pilihan karyawan tidak valid.' })
-        }
-
         const data = {
             nama_project,
-            nama_user: validUsers[0].nama_user,
-            role_project: validUsers[0].role_user,
+            nama_user: session.nama_user,
+            role_project: roleProject,
             tgl_mulai,
             deadline,
             deskripsi_project: deskripsi,

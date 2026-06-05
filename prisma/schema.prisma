@@ -18,7 +18,7 @@ model project {
   id_project        Int      @id @default(autoincrement())
   nama_project      String   @db.VarChar(100)
   nama_user         String   @db.VarChar(100)
-  role_project      String   @db.VarChar(100)
+  role_project      String   @db.VarChar(255)
   tgl_mulai         DateTime @db.DateTime
   deadline          DateTime @db.DateTime
   status_project    String   @db.VarChar(100)
@@ -32,7 +32,7 @@ model laporan {
   id_laporan         Int    @id @default(autoincrement())
   nama_project       String @db.VarChar(100)
   nama_user          String @db.VarChar(100)
-  role_project       String @db.VarChar(100)
+  role_project       String @db.VarChar(255)
   bukti              String @db.VarChar(255)
   jenis_laporan      String @db.VarChar(100)
   deskripsi_laporan  String @db.VarChar(255)

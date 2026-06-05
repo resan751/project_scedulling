@@ -10,13 +10,14 @@ const pbkdf2Async = promisify(pbkdf2)
 const sessionSecret = process.env.SESSION_SECRET || 'project-scedulling-session-secret'
 const roleRedirects = {
     admin: '/page/admin/dashboard.html',
-    karyawan: '/page/karyawan/dashboard.html',
+    freelance: '/page/karyawan/dashboard.html',
 }
 
 export function normalizeRole(role) {
     const normalized = String(role || '').trim().toLowerCase()
     if (normalized === 'manager') return 'admin'
-    return normalized === 'user' ? 'karyawan' : normalized
+    if (normalized === 'user' || normalized === 'karyawan') return 'freelance'
+    return normalized
 }
 
 function parseCookies(cookieHeader = '') {
@@ -103,7 +104,7 @@ export const login = async (req, res) => {
         const { nama_user, password } = req.body
 
         if (!nama_user || !password) {
-            return res.status(400).json({ message: 'Nama karyawan dan password wajib diisi.' })
+            return res.status(400).json({ message: 'Nama user dan password wajib diisi.' })
         }
 
         const user = await prisma.user.findFirst({
@@ -113,7 +114,7 @@ export const login = async (req, res) => {
         })
 
         if (!user || !(await verifyPassword(password, user.password))) {
-            return res.status(401).json({ message: 'Nama karyawan atau password salah.' })
+            return res.status(401).json({ message: 'Nama user atau password salah.' })
         }
 
         const role = normalizeRole(user.role_user)

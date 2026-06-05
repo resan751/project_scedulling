@@ -12,7 +12,6 @@
     <header>
         <h1>Dashboard Admin</h1>
         <div class="header-actions">
-            <a class="link-btn" href="/page/admin/user-create.html">Create User</a>
             <a class="link-btn" href="/page/admin/project-create.html">Create Project</a>   
             <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
         </div>
@@ -53,7 +52,7 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nama Karyawan</th>
+                            <th>Nama User</th>
                             <th>Email</th>
                             <th>Role</th>
                             <th>Aksi</th>
@@ -84,7 +83,8 @@
                         <tr>
                             <th>ID</th>
                             <th>Project</th>
-                            <th>Karyawan</th>
+                            <th>Dibuat Oleh</th>
+                            <th>Role Project</th>
                             <th>Tanggal Mulai</th>
                             <th>Deadline</th>
                             <th>Status</th>
@@ -93,7 +93,7 @@
                     </thead>
                     <tbody id="projectTableBody">
                         <tr>
-                            <td colspan="7">Memuat data...</td>
+                            <td colspan="8">Memuat data...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -115,10 +115,13 @@
                 <label for="editNamaProject">Nama Project</label>
                 <input type="text" id="editNamaProject" name="nama_project" required>
 
-                <label>Nama Karyawan</label>
+                <label>Role Project</label>
                 <div class="employee-list" id="editEmployeeList" aria-live="polite">
-                    <p class="empty-text">Memuat data karyawan...</p>
+                    <div class="role-project-row">
+                        <input type="text" name="role_project" placeholder="Contoh: frontend" required>
+                    </div>
                 </div>
+                <button class="secondary-btn" id="addEditRoleProjectBtn" type="button">Tambah Role Project</button>
 
                 <div class="form-grid">
                     <div>

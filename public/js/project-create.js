@@ -1,5 +1,6 @@
 const createProjectForm = document.getElementById('createProjectForm');
-const employeeList = document.getElementById('employeeList');
+const roleProjectList = document.getElementById('roleProjectList');
+const addRoleProjectBtn = document.getElementById('addRoleProjectBtn');
 const submitBtn = document.getElementById('submitBtn');
 const formMessage = document.getElementById('formMessage');
 const logoutBtn = document.getElementById('logoutBtn');
@@ -9,45 +10,41 @@ function setMessage(message, type = '') {
     formMessage.className = `message ${type}`.trim();
 }
 
-async function loadKaryawanOptions() {
-    try {
-        const response = await fetch('/api/project-karyawan');
-        const result = await response.json();
+function createRoleProjectInput(value = '') {
+    const row = document.createElement('div');
+    const input = document.createElement('input');
+    const removeButton = document.createElement('button');
 
-        if (!response.ok) {
-            throw new Error(result.message || 'Data karyawan gagal dimuat.');
-        }
+    row.className = 'role-project-row';
+    input.type = 'text';
+    input.name = 'role_project';
+    input.placeholder = 'Contoh: backend';
+    input.required = true;
+    input.value = value;
 
-        employeeList.innerHTML = '';
+    removeButton.className = 'icon-btn';
+    removeButton.type = 'button';
+    removeButton.textContent = 'x';
+    removeButton.setAttribute('aria-label', 'Hapus role project');
+    removeButton.addEventListener('click', () => {
+        row.remove();
+    });
 
-        if (!result.users.length) {
-            const emptyText = document.createElement('p');
-            emptyText.className = 'empty-text';
-            emptyText.textContent = 'Belum ada user dengan role karyawan';
-            employeeList.appendChild(emptyText);
-            submitBtn.disabled = true;
-            return;
-        }
+    row.append(input, removeButton);
+    roleProjectList.appendChild(row);
+    input.focus();
+}
 
-        result.users.forEach((user) => {
-            const label = document.createElement('label');
-            const checkbox = document.createElement('input');
-            const name = document.createElement('span');
+function getRoleProjectValues(formData) {
+    return [...new Set(formData.getAll('role_project')
+        .map((role) => String(role || '').trim())
+        .filter(Boolean))];
+}
 
-            label.className = 'employee-option';
-            checkbox.type = 'checkbox';
-            checkbox.name = 'nama_user';
-            checkbox.value = user.nama_user;
-            name.textContent = user.nama_user;
-
-            label.append(checkbox, name);
-            employeeList.appendChild(label);
-        });
-    } catch (error) {
-        employeeList.innerHTML = '';
-        submitBtn.disabled = true;
-        setMessage(error.message, 'error');
-    }
+if (addRoleProjectBtn) {
+    addRoleProjectBtn.addEventListener('click', () => {
+        createRoleProjectInput();
+    });
 }
 
 createProjectForm.addEventListener('submit', async (event) => {
@@ -55,12 +52,12 @@ createProjectForm.addEventListener('submit', async (event) => {
 
     const formData = new FormData(createProjectForm);
     const payload = Object.fromEntries(formData.entries());
-    payload.nama_user = formData.getAll('nama_user');
+    payload.role_project = getRoleProjectValues(formData);
 
     setMessage('');
 
-    if (!payload.nama_user.length) {
-        setMessage('Pilih minimal satu karyawan.', 'error');
+    if (!payload.role_project.length) {
+        setMessage('Isi minimal satu role project.', 'error');
         return;
     }
 
@@ -96,5 +93,3 @@ if (logoutBtn) {
         window.location.href = '/login.html';
     });
 }
-
-loadKaryawanOptions();

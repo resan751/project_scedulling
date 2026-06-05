@@ -52,9 +52,9 @@ AuthRouter.get('/page/admin/user-update.html', userUpdatePage)
 AuthRouter.get('/register.html', registerPage)
 AuthRouter.get('/page/register.html', registerPage)
 AuthRouter.get('/page/admin/dashboard.html', dashboardPage('admin'))
-AuthRouter.get('/page/karyawan/dashboard.html', dashboardPage('karyawan'))
+AuthRouter.get('/page/karyawan/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/admin/dashboard.html', dashboardPage('admin'))
-AuthRouter.get('/karyawan/dashboard.html', dashboardPage('karyawan'))
+AuthRouter.get('/karyawan/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 
 export default AuthRouter

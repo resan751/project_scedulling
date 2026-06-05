@@ -20,6 +20,7 @@ const saveEditBtn = document.getElementById('saveEditBtn');
 const editProjectId = document.getElementById('editProjectId');
 const editNamaProject = document.getElementById('editNamaProject');
 const editEmployeeList = document.getElementById('editEmployeeList');
+const addEditRoleProjectBtn = document.getElementById('addEditRoleProjectBtn');
 const editTanggalMulai = document.getElementById('editTanggalMulai');
 const editDeadline = document.getElementById('editDeadline');
 const editDeskripsi = document.getElementById('editDeskripsi');
@@ -45,7 +46,6 @@ let selectedDate = new Date(today.getFullYear(), today.getMonth(), today.getDate
 let visibleMonth = today.getMonth();
 let visibleYear = today.getFullYear();
 let projectsData = [];
-let employeeOptions = [];
 
 async function readJson(response) {
     const contentType = response.headers.get('content-type') || '';
@@ -102,7 +102,7 @@ function renderProjectSummary(projects) {
     approvedProjectCount.textContent = approvedProjects;
 }
 
-function getEmployeeNames(value) {
+function getListValue(value) {
     if (Array.isArray(value)) {
         return value;
     }
@@ -119,47 +119,54 @@ function getEmployeeNames(value) {
     }
 }
 
-function buildEmployeeCheckboxes(selectedNames = []) {
-    editEmployeeList.innerHTML = '';
+function createRoleProjectInput(container, value = '', removable = true) {
+    const row = document.createElement('div');
+    const input = document.createElement('input');
 
-    if (!employeeOptions.length) {
-        const emptyText = document.createElement('p');
-        emptyText.className = 'empty-text';
-        emptyText.textContent = 'Belum ada user dengan role karyawan';
-        editEmployeeList.appendChild(emptyText);
-        return;
+    row.className = 'role-project-row';
+    input.type = 'text';
+    input.name = 'role_project';
+    input.placeholder = 'Contoh: backend';
+    input.required = true;
+    input.value = value;
+    row.appendChild(input);
+
+    if (removable) {
+        const removeButton = document.createElement('button');
+        removeButton.className = 'icon-btn';
+        removeButton.type = 'button';
+        removeButton.textContent = 'x';
+        removeButton.setAttribute('aria-label', 'Hapus role project');
+        removeButton.addEventListener('click', () => {
+            row.remove();
+        });
+        row.appendChild(removeButton);
     }
 
-    const selectedNameSet = new Set(selectedNames);
+    container.appendChild(row);
+    return input;
+}
 
-    employeeOptions.forEach((user) => {
-        const label = document.createElement('label');
-        const checkbox = document.createElement('input');
-        const name = document.createElement('span');
+function buildRoleProjectInputs(selectedRoles = []) {
+    const roles = selectedRoles.length ? selectedRoles : [''];
 
-        label.className = 'employee-option';
-        checkbox.type = 'checkbox';
-        checkbox.name = 'nama_user';
-        checkbox.value = user.nama_user;
-        checkbox.checked = selectedNameSet.has(user.nama_user);
-        name.textContent = user.nama_user;
-
-        label.append(checkbox, name);
-        editEmployeeList.appendChild(label);
+    editEmployeeList.innerHTML = '';
+    roles.forEach((role, index) => {
+        createRoleProjectInput(editEmployeeList, role, index > 0);
     });
 }
 
-function renderEmployeeToggle(project, employeeCell) {
-    const employeeNames = getEmployeeNames(project.nama_user);
+function renderRoleProjectToggle(project, employeeCell) {
+    const roleNames = getListValue(project.role_project);
     const details = document.createElement('details');
     const summary = document.createElement('summary');
     const list = document.createElement('ul');
 
     details.className = 'employee-details';
-    summary.textContent = `${employeeNames.length} karyawan`;
+    summary.textContent = `${roleNames.length} role`;
     list.className = 'employee-name-list';
 
-    employeeNames.forEach((name) => {
+    roleNames.forEach((name) => {
         const item = document.createElement('li');
         item.textContent = name;
         list.appendChild(item);
@@ -220,7 +227,7 @@ function openEditProjectModal(project) {
     editTanggalMulai.value = formatDateInput(project.tgl_mulai);
     editDeadline.value = formatDateInput(project.deadline);
     editDeskripsi.value = project.deskripsi_project || '';
-    buildEmployeeCheckboxes(getEmployeeNames(project.nama_user));
+    buildRoleProjectInputs(getListValue(project.role_project));
     setMessage(editProjectMessage, '');
     editProjectModal.hidden = false;
     editNamaProject.focus();
@@ -258,7 +265,7 @@ async function deleteProject(project) {
 
 function renderProjects(projects) {
     if (!projects.length) {
-        projectTableBody.innerHTML = '<tr><td colspan="7">Belum ada data project.</td></tr>';
+        projectTableBody.innerHTML = '<tr><td colspan="8">Belum ada data project.</td></tr>';
         return;
     }
 
@@ -268,6 +275,7 @@ function renderProjects(projects) {
         const row = document.createElement('tr');
         const idCell = document.createElement('td');
         const projectCell = document.createElement('td');
+        const creatorCell = document.createElement('td');
         const employeeCell = document.createElement('td');
         const startCell = document.createElement('td');
         const deadlineCell = document.createElement('td');
@@ -279,7 +287,8 @@ function renderProjects(projects) {
 
         idCell.textContent = project.id_project;
         projectCell.textContent = project.nama_project;
-        renderEmployeeToggle(project, employeeCell);
+        creatorCell.textContent = project.nama_user;
+        renderRoleProjectToggle(project, employeeCell);
         startCell.textContent = formatDate(project.tgl_mulai);
         deadlineCell.textContent = formatDate(project.deadline);
         statusBadge.className = `status-badge ${getStatusClass(project.status_project)}`.trim();
@@ -304,25 +313,9 @@ function renderProjects(projects) {
             actionCell.appendChild(text);
         }
 
-        row.append(idCell, projectCell, employeeCell, startCell, deadlineCell, statusCell, actionCell);
+        row.append(idCell, projectCell, creatorCell, employeeCell, startCell, deadlineCell, statusCell, actionCell);
         projectTableBody.appendChild(row);
     });
-}
-
-async function loadKaryawanOptions() {
-    try {
-        const response = await fetch('/api/project-karyawan');
-        const result = await readJson(response);
-
-        if (!response.ok) {
-            throw new Error(result.message || 'Data karyawan gagal dimuat.');
-        }
-
-        employeeOptions = result.users || [];
-    } catch (error) {
-        employeeOptions = [];
-        setMessage(projectMessage, error.message, 'error');
-    }
 }
 
 async function loadProjects(successMessage = '', successType = '') {
@@ -341,7 +334,7 @@ async function loadProjects(successMessage = '', successType = '') {
         renderProjects(projectsData);
         setMessage(projectMessage, successMessage, successType);
     } catch (error) {
-        projectTableBody.innerHTML = '<tr><td colspan="7">Data gagal dimuat.</td></tr>';
+        projectTableBody.innerHTML = '<tr><td colspan="8">Data gagal dimuat.</td></tr>';
         setMessage(projectMessage, error.message, 'error');
     }
 }
@@ -494,7 +487,7 @@ if (calendarDays && calendarCurrent && monthSelect && yearSelect && prevMonthBtn
 }
 
 if (projectTableBody && projectMessage) {
-    loadKaryawanOptions().then(() => loadProjects());
+    loadProjects();
 }
 
 if (userTableBody && userMessage) {
@@ -523,7 +516,6 @@ if (userTableBody && userMessage) {
             }
 
             await loadUsers(result.message || 'User berhasil dihapus.', 'success');
-            await loadKaryawanOptions();
             await loadProjects();
         } catch (error) {
             setMessage(userMessage, error.message, 'error');
@@ -539,10 +531,12 @@ if (editProjectForm) {
 
         const formData = new FormData(editProjectForm);
         const payload = Object.fromEntries(formData.entries());
-        payload.nama_user = formData.getAll('nama_user');
+        payload.role_project = [...new Set(formData.getAll('role_project')
+            .map((role) => String(role || '').trim())
+            .filter(Boolean))];
 
-        if (!payload.nama_user.length) {
-            setMessage(editProjectMessage, 'Pilih minimal satu karyawan.', 'error');
+        if (!payload.role_project.length) {
+            setMessage(editProjectMessage, 'Isi minimal satu role project.', 'error');
             return;
         }
 
@@ -572,6 +566,12 @@ if (editProjectForm) {
             saveEditBtn.disabled = false;
             saveEditBtn.textContent = 'Simpan';
         }
+    });
+}
+
+if (addEditRoleProjectBtn) {
+    addEditRoleProjectBtn.addEventListener('click', () => {
+        createRoleProjectInput(editEmployeeList).focus();
     });
 }
 
