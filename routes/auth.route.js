@@ -24,6 +24,12 @@ import {
   userCreatePage,
   userUpdatePage,
 } from '../controllers/admin.controller.js';
+import {
+  getProjects as getFreelanceProjects,
+  getProject as getFreelanceProject,
+  registerProject,
+  detailProjectPage,
+} from '../controllers/freelance.controller.js';
 
 const AuthRouter = express.Router();
 
@@ -45,6 +51,9 @@ AuthRouter.post('/api/projects', createProject)
 AuthRouter.get('/api/admin/projects', getAdminProjects)
 AuthRouter.put('/api/admin/projects/:id', updateProject)
 AuthRouter.delete('/api/admin/projects/:id', deleteProject)
+AuthRouter.get('/api/freelance/projects', getFreelanceProjects)
+AuthRouter.get('/api/freelance/projects/:id', getFreelanceProject)
+AuthRouter.post('/api/freelance/projects/:id/register', registerProject)
 
 AuthRouter.get('/page/admin/project-create.html', projectCreatePage)
 AuthRouter.get('/page/admin/user-create.html', userCreatePage)
@@ -55,6 +64,7 @@ AuthRouter.get('/page/admin/dashboard.html', dashboardPage('admin'))
 AuthRouter.get('/page/karyawan/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/admin/dashboard.html', dashboardPage('admin'))
 AuthRouter.get('/karyawan/dashboard.html', dashboardPage('freelance'))
+AuthRouter.get('/page/freelance/detail-project.html', detailProjectPage)
 AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 
 export default AuthRouter

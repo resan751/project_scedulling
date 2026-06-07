@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Freelance</title>
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-brand">
+            <div class="brand-icon">F</div>
+            <h1 class="header-title">Dashboard Freelance</h1>
+        </div>
+        <div class="header-actions">
+            <span class="user-welcome" id="userWelcome">Memuat...</span>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="dashboard-intro">
+            <h2>Daftar Pekerjaan Project</h2>
+            <p>Temukan project baru dan kelola peran Anda dalam team project.</p>
+        </section>
+
+        <section class="summary-grid" aria-label="Ringkasan project">
+            <article class="summary-card yellow">
+                <span>Project Tersedia</span>
+                <strong id="availableProjectCount">0</strong>
+            </article>
+            <article class="summary-card blue">
+                <span>Project Diikuti</span>
+                <strong id="registeredProjectCount">0</strong>
+            </article>
+        </section>
+
+        <section class="table-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Project Tersedia</h2>
+                    <p>Project yang membutuhkan freelance untuk peran tertentu.</p>
+                </div>
+            </div>
+
+            <p class="message" id="availableMessage" aria-live="polite">Memuat data project...</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Project</th>
+                            <th>Role Tersedia</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Deadline</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="availableTableBody">
+                        <tr>
+                            <td colspan="6">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section class="table-section">
+            <div class="section-heading">
+                <div>
+                    <h2>Project Saya</h2>
+                    <p>Daftar project yang Anda ikuti dan status pelaksanaannya.</p>
+                </div>
+            </div>
+
+            <p class="message" id="registeredMessage" aria-live="polite">Memuat data project...</p>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Project</th>
+                            <th>Role Anda</th>
+                            <th>Tanggal Mulai</th>
+                            <th>Deadline</th>
+                            <th>Status Project</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registeredTableBody">
+                        <tr>
+                            <td colspan="6">Memuat data...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <script src="/js/dashboard-freelance.js"></script>
+</body>
+
+</html>

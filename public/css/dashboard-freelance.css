@@ -137,13 +137,18 @@ h1 {
    ========================================= */
 main {
     flex: 1;
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 28px;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px 20px;
+    flex-direction: column;
+    gap: 32px;
+    align-items: stretch;
 }
 
 .form-card {
+    align-self: center;
     width: 100%;
     max-width: 20cm; /* Ukuran proporsional ~20cm untuk Desktop/Tablet */
     background: var(--bg-card);
@@ -302,6 +307,237 @@ textarea {
     background: rgba(185, 28, 28, 0.1);
     border: 1px solid rgba(185, 28, 28, 0.3);
 }
+
+/* =========================================
+   8.5 ADDITIONAL FREELANCE DASHBOARD STYLES
+   ========================================= */
+.header-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 36px;
+    height: 36px;
+    background-color: var(--accent-primary);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-weight: bold;
+    box-shadow: 0 4px 12px rgba(217, 119, 6, 0.3);
+}
+
+.header-title {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+}
+
+.user-welcome {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    margin-right: 10px;
+}
+
+.dashboard-intro {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.dashboard-intro h2 {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.dashboard-intro p {
+    color: var(--text-secondary);
+    font-size: 15px;
+}
+
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.summary-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.2s;
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+}
+
+.summary-card.blue {
+    border-top: 4px solid #3b82f6;
+}
+
+.summary-card.yellow {
+    border-top: 4px solid var(--accent-primary);
+}
+
+.summary-card span {
+    color: var(--text-secondary);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-card strong {
+    font-size: 32px;
+    font-weight: 800;
+    margin-top: 6px;
+    color: var(--text-primary);
+}
+
+.table-section {
+    width: 100%;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: var(--shadow-md);
+    margin-bottom: 32px;
+}
+
+.section-heading {
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.section-heading p {
+    color: var(--text-secondary);
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.table-wrap {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    vertical-align: middle;
+    font-size: 14px;
+}
+
+th {
+    background: var(--bg-primary);
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+tr:last-child td {
+    border-bottom: 0;
+}
+
+tr:hover td {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.status-badge {
+    display: inline-block;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: capitalize;
+    text-align: center;
+}
+
+.status-badge.waiting {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge.pending {
+    background: #e0f2fe;
+    color: #075985;
+}
+
+.status-badge.progress {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-badge.done {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+.status-badge.rejected {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+@media (prefers-color-scheme: dark) {
+    .status-badge.waiting {
+        background: rgba(234, 179, 8, 0.15);
+        color: #eab308;
+        border: 1px solid rgba(234, 179, 8, 0.3);
+    }
+
+    .status-badge.pending {
+        background: rgba(59, 130, 246, 0.15);
+        color: #60a5fa;
+        border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .status-badge.progress {
+        background: rgba(34, 197, 94, 0.15);
+        color: #4ade80;
+        border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-badge.done {
+        background: rgba(148, 163, 184, 0.15);
+        color: #94a3b8;
+        border: 1px solid rgba(148, 163, 184, 0.3);
+    }
+
+    .status-badge.rejected {
+        background: rgba(239, 68, 68, 0.15);
+        color: #f87171;
+        border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+}
+
 
 /* =========================================
    9. RESPONSIVE DESIGN (Mobile & Tablet)

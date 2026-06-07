@@ -287,7 +287,8 @@ function renderProjects(projects) {
 
         idCell.textContent = project.id_project;
         projectCell.textContent = project.nama_project;
-        creatorCell.textContent = project.nama_user;
+        const freelancers = getListValue(project.nama_user).filter(Boolean);
+        creatorCell.textContent = freelancers.length > 0 ? freelancers.join(', ') : 'Belum ada freelance';
         renderRoleProjectToggle(project, employeeCell);
         startCell.textContent = formatDate(project.tgl_mulai);
         deadlineCell.textContent = formatDate(project.deadline);

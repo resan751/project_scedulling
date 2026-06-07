@@ -526,7 +526,7 @@ export const createProject = async (req, res) => {
         const project = await prisma.project.create({
             data: {
                 nama_project,
-                nama_user: session.nama_user,
+                nama_user: JSON.stringify(new Array(roleProjectList.length).fill('')),
                 role_project: roleProject,
                 tgl_mulai,
                 deadline,
@@ -587,7 +587,7 @@ export const updateProject = async (req, res) => {
 
         const data = {
             nama_project,
-            nama_user: session.nama_user,
+            nama_user: JSON.stringify(new Array(roleProjectList.length).fill('')),
             role_project: roleProject,
             tgl_mulai,
             deadline,

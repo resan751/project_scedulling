@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Project</title>
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-brand">
+            <div class="brand-icon">F</div>
+            <h1 class="header-title">Detail Project</h1>
+        </div>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/freelance/dashboard.html">Kembali ke Dashboard</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-card">
+            <div class="form-header">
+                <h2 id="projectTitle">Memuat Nama Project...</h2>
+                <p>Status: <span id="projectStatus" class="status-badge">Memuat...</span></p>
+            </div>
+
+            <p class="message" id="detailMessage" aria-live="polite"></p>
+
+            <div class="form-group">
+                <label>Deskripsi Project</label>
+                <div id="projectDescription" style="padding: 10px; background: var(--bg-primary); border-radius: 6px; min-height: 50px; white-space: pre-wrap;">Memuat deskripsi...</div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Tanggal Mulai</label>
+                    <input type="text" id="projectStartDate" readonly style="cursor: not-allowed; opacity: 0.85;">
+                </div>
+                <div class="form-group">
+                    <label>Deadline</label>
+                    <input type="text" id="projectDeadline" readonly style="cursor: not-allowed; opacity: 0.85;">
+                </div>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label>Pilih Peran / Role Project</label>
+                    <p class="form-header-p" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px;">Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.</p>
+                    
+                    <div class="employee-list" id="rolesList">
+                        <p class="loading-text">Memuat peran project...</p>
+                    </div>
+                </div>
+
+                <p class="message" id="submitMessage" aria-live="polite"></p>
+                <button class="submit-btn" id="submitBtn" type="submit" disabled>Daftar Peran Terpilih</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/detail-project.js"></script>
+</body>
+
+</html>

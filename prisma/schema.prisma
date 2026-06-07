@@ -17,7 +17,7 @@ model user {
 model project {
   id_project        Int      @id @default(autoincrement())
   nama_project      String   @db.VarChar(100)
-  nama_user         String   @db.VarChar(100)
+  nama_user         String   @db.VarChar(255)
   role_project      String   @db.VarChar(255)
   tgl_mulai         DateTime @db.DateTime
   deadline          DateTime @db.DateTime
