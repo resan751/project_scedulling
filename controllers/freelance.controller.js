@@ -29,6 +29,14 @@ export const detailProjectPage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'detail-project.html'))
 }
 
+export const createLaporanPage = (req, res) => {
+    setNoCache(res)
+
+    if (!requireFreelance(req, res)) return
+
+    res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'create-laporan.html'))
+}
+
 function requireFreelanceApi(req, res) {
     const session = readSession(req)
     if (!session) {
@@ -252,5 +260,68 @@ export const registerProject = async (req, res) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Gagal mendaftar ke project.' })
+    }
+}
+
+export const createLaporan = async (req, res) => {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    const { nama_project, role_project, jenis_laporan, deskripsi_laporan } = req.body
+
+    // Validation
+    if (!nama_project || !role_project || !jenis_laporan || !deskripsi_laporan) {
+        return res.status(400).json({ message: 'Semua field harus diisi.' })
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ message: 'File bukti harus diunggah.' })
+    }
+
+    try {
+        // Verify that the user is registered in the specified project with the specified role
+        const project = await prisma.project.findUnique({
+            where: {
+                nama_project,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        const roles = getListValue(project.role_project)
+        const freelancers = getListValue(project.nama_user)
+
+        const roleIndex = roles.indexOf(role_project)
+        if (roleIndex === -1) {
+            return res.status(400).json({ message: 'Role project tidak ditemukan dalam project ini.' })
+        }
+
+        if (freelancers[roleIndex] !== session.nama_user) {
+            return res.status(403).json({ message: 'Anda tidak terdaftar dalam role ini untuk project ini.' })
+        }
+
+        // Create laporan record
+        const buktiPath = `/uploads/${req.file.filename}`
+
+        const laporan = await prisma.laporan.create({
+            data: {
+                nama_project,
+                nama_user: session.nama_user,
+                role_project,
+                bukti: buktiPath,
+                jenis_laporan,
+                deskripsi_laporan,
+            },
+        })
+
+        res.json({
+            message: 'Laporan berhasil dibuat.',
+            laporan,
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal membuat laporan.' })
     }
 }

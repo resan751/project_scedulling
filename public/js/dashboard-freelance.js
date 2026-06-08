@@ -161,7 +161,16 @@ function renderRegisteredProjects(projects) {
         statusBadge.textContent = project.status_project;
         statusCell.appendChild(statusBadge);
 
-        row.append(idCell, nameCell, rolesCell, startCell, deadlineCell, statusCell);
+        const actionCell = document.createElement('td');
+        const detailLink = document.createElement('a');
+        detailLink.className = 'link-btn';
+        detailLink.style.padding = '6px 12px';
+        detailLink.style.fontSize = '12px';
+        detailLink.href = `/page/freelance/detail-project.html?id=${project.id_project}`;
+        detailLink.textContent = 'Detail';
+        actionCell.appendChild(detailLink);
+
+        row.append(idCell, nameCell, rolesCell, startCell, deadlineCell, statusCell, actionCell);
         registeredTableBody.appendChild(row);
     });
 }

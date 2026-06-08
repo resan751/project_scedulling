@@ -29,7 +29,10 @@ import {
   getProject as getFreelanceProject,
   registerProject,
   detailProjectPage,
+  createLaporanPage,
+  createLaporan,
 } from '../controllers/freelance.controller.js';
+import { upload } from '../config/multer.js'
 
 const AuthRouter = express.Router();
 
@@ -65,6 +68,8 @@ AuthRouter.get('/page/karyawan/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/admin/dashboard.html', dashboardPage('admin'))
 AuthRouter.get('/karyawan/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/page/freelance/detail-project.html', detailProjectPage)
+AuthRouter.get('/page/freelance/create-laporan.html', createLaporanPage)
+AuthRouter.post('/api/freelance/laporan/create', upload.single('bukti'), createLaporan)
 AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 
 export default AuthRouter

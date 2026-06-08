@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buat Laporan</title>
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+</head>
+
+<body>
+    <header>
+        <div class="header-brand">
+            <div class="brand-icon">F</div>
+            <h1 class="header-title">Buat Laporan</h1>
+        </div>
+        <div class="header-actions">
+            <a class="link-btn" href="/page/freelance/dashboard.html">Kembali ke Dashboard</a>
+            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+        </div>
+    </header>
+
+    <main>
+        <div class="form-card">
+            <form id="createLaporanForm">
+                <div class="form-group">
+                    <label for="namaProject">Nama Project</label>
+                    <select id="namaProject" name="nama_project" required>
+                        <option value="">-- Pilih Project --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="roleProject">Role Project</label>
+                    <select id="roleProject" name="role_project" required>
+                        <option value="">-- Pilih Role --</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="bukti">Bukti (Upload File)</label>
+                    <input type="file" id="bukti" name="bukti" required>
+                    <small style="color: var(--text-secondary);">Format: PDF, JPG, PNG. Max 5MB</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="jenisLaporan">Jenis Laporan</label>
+                    <select id="jenisLaporan" name="jenis_laporan" required>
+                        <option value="">-- Pilih Jenis Laporan --</option>
+                        <option value="harian">Progress</option>
+                        <option value="mingguan">Problem</option>
+                        <option value="bulanan">Notice</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="deskripsi">Deskripsi Laporan</label>
+                    <textarea id="deskripsi" name="deskripsi_laporan" rows="4" placeholder="Jelaskan detail laporan Anda..." required></textarea>
+                </div>
+
+                <p class="message" id="formMessage" aria-live="polite"></p>
+                <button class="submit-btn" id="submitBtn" type="submit">Buat Laporan</button>
+            </form>
+        </div>
+    </main>
+
+    <script src="/js/create-laporan.js"></script>
+</body>
+
+</html>
