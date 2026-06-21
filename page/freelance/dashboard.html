@@ -1,108 +1,159 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Freelance</title>
-    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+    <title>Dashboard Freelance - WorkDesk</title>
+    
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-freelance.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <div class="header-brand">
-            <div class="brand-icon">F</div>
-            <h1 class="header-title">Dashboard Freelance</h1>
-        </div>
-        <div class="header-actions">
-            <span class="user-welcome" id="userWelcome">Memuat...</span>
-            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
-        </div>
-    </header>
-
-    <main>
-        <section class="dashboard-intro">
-            <h2>Daftar Pekerjaan Project</h2>
-            <p>Temukan project baru dan kelola peran Anda dalam team project.</p>
-        </section>
-
-        <section class="summary-grid" aria-label="Ringkasan project">
-            <article class="summary-card yellow">
-                <span>Project Tersedia</span>
-                <strong id="availableProjectCount">0</strong>
-            </article>
-            <article class="summary-card blue">
-                <span>Project Diikuti</span>
-                <strong id="registeredProjectCount">0</strong>
-            </article>
-        </section>
-
-        <section class="table-section">
-            <div class="section-heading">
-                <div>
-                    <h2>Project Tersedia</h2>
-                    <p>Project yang membutuhkan freelance untuk peran tertentu.</p>
+    <div class="page active" id="page-freelance">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR KARYAWAN (Sesuai ss.md) -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Work<span>Desk</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
                 </div>
-            </div>
-
-            <p class="message" id="availableMessage" aria-live="polite">Memuat data project...</p>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Project</th>
-                            <th>Role Tersedia</th>
-                            <th>Tanggal Mulai</th>
-                            <th>Deadline</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="availableTableBody">
-                        <tr>
-                            <td colspan="6">Memuat data...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="table-section">
-            <div class="section-heading">
-                <div>
-                    <h2>Project Saya</h2>
-                    <p>Daftar project yang Anda ikuti dan status pelaksanaannya.</p>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">RD</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Rudi Dermawan</div>
+                        <div class="urole">Karyawan Utama</div>
+                    </div>
                 </div>
-                <a href="/page/freelance/create-laporan.html" class="link-btn">+ Buat Laporan</a>
-            </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu</div>
+                    <a href="dashboard.html" class="nav-item active"><i class="fas fa-folder-open"></i> Project Saya</a>
+                    <a href="detail-project.html" class="nav-item"><i class="fas fa-folder-open"></i> Detail Project</a>
+                    
+                    <div class="nav-section-title">Laporan</div>
+                    <a href="create-laporan.html" class="nav-item"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
+                    <div class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</div>
+                    
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Kalender</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">3</span></div>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
 
-            <p class="message" id="registeredMessage" aria-live="polite">Memuat data project...</p>
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Dashboard Freelance</h2>
+                        <p>Temukan project baru dan kelola peran Anda dalam tim</p>
+                    </div>
+                    <div class="topbar-right">
+                        <button class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
+                        <div class="topbar-avatar">RD</div>
+                    </div>
+                </header>
 
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Project</th>
-                            <th>Role Anda</th>
-                            <th>Tanggal Mulai</th>
-                            <th>Deadline</th>
-                            <th>Status Project</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="registeredTableBody">
-                        <tr>
-                            <td colspan="6">Memuat data...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </main>
+                <div class="page-body">
+                    
+                    <!-- STATS -->
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-icon purple"><i class="fas fa-briefcase"></i></div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Project Tersedia</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
+                            <div class="stat-value">0</div>
+                            <div class="stat-label">Project Diikuti</div>
+                        </div>
+                    </div>
 
-    <script src="/js/dashboard-freelance.js"></script>
+                    <!-- PROJECT TERSEDIA -->
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Project Tersedia</h3>
+                                <p>Project yang membutuhkan freelance untuk peran tertentu</p>
+                            </div>
+                        </div>
+                        <div class="table-card">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Project</th>
+                                            <th>Role Tersedia</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Deadline</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="6" class="text-center text-muted" style="padding: 24px;">
+                                                <i class="fas fa-spinner fa-spin"></i> Memuat data project...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT SAYA -->
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Project Saya</h3>
+                                <p>Daftar project yang Anda ikuti dan status pelaksanaannya</p>
+                            </div>
+                            <a href="create-laporan.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Buat Laporan
+                            </a>
+                        </div>
+                        <div class="table-card">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Project</th>
+                                            <th>Role Anda</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Deadline</th>
+                                            <th>Status Project</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td colspan="7" class="text-center text-muted" style="padding: 24px;">
+                                                <i class="fas fa-spinner fa-spin"></i> Memuat data project...
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
 </body>
-
 </html>

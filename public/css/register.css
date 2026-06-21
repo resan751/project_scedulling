@@ -1,0 +1,16 @@
+
+/* Meniru background dan layout dari #page-login di style.css */
+#page-register {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #e8daf3 0%, #a875d2 50%, #9e77c7 100%);
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+/* Penyesuaian spacing form register agar lebih proporsional */
+#form-register .form-group {
+    margin-bottom: 4px;
+}

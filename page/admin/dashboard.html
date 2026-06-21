@@ -1,183 +1,351 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/dashboard-admin.css">
-    <title>Dashboard Admin</title>
+    <title>Dashboard Admin - WorkDesk</title>
+    
+    <!-- Global Design System CSS -->
+    <link rel="stylesheet" href="/public/css/global.css">
+    <!-- Admin Specific Override CSS -->
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <h1>Dashboard Admin</h1>
-        <div class="header-actions">
-            <a class="link-btn" href="/page/admin/project-create.html">Create Project</a>   
-            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+    <div class="page active" id="page-admin">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Work<span>Desk</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">YS</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Yusuf Santoso</div>
+                        <div class="urole">Admin Utama</div>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <div class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</div>
+                    <a href="/page/admin/project-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Buat Project Baru</a>
+                    <a href="/page/admin/user-update.html" class="nav-item"><i class="fas fa-users-cog"></i> Kelola User</a>
+                    <div class="nav-item"><i class="fas fa-folder-open"></i> Daftar Project <span class="nav-badge">8</span></div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</div>
+                    
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">2</span></div>
+                    <div class="nav-item"><i class="fas fa-cog"></i> Pengaturan</div>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <!-- TOPBAR -->
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Dashboard Admin</h2>
+                        <p>Kelola project dan jadwal perusahaan</p>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="topbar-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari project...">
+                        </div>
+                        <button class="topbar-icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-dot"></span>
+                        </button>
+                        <div class="topbar-avatar">YS</div>
+                    </div>
+                </header>
+
+                <!-- PAGE BODY -->
+                <div class="page-body">
+                    
+                    <!-- STATS GRID -->
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-icon purple"><i class="fas fa-rocket"></i></div>
+                            <div class="stat-value">8</div>
+                            <div class="stat-label">Project Aktif</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Disetujui Manajer</div>
+                        </div>
+                        <div class="stat-card amber">
+                            <div class="stat-icon amber"><i class="fas fa-hourglass-half"></i></div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-label">Menunggu Approval</div>
+                        </div>
+                        <div class="stat-card pink">
+                            <div class="stat-icon pink"><i class="fas fa-users"></i></div>
+                            <div class="stat-value">12</div>
+                            <div class="stat-label">Karyawan Terlibat</div>
+                        </div>
+                    </div>
+
+                    <!-- PROJECT SAYA -->
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Project Saya</h3>
+                                <p>Project yang telah dibuat dan statusnya</p>
+                            </div>
+                        </div>
+                        <div class="three-col">
+                            <!-- Card 1 -->
+                            <div class="proj-card c-emerald">
+                                <div class="proj-card-top">
+                                    <div>
+                                        <div class="proj-title">Migrasi Database</div>
+                                        <div class="proj-desc">Pindah data dari server lama ke cloud AWS</div>
+                                    </div>
+                                    <span class="badge badge-approved"><span class="badge-dot"></span> Disetujui</span>
+                                </div>
+                                <div class="proj-meta">
+                                    <div class="proj-meta-item"><i class="fas fa-calendar"></i> 10 - 20 Jan 2025</div>
+                                    <div class="proj-meta-item"><i class="fas fa-users"></i> 4 Karyawan</div>
+                                </div>
+                                <div class="progress-bar"><div class="progress-fill emerald" style="width: 85%"></div></div>
+                                <div class="proj-card-footer">
+                                    <span class="text-sm text-muted">Progress: 85%</span>
+                                    <button class="btn btn-outline btn-sm">Detail</button>
+                                </div>
+                            </div>
+                            <!-- Card 2 -->
+                            <div class="proj-card c-amber">
+                                <div class="proj-card-top">
+                                    <div>
+                                        <div class="proj-title">Redesign Website Utama</div>
+                                        <div class="proj-desc">Update tampilan dan performa website perusahaan</div>
+                                    </div>
+                                    <span class="badge badge-pending"><span class="badge-dot"></span> Pending</span>
+                                </div>
+                                <div class="proj-meta">
+                                    <div class="proj-meta-item"><i class="fas fa-calendar"></i> 15 Jan - 28 Feb 2025</div>
+                                    <div class="proj-meta-item"><i class="fas fa-users"></i> 5 Karyawan</div>
+                                </div>
+                                <div class="proj-card-footer">
+                                    <span class="text-sm text-muted">Menunggu Manajer</span>
+                                    <div class="action-group">
+                                        <button class="btn btn-outline btn-xs">Update</button>
+                                        <button class="btn btn-danger btn-xs">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 3 -->
+                            <div class="proj-card c-amber">
+                                <div class="proj-card-top">
+                                    <div>
+                                        <div class="proj-title">Audit Sistem Keamanan</div>
+                                        <div class="proj-desc">Pemeriksaan keamanan jaringan dan server</div>
+                                    </div>
+                                    <span class="badge badge-pending"><span class="badge-dot"></span> Pending</span>
+                                </div>
+                                <div class="proj-meta">
+                                    <div class="proj-meta-item"><i class="fas fa-calendar"></i> 20 Jan - 5 Feb 2025</div>
+                                    <div class="proj-meta-item"><i class="fas fa-users"></i> 3 Karyawan</div>
+                                </div>
+                                <div class="proj-card-footer">
+                                    <span class="text-sm text-muted">Menunggu Manajer</span>
+                                    <div class="action-group">
+                                        <button class="btn btn-outline btn-xs">Update</button>
+                                        <button class="btn btn-danger btn-xs">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SEMUA PROJECT (TABLE) -->
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Semua Project</h3>
+                                <p>Kelola project (update/cancel hanya untuk yang belum diapprove)</p>
+                            </div>
+                        </div>
+                        <div class="table-card">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nama Project</th>
+                                            <th>Periode</th>
+                                            <th>Tim</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><div class="t-name">Migrasi Database</div></td>
+                                            <td>10 - 20 Jan 25</td>
+                                            <td>4 orang</td>
+                                            <td><span class="badge badge-approved"><span class="badge-dot"></span> Disetujui</span></td>
+                                            <td><button class="btn btn-outline btn-xs">Detail</button> <span class="text-sm text-muted">Tidak bisa diubah</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="t-name">Kampanye Media Sosial</div></td>
+                                            <td>5 - 31 Jan 25</td>
+                                            <td>6 orang</td>
+                                            <td><span class="badge badge-approved"><span class="badge-dot"></span> Disetujui</span></td>
+                                            <td><button class="btn btn-outline btn-xs">Detail</button> <span class="text-sm text-muted">Tidak bisa diubah</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="t-name">Redesign Website Utama</div></td>
+                                            <td>15 Jan - 28 Feb 25</td>
+                                            <td>5 orang</td>
+                                            <td><span class="badge badge-pending"><span class="badge-dot"></span> Pending</span></td>
+                                            <td>
+                                                <div class="action-group">
+                                                    <button class="btn btn-outline btn-xs">Update</button>
+                                                    <button class="btn btn-danger btn-xs">Cancel</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="t-name">Audit Sistem Keamanan</div></td>
+                                            <td>20 Jan - 5 Feb 25</td>
+                                            <td>3 orang</td>
+                                            <td><span class="badge badge-pending"><span class="badge-dot"></span> Pending</span></td>
+                                            <td>
+                                                <div class="action-group">
+                                                    <button class="btn btn-outline btn-xs">Update</button>
+                                                    <button class="btn btn-danger btn-xs">Cancel</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><div class="t-name">Pelatihan SDM Q1</div></td>
+                                            <td>1 - 15 Feb 25</td>
+                                            <td>8 orang</td>
+                                            <td><span class="badge badge-pending"><span class="badge-dot"></span> Pending</span></td>
+                                            <td>
+                                                <div class="action-group">
+                                                    <button class="btn btn-outline btn-xs">Update</button>
+                                                    <button class="btn btn-danger btn-xs">Cancel</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KALENDER & PROJECT BULAN INI -->
+                    <div class="left-main">
+                        <div class="card">
+                            <div class="card-head">
+                                <h3>Jadwal Kalender</h3>
+                                <span class="badge badge-progress"><span class="badge-dot"></span> Januari 2025</span>
+                            </div>
+                            <div class="card-body admin-calendar-wrap">
+                                <div class="cal-nav">
+                                    <button class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
+                                    <div class="cal-month">Januari 2025</div>
+                                    <button class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="calendar-grid">
+                                    <div class="cal-header">Min</div>
+                                    <div class="cal-header">Sen</div>
+                                    <div class="cal-header">Sel</div>
+                                    <div class="cal-header">Rab</div>
+                                    <div class="cal-header">Kam</div>
+                                    <div class="cal-header">Jum</div>
+                                    <div class="cal-header">Sab</div>
+                                    
+                                    <!-- Days Dummy Data -->
+                                    <div class="cal-day other-month">29</div>
+                                    <div class="cal-day other-month">30</div>
+                                    <div class="cal-day other-month">31</div>
+                                    <div class="cal-day">1</div>
+                                    <div class="cal-day">2</div>
+                                    <div class="cal-day">3</div>
+                                    <div class="cal-day">4</div>
+                                    <div class="cal-day">5</div>
+                                    <div class="cal-day">6</div>
+                                    <div class="cal-day">7</div>
+                                    <div class="cal-day">8</div>
+                                    <div class="cal-day">9</div>
+                                    <div class="cal-day has-event">10</div>
+                                    <div class="cal-day">11</div>
+                                    <div class="cal-day">12</div>
+                                    <div class="cal-day">13</div>
+                                    <div class="cal-day">14</div>
+                                    <div class="cal-day has-event today">15</div>
+                                    <div class="cal-day">16</div>
+                                    <div class="cal-day">17</div>
+                                    <div class="cal-day">18</div>
+                                    <div class="cal-day has-event">19</div>
+                                    <div class="cal-day">20</div>
+                                    <div class="cal-day">21</div>
+                                    <div class="cal-day">22</div>
+                                    <div class="cal-day">23</div>
+                                    <div class="cal-day">24</div>
+                                    <div class="cal-day">25</div>
+                                    <div class="cal-day">26</div>
+                                    <div class="cal-day">27</div>
+                                    <div class="cal-day">28</div>
+                                    <div class="cal-day">29</div>
+                                    <div class="cal-day">30</div>
+                                    <div class="cal-day">31</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-head">
+                                <h3>Project Bulan Ini</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="project-list">
+                                    <div class="proj-card c-purple" style="padding: 12px;">
+                                        <div class="proj-title" style="font-size: 13px;">Migrasi Database</div>
+                                        <div class="proj-meta" style="margin-top: 6px;">
+                                            <div class="proj-meta-item"><i class="fas fa-calendar"></i> 10 - 20 Jan</div>
+                                        </div>
+                                    </div>
+                                    <div class="proj-card c-amber" style="padding: 12px;">
+                                        <div class="proj-title" style="font-size: 13px;">Redesign Website Utama</div>
+                                        <div class="proj-meta" style="margin-top: 6px; flex-wrap: wrap;">
+                                            <div class="proj-meta-item"><i class="fas fa-calendar"></i> 15 Jan - 28 Feb</div>
+                                            <span class="badge badge-pending" style="font-size:9px; padding: 2px 6px;"><span class="badge-dot"></span> Pending</span>
+                                        </div>
+                                    </div>
+                                    <div class="proj-card c-amber" style="padding: 12px;">
+                                        <div class="proj-title" style="font-size: 13px;">Audit Sistem Keamanan</div>
+                                        <div class="proj-meta" style="margin-top: 6px; flex-wrap: wrap;">
+                                            <div class="proj-meta-item"><i class="fas fa-calendar"></i> 20 Jan - 5 Feb</div>
+                                            <span class="badge badge-pending" style="font-size:9px; padding: 2px 6px;"><span class="badge-dot"></span> Pending</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
         </div>
-    </header>
-
-    <main>
-        <section class="dashboard-intro">
-            <p>Selamat datang di Dashboard Admin.</p>
-        </section>
-
-        <section class="summary-grid" aria-label="Ringkasan project">
-            <article class="summary-card">
-                <span>Total Project</span>
-                <strong id="totalProjectCount">0</strong>
-            </article>
-            <article class="summary-card">
-                <span>Status Pending</span>
-                <strong id="waitingProjectCount">0</strong>
-            </article>
-            <article class="summary-card">
-                <span>Aktif / Selesai</span>
-                <strong id="approvedProjectCount">0</strong>
-            </article>
-        </section>
-
-        <section class="table-section">
-            <div class="section-heading">
-                <div>
-                    <h2>Table User</h2>
-                    <p>Data user yang terdaftar di sistem.</p>
-                </div>
-            </div>
-
-            <p class="message" id="userMessage" aria-live="polite">Memuat data user...</p>
-
-            <div class="table-wrap">
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nama User</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="userTableBody">
-                        <tr>
-                            <td colspan="5">Memuat data...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="table-section">
-            <div class="section-heading">
-                <div>
-                    <h2>Table Project</h2>
-                    <p>Data project yang terdaftar di sistem.</p>
-                </div>
-            </div>
-
-            <p class="message" id="projectMessage" aria-live="polite">Memuat data project...</p>
-
-            <div class="table-wrap">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Project</th>
-                            <th>Freelance</th>
-                            <th>Role Project</th>
-                            <th>Tanggal Mulai</th>
-                            <th>Deadline</th>
-                            <th>Status</th>
-                            <th>Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody id="projectTableBody">
-                        <tr>
-                            <td colspan="8">Memuat data...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <div class="modal-backdrop" id="editProjectModal" hidden>
-            <form class="modal-card" id="editProjectForm">
-                <div class="modal-heading">
-                    <div>
-                        <p class="section-label">Edit Project</p>
-                        <h2 id="editProjectTitle">Update Project</h2>
-                    </div>
-                    <button class="icon-btn" id="closeEditModalBtn" type="button" aria-label="Tutup form edit">&times;</button>
-                </div>
-
-                <input type="hidden" id="editProjectId">
-
-                <label for="editNamaProject">Nama Project</label>
-                <input type="text" id="editNamaProject" name="nama_project" required>
-
-                <label>Role Project</label>
-                <div class="employee-list" id="editEmployeeList" aria-live="polite">
-                    <div class="role-project-row">
-                        <input type="text" name="role_project" placeholder="Contoh: frontend" required>
-                    </div>
-                </div>
-                <button class="secondary-btn" id="addEditRoleProjectBtn" type="button">Tambah Role Project</button>
-
-                <div class="form-grid">
-                    <div>
-                        <label for="editTanggalMulai">Tanggal Mulai</label>
-                        <input type="date" id="editTanggalMulai" name="tgl_mulai" required>
-                    </div>
-                    <div>
-                        <label for="editDeadline">Deadline</label>
-                        <input type="date" id="editDeadline" name="deadline" required>
-                    </div>
-                </div>
-
-                <label for="editDeskripsi">Deskripsi</label>
-                <textarea id="editDeskripsi" name="deskripsi" rows="4" required></textarea>
-
-                <p class="message" id="editProjectMessage" aria-live="polite"></p>
-
-                <div class="modal-actions">
-                    <button class="secondary-btn" id="cancelEditBtn" type="button">Batal</button>
-                    <button class="submit-btn" id="saveEditBtn" type="submit">Simpan</button>
-                </div>
-            </form>
-        </div>
-
-        <section class="calendar-panel" aria-labelledby="calendarTitle">
-            <div class="calendar-header">
-                <div>
-                    <p class="section-label">Kalender</p>
-                    <h2 id="calendarTitle">Jadwal Bulanan</h2>
-                </div>
-
-                <div class="calendar-controls" aria-label="Kontrol kalender">
-                    <button class="calendar-nav" id="prevMonthBtn" type="button" aria-label="Bulan sebelumnya">&lt;</button>
-                    <select id="monthSelect" aria-label="Pilih bulan"></select>
-                    <select id="yearSelect" aria-label="Pilih tahun"></select>
-                    <button class="calendar-nav" id="nextMonthBtn" type="button" aria-label="Bulan berikutnya">&gt;</button>
-                </div>
-            </div>
-
-            <div class="calendar-current" id="calendarCurrent" aria-live="polite"></div>
-
-            <div class="calendar-grid calendar-weekdays" aria-hidden="true">
-                <span>Min</span>
-                <span>Sen</span>
-                <span>Sel</span>
-                <span>Rab</span>
-                <span>Kam</span>
-                <span>Jum</span>
-                <span>Sab</span>
-            </div>
-
-            <div class="calendar-grid calendar-days" id="calendarDays"></div>
-        </section>
-    </main>
-
-    <script src="/js/dashboard-admin.js"></script>
+    </div>
 </body>
-
 </html>

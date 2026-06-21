@@ -1,67 +1,129 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Project</title>
-    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+    <title>Detail Project - WorkDesk</title>
+    
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-freelance.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <div class="header-brand">
-            <div class="brand-icon">F</div>
-            <h1 class="header-title">Detail Project</h1>
-        </div>
-        <div class="header-actions">
-            <a class="link-btn" href="/page/freelance/dashboard.html">Kembali ke Dashboard</a>
-            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
-        </div>
-    </header>
-
-    <main>
-        <div class="form-card">
-            <div class="form-header">
-                <h2 id="projectTitle">Memuat Nama Project...</h2>
-                <p>Status: <span id="projectStatus" class="status-badge">Memuat...</span></p>
-            </div>
-
-            <p class="message" id="detailMessage" aria-live="polite"></p>
-
-            <div class="form-group">
-                <label>Deskripsi Project</label>
-                <div id="projectDescription" style="padding: 10px; background: var(--bg-primary); border-radius: 6px; min-height: 50px; white-space: pre-wrap;">Memuat deskripsi...</div>
-            </div>
-
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Tanggal Mulai</label>
-                    <input type="text" id="projectStartDate" readonly style="cursor: not-allowed; opacity: 0.85;">
-                </div>
-                <div class="form-group">
-                    <label>Deadline</label>
-                    <input type="text" id="projectDeadline" readonly style="cursor: not-allowed; opacity: 0.85;">
-                </div>
-            </div>
-
-            <form id="registerForm">
-                <div class="form-group">
-                    <label>Pilih Peran / Role Project</label>
-                    <p class="form-header-p" style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 10px;">Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.</p>
-                    
-                    <div class="employee-list" id="rolesList">
-                        <p class="loading-text">Memuat peran project...</p>
+    <div class="page active" id="page-freelance-detail">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR KARYAWAN -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Work<span>Desk</span></div>
+                        <div class="tagline">Scheduling System</div>
                     </div>
                 </div>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">RD</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Rudi Dermawan</div>
+                        <div class="urole">Karyawan Utama</div>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-folder-open"></i> Project Saya</a>
+                    
+                    <div class="nav-section-title">Laporan</div>
+                    <a href="create-laporan.html" class="nav-item"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
+                    <div class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</div>
+                    
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Kalender</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi</div>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
 
-                <p class="message" id="submitMessage" aria-live="polite"></p>
-                <button class="submit-btn" id="submitBtn" type="submit" disabled>Daftar Peran Terpilih</button>
-            </form>
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Detail Project</h2>
+                        <p>Informasi lengkap dan pemilihan peran project</p>
+                    </div>
+                    <div class="topbar-right">
+                        <a href="dashboard.html" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
+                        <div class="topbar-avatar">RD</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+                    <div class="left-main">
+                        <!-- Info Project -->
+                        <div class="card">
+                            <div class="card-head">
+                                <h3><i class="fas fa-rocket" style="color: var(--purple-500); margin-right: 8px;"></i> Memuat Nama Project...</h3>
+                                <span class="badge badge-progress"><span class="badge-dot"></span> Memuat...</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Deskripsi Project</label>
+                                    <p class="text-muted">Memuat deskripsi...</p>
+                                </div>
+
+                                <div class="two-col mb-20">
+                                    <div class="field-group" style="margin-bottom: 0;">
+                                        <label class="field-label">Tanggal Mulai</label>
+                                        <div class="field-input" style="background: white; border-color: var(--purple-200);">-</div>
+                                    </div>
+                                    <div class="field-group" style="margin-bottom: 0;">
+                                        <label class="field-label">Deadline</label>
+                                        <div class="field-input" style="background: white; border-color: var(--purple-200);">-</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pilih Role -->
+                        <div class="card">
+                            <div class="card-head">
+                                <h3>Pilih Peran / Role</h3>
+                            </div>
+                            <div class="card-body">
+                                <p class="text-sm text-muted mb-12">Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.</p>
+                                
+                                <div class="field-group">
+                                    <label class="field-label">Role Project Tersedia</label>
+                                    <div class="upload-area" style="padding: 20px; cursor: default;">
+                                        <i class="fas fa-spinner fa-spin" style="font-size: 20px;"></i>
+                                        <p style="margin-top: 8px;">Memuat peran project...</p>
+                                    </div>
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Daftar Peran Terpilih</label>
+                                    <div class="empty-state" style="padding: 24px;">
+                                        <i class="fas fa-inbox" style="font-size: 24px;"></i>
+                                        <p>Belum ada peran dipilih</p>
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-primary" style="width: 100%; justify-content: center;">
+                                    <i class="fas fa-check"></i> Daftar Peran Terpilih
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-    </main>
-
-    <script src="/js/detail-project.js"></script>
+    </div>
 </body>
-
 </html>

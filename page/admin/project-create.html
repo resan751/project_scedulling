@@ -1,50 +1,146 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Project</title>
-    <link rel="stylesheet" href="/css/project-create.css">
+    <title>Buat Project Baru - WorkDesk</title>
+    
+    <!-- Global Design System CSS -->
+    <link rel="stylesheet" href="/public/css/global.css">
+    <!-- Page Specific Override CSS -->
+    <link rel="stylesheet" href="/public/css/project-create.css">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <h1>Create Project</h1>
-        <div class="header-actions">
-            <a class="link-btn" href="/page/admin/dashboard.html">Dashboard</a>
-            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
-        </div>
-    </header>
-
-    <main>
-        <form class="form-card" id="createProjectForm">
-            <label for="nama_project">Nama Project</label>
-            <input type="text" id="nama_project" name="nama_project" required>
-
-            <label for="roleProjectInput0">Role Project</label>
-            <div class="role-project-list" id="roleProjectList">
-                <div class="role-project-row">
-                    <input type="text" id="roleProjectInput0" name="role_project" placeholder="Contoh: frontend" required>
+    <div class="page active" id="page-admin-create">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR (Sama persis dengan Dashboard Admin) -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Work<span>Desk</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
                 </div>
-            </div>
-            <button class="secondary-btn" id="addRoleProjectBtn" type="button">Tambah Role Project</button>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">YS</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Yusuf Santoso</div>
+                        <div class="urole">Admin Utama</div>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <a href="/page/admin/dashboard.html" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="/page/admin/project-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Buat Project Baru</a>
+                    <a href="/page/admin/user-update.html" class="nav-item"><i class="fas fa-users-cog"></i> Kelola User</a>
+                    <div class="nav-item"><i class="fas fa-folder-open"></i> Daftar Project <span class="nav-badge">8</span></div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</div>
+                    
+                    
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">2</span></div>
+                    <div class="nav-item"><i class="fas fa-cog"></i> Pengaturan</div>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
 
-            <label for="tgl_mulai">Tanggal Mulai</label>
-            <input type="date" id="tgl_mulai" name="tgl_mulai" required>
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <!-- TOPBAR -->
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Buat Project Baru</h2>
+                        <p>Isi detail project akan dikirim ke Manajer untuk disetujui</p>
+                    </div>
+                    <div class="topbar-right">
+                        <a href="/page/admin/dashboard.html" class="btn btn-outline btn-sm">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                        <button class="topbar-icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-dot"></span>
+                        </button>
+                        <div class="topbar-avatar">YS</div>
+                    </div>
+                </header>
 
-            <label for="deadline">Deadline</label>
-            <input type="date" id="deadline" name="deadline" required>
+                <!-- PAGE BODY -->
+                <div class="page-body">
+                    <div class="card" style="max-width: 900px; margin: 0 auto;">
+                        <div class="card-head">
+                            <h3><i class="fas fa-rocket" style="color: var(--purple-500); margin-right: 8px;"></i> Form Pembuatan Project</h3>
+                            <span class="badge badge-progress"><span class="badge-dot"></span> Draft Baru</span>
+                        </div>
+                        <div class="card-body">
+                            <form id="form-create-project">
+                                
+                                <!-- Nama Project -->
+                                <div class="field-group">
+                                    <label class="field-label">Nama Project *</label>
+                                    <input type="text" class="field-input" placeholder="Contoh: Redesign Website Utama" required>
+                                </div>
 
-            <label for="deskripsi">Deskripsi</label>
-            <textarea id="deskripsi" name="deskripsi" rows="4" required></textarea>
+                                <!-- Role Project (Dynamic List) -->
+                                <div class="field-group">
+                                    <label class="field-label">Role Project</label>
+                                    <div id="role-project-list" class="flex flex-col gap-8 mb-12">
+                                        <div class="role-project-row">
+                                            <input type="text" class="field-input" placeholder="Contoh: Frontend Developer">
+                                            <button type="button" class="btn btn-danger btn-sm icon-btn-del" title="Hapus Role" disabled>
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <button type="button" id="btn-add-role" class="btn btn-outline btn-sm">
+                                        <i class="fas fa-plus"></i> Tambah Role Project
+                                    </button>
+                                </div>
 
-            <p class="message" id="formMessage" aria-live="polite"></p>
-            <button class="submit-btn" id="submitBtn" type="submit">Simpan Project</button>
-        </form>
-    </main>
+                                <!-- Tanggal Mulai & Deadline -->
+                                <div class="two-col mb-20">
+                                    <div class="field-group" style="margin-bottom: 0;">
+                                        <label class="field-label">Tanggal Mulai *</label>
+                                        <input type="date" class="field-input" required>
+                                    </div>
+                                    <div class="field-group" style="margin-bottom: 0;">
+                                        <label class="field-label">Deadline *</label>
+                                        <input type="date" class="field-input" required>
+                                    </div>
+                                </div>
 
-    <script src="/js/project-create.js"></script>
+                                <!-- Deskripsi -->
+                                <div class="field-group">
+                                    <label class="field-label">Deskripsi Project</label>
+                                    <textarea class="field-input field-textarea" rows="5" placeholder="Jelaskan detail, tujuan, dan ruang lingkup project..."></textarea>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="action-group" style="margin-top: 28px; justify-content: flex-end; display: flex; gap: 12px;">
+                                    <button type="button" class="btn btn-outline">
+                                        <i class="fas fa-save"></i> Simpan Draft
+                                    </button>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Simpan Project
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
 </body>
-
 </html>

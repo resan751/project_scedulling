@@ -1,70 +1,134 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Laporan</title>
-    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+    <title>Buat Laporan - WorkDesk</title>
+    
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-freelance.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <div class="header-brand">
-            <div class="brand-icon">F</div>
-            <h1 class="header-title">Buat Laporan</h1>
+    <div class="page active" id="page-freelance-laporan">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR KARYAWAN -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Work<span>Desk</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">RD</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Rudi Dermawan</div>
+                        <div class="urole">Karyawan Utama</div>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-folder-open"></i> Project Saya</a>
+                    
+                    <div class="nav-section-title">Laporan</div>
+                    <a href="create-laporan.html" class="nav-item active"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
+                    <div class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</div>
+                    
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Kalender</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi</div>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Buat Laporan</h2>
+                        <p>Laporkan progress pekerjaan Anda kepada Manajer</p>
+                    </div>
+                    <div class="topbar-right">
+                        <a href="dashboard.html" class="btn btn-outline btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
+                        <div class="topbar-avatar">RD</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+                    <div class="card" style="max-width: 800px; margin: 0 auto;">
+                        <div class="card-head">
+                            <h3><i class="fas fa-file-signature" style="color: var(--purple-500); margin-right: 8px;"></i> Form Laporan Kerja</h3>
+                            <span class="badge badge-progress"><span class="badge-dot"></span> Draft Baru</span>
+                        </div>
+                        <div class="card-body">
+                            <form id="form-create-laporan">
+                                
+                                <div class="two-col mb-20">
+                                    <div class="field-group" style="margin-bottom: 0;">
+                                        <label class="field-label">Nama Project *</label>
+                                        <select class="field-input field-select" required>
+                                            <option value="">-- Pilih Project --</option>
+                                            <option>Redesign Website Utama</option>
+                                            <option>Migrasi Database</option>
+                                        </select>
+                                    </div>
+                                    <div class="field-group" style="margin-bottom: 0;">
+                                        <label class="field-label">Role Project *</label>
+                                        <select class="field-input field-select" required>
+                                            <option value="">-- Pilih Role --</option>
+                                            <option>Senior Developer</option>
+                                            <option>Backend Developer</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Bukti (Upload File) *</label>
+                                    <div class="upload-area">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                        <p>Klik atau drag file ke sini</p>
+                                        <span class="text-sm text-muted">Format: PDF, JPG, PNG. Max 5MB</span>
+                                    </div>
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Jenis Laporan *</label>
+                                    <select class="field-input field-select" required>
+                                        <option value="">-- Pilih Jenis Laporan --</option>
+                                        <option value="progress">Progress</option>
+                                        <option value="problem">Problem</option>
+                                        <option value="notice">Notice</option>
+                                    </select>
+                                </div>
+
+                                <div class="field-group">
+                                    <label class="field-label">Deskripsi Laporan *</label>
+                                    <textarea class="field-input field-textarea" rows="5" placeholder="Jelaskan detail progress atau kendala yang dihadapi..." required></textarea>
+                                </div>
+
+                                <div class="action-group" style="margin-top: 28px; justify-content: flex-end; display: flex; gap: 12px;">
+                                    <a href="dashboard.html" class="btn btn-outline">Batal</a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-paper-plane"></i> Buat Laporan
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-        <div class="header-actions">
-            <a class="link-btn" href="/page/freelance/dashboard.html">Kembali ke Dashboard</a>
-            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
-        </div>
-    </header>
-
-    <main>
-        <div class="form-card">
-            <form id="createLaporanForm">
-                <div class="form-group">
-                    <label for="namaProject">Nama Project</label>
-                    <select id="namaProject" name="nama_project" required>
-                        <option value="">-- Pilih Project --</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="roleProject">Role Project</label>
-                    <select id="roleProject" name="role_project" required>
-                        <option value="">-- Pilih Role --</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="bukti">Bukti (Upload File)</label>
-                    <input type="file" id="bukti" name="bukti" required>
-                    <small style="color: var(--text-secondary);">Format: PDF, JPG, PNG. Max 5MB</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="jenisLaporan">Jenis Laporan</label>
-                    <select id="jenisLaporan" name="jenis_laporan" required>
-                        <option value="">-- Pilih Jenis Laporan --</option>
-                        <option value="harian">Progress</option>
-                        <option value="mingguan">Problem</option>
-                        <option value="bulanan">Notice</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="deskripsi">Deskripsi Laporan</label>
-                    <textarea id="deskripsi" name="deskripsi_laporan" rows="4" placeholder="Jelaskan detail laporan Anda..." required></textarea>
-                </div>
-
-                <p class="message" id="formMessage" aria-live="polite"></p>
-                <button class="submit-btn" id="submitBtn" type="submit">Buat Laporan</button>
-            </form>
-        </div>
-    </main>
-
-    <script src="/js/create-laporan.js"></script>
+    </div>
 </body>
-
 </html>

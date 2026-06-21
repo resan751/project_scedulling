@@ -1,130 +1,135 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Update User</title>
-    <link rel="stylesheet" href="/css/user-update.css">
+    <title>Update User - WorkDesk</title>
+    
+    <!-- Global Design System CSS -->
+    <link rel="stylesheet" href="/public/css/global.css">
+    <!-- Page Specific Override CSS -->
+    <link rel="stylesheet" href="/public/css/user-update.css">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <h1>Update User</h1>
-        <div class="header-actions">
-            <a class="link-btn" href="/page/admin/dashboard.html">Dashboard</a>
-            <button class="logout-btn" id="logoutBtn" type="button">Logout</button>
+    <div class="page active" id="page-admin-user-update">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR (Sama persis dengan Dashboard Admin) -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Work<span>Desk</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">YS</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Yusuf Santoso</div>
+                        <div class="urole">Admin Utama</div>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="project-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Buat Project Baru</a>
+                    <a href="user-update.html" class="nav-item active"><i class="fas fa-users-cog"></i> Kelola User</a>
+                    <div class="nav-item"><i class="fas fa-folder-open"></i> Daftar Project <span class="nav-badge">8</span></div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</div>
+                    
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">2</span></div>
+                    <div class="nav-item"><i class="fas fa-cog"></i> Pengaturan</div>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <!-- TOPBAR -->
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Update User</h2>
+                        <p>Perbarui informasi dan hak akses pengguna sistem</p>
+                    </div>
+                    <div class="topbar-right">
+                        <a href="dashboard.html" class="btn btn-outline btn-sm">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                        <button class="topbar-icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-dot"></span>
+                        </button>
+                        <div class="topbar-avatar">YS</div>
+                    </div>
+                </header>
+
+                <!-- PAGE BODY -->
+                <div class="page-body">
+                    <div class="card" style="max-width: 800px; margin: 0 auto;">
+                        <div class="card-head">
+                            <h3><i class="fas fa-user-edit" style="color: var(--purple-500); margin-right: 8px;"></i> Form Pembaruan User</h3>
+                            <span class="badge badge-progress"><span class="badge-dot"></span> Edit Data</span>
+                        </div>
+                        <div class="card-body">
+                            <form id="form-update-user">
+                                
+                                <!-- Nama User -->
+                                <div class="field-group">
+                                    <label class="field-label">Nama User *</label>
+                                    <input type="text" class="field-input" placeholder="Masukkan nama lengkap user" value="" required>
+                                </div>
+
+                                <!-- Email -->
+                                <div class="field-group">
+                                    <label class="field-label">Email *</label>
+                                    <input type="email" class="field-input" placeholder="email@workdesk.com" value="" required>
+                                </div>
+
+                                <!-- Role -->
+                                <div class="field-group">
+                                    <label class="field-label">Role / Hak Akses *</label>
+                                    <select class="field-input field-select" required>
+                                        <!-- <option value="" disabled>Pilih role...</option> -->
+                                        <option value="admin">Admin</option>
+                                        <option value="freelance" selected>Freelance / Karyawan</option>
+                                        <!-- <option value="manajer">Manajer</option> -->
+                                    </select>
+                                </div>
+
+                                <!-- Password Baru -->
+                                <div class="field-group">
+                                    <label class="field-label">Password Baru</label>
+                                    <input type="password" class="field-input" placeholder="Kosongkan jika tidak ingin mengubah password">
+                                    <span class="text-sm text-muted" style="margin-top: 4px;">* Biarkan kosong jika password tidak diubah</span>
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="action-group" style="margin-top: 28px; justify-content: flex-end; display: flex; gap: 12px;">
+                                    <a href="dashboard.html" class="btn btn-outline">
+                                        <i class="fas fa-times"></i> Batal
+                                    </a>
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save"></i> Update User
+                                    </button>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </main>
         </div>
-    </header>
-
-    <main>
-        <form class="form-card" id="updateUserForm">
-            <label for="nama_user">Nama User</label>
-            <input type="text" id="nama_user" name="nama_user" autocomplete="name" required>
-
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-
-            <label for="role">Role</label>
-            <select id="role" name="role" required>
-                <option value="">Pilih role</option>
-                <option value="admin">Admin</option>
-                <option value="freelance">Freelance</option>
-            </select>
-
-            <label for="password">Password Baru</label>
-            <input type="password" id="password" name="password" autocomplete="new-password" placeholder="Kosongkan jika tidak diganti">
-
-            <p class="message" id="formMessage" aria-live="polite"></p>
-            <button class="submit-btn" id="submitBtn" type="submit">Update User</button>
-        </form>
-    </main>
-
-    <script>
-        const updateUserForm = document.getElementById('updateUserForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const formMessage = document.getElementById('formMessage');
-        const params = new URLSearchParams(window.location.search);
-        const userId = params.get('id');
-
-        async function readJson(response) {
-            const contentType = response.headers.get('content-type') || '';
-            if (contentType.includes('application/json')) {
-                return response.json();
-            }
-
-            return { message: 'Server mengirim response yang tidak valid.' };
-        }
-
-        function setMessage(message, type = '') {
-            formMessage.textContent = message;
-            formMessage.className = `message ${type}`.trim();
-        }
-
-        async function loadUser() {
-            if (!userId) {
-                setMessage('ID user tidak ditemukan.', 'error');
-                submitBtn.disabled = true;
-                return;
-            }
-
-            try {
-                const response = await fetch(`/api/admin/users/${userId}`);
-                const result = await readJson(response);
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Data user gagal dimuat.');
-                }
-
-                document.getElementById('nama_user').value = result.user.nama_user;
-                document.getElementById('email').value = result.user.email;
-                document.getElementById('role').value = result.user.role;
-            } catch (error) {
-                setMessage(error.message, 'error');
-                submitBtn.disabled = true;
-            }
-        }
-
-        updateUserForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(updateUserForm);
-            const payload = Object.fromEntries(formData.entries());
-
-            setMessage('');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Mengupdate...';
-
-            try {
-                const response = await fetch(`/api/admin/users/${userId}`, {
-                    method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-                const result = await readJson(response);
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'User gagal diupdate.');
-                }
-
-                window.location.href = result.redirectTo || '/page/admin/dashboard.html';
-            } catch (error) {
-                setMessage(error.message, 'error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Update User';
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await fetch('/api/logout', { method: 'POST' });
-            window.location.href = '/login.html';
-        });
-
-        loadUser();
-    </script>
+    </div>
 </body>
-
 </html>

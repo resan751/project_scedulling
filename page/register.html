@@ -1,91 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register</title>
-    <link rel="stylesheet" href="/css/user-create.css">
+    <title>Register - WorkDesk</title>
+    
+    <!-- Global Design System CSS -->
+    <link rel="stylesheet" href="/public/css/global.css">
+    <!-- Page Specific Override CSS -->
+    <link rel="stylesheet" href="/public/css/register.css">
+    
+    <!-- Fonts & Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-
 <body>
-    <header>
-        <h1>Register</h1>
-        <div class="header-actions">
-            <a class="link-btn" href="/login.html">Login</a>
+    <!-- Menggunakan struktur kelas yang sama dengan login page di style.css -->
+    <div class="page active" id="page-register">
+        
+        <!-- Background Orbs (Sama persis dengan Login) -->
+        <div class="login-bg-orb o1"></div>
+        <div class="login-bg-orb o2"></div>
+        <div class="login-bg-orb o3"></div>
+
+        <div class="login-card">
+            <div class="login-brand">
+                <div class="login-brand-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="login-brand-name">Work<span>Desk</span></div>
+            </div>
+            
+            <h2 class="login-title">Daftar Akun Baru</h2>
+            <p class="login-subtitle">Lengkapi data diri Anda untuk mulai menggunakan sistem</p>
+
+            <form class="login-form" id="form-register">
+                
+                <!-- Nama Lengkap -->
+                <div class="form-group">
+                    <label class="form-label">Nama Lengkap</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-user fi"></i>
+                        <input type="text" class="form-input" placeholder="Masukkan nama lengkap" required>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-envelope fi"></i>
+                        <input type="email" class="form-input" placeholder="contoh@email.com" required>
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-lock fi"></i>
+                        <input type="password" class="form-input" placeholder="Buat password yang aman" required>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-login">Daftar Sekarang</button>
+            </form>
+
+            <div class="login-footer">
+                Sudah punya akun? <a href="login.html" style="color: var(--purple-300); font-weight: 700; text-decoration: underline;">Login di sini</a>
+            </div>
         </div>
-    </header>
-
-    <main>
-        <form class="form-card" id="registerForm">
-            <label for="nama_user">Nama</label>
-            <input type="text" id="nama_user" name="nama_user" autocomplete="name" required>
-
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" autocomplete="email" required>
-
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" autocomplete="new-password" required>
-
-            <p class="message" id="formMessage" aria-live="polite"></p>
-            <button class="submit-btn" id="submitBtn" type="submit">Register</button>
-        </form>
-    </main>
-
-    <script>
-        const registerForm = document.getElementById('registerForm');
-        const submitBtn = document.getElementById('submitBtn');
-        const formMessage = document.getElementById('formMessage');
-
-        async function readJson(response) {
-            const contentType = response.headers.get('content-type') || '';
-            if (contentType.includes('application/json')) {
-                return response.json();
-            }
-
-            return { message: 'Server mengirim response yang tidak valid.' };
-        }
-
-        registerForm.addEventListener('submit', async (event) => {
-            event.preventDefault();
-
-            const formData = new FormData(registerForm);
-            const payload = Object.fromEntries(formData.entries());
-
-            formMessage.textContent = '';
-            formMessage.className = 'message';
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Mendaftar...';
-
-            try {
-                const response = await fetch('/api/register', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-                const result = await readJson(response);
-
-                if (!response.ok) {
-                    throw new Error(result.message || 'Registrasi gagal.');
-                }
-
-                formMessage.textContent = result.message || 'Registrasi berhasil. Silakan login.';
-                formMessage.classList.add('success');
-                registerForm.reset();
-                window.setTimeout(() => {
-                    window.location.href = result.redirectTo || '/login.html';
-                }, 900);
-            } catch (error) {
-                formMessage.textContent = error.message;
-                formMessage.classList.add('error');
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.textContent = 'Register';
-            }
-        });
-    </script>
+    </div>
 </body>
-
 </html>
