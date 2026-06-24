@@ -81,7 +81,7 @@ Browser / Client
 | `config/` | Menyimpan konfigurasi seperti koneksi database, environment variables, dan pengaturan aplikasi lainnya. |
 | `page/` | File HTML yang di-serve ke browser sebagai antarmuka pengguna. |
 | `public/` | Aset statis: stylesheet CSS, gambar, dan script JavaScript sisi klien. |
-| `prisma.config.ts` | Konfigurasi Prisma — menghubungkan adapter MariaDB, menentukan path schema, migrasi, dan seed. |
+| `prisma.config.ts` | Konfigurasi Prisma — menghubungkan adapter MySQL, menentukan path schema, migrasi, dan seed. |
 
 ### Stack Teknologi
 
@@ -131,7 +131,7 @@ Dependensi yang akan diinstal:
 |---|---|---|
 | `express` | ^5.2.1 | Web framework |
 | `@prisma/client` | ^7.8.0 | Prisma ORM client |
-| `@prisma/adapter-mariadb` | ^7.8.0 | Adapter koneksi MariaDB |
+| `@prisma/adapter-mysql` | ^7.8.0 | Adapter koneksi MySQL |
 | `dotenv` | ^17.4.2 | Manajemen environment variables |
 | `multer` | ^2.1.1 | Middleware upload file |
 | `prisma` *(dev)* | ^7.8.0 | CLI Prisma untuk migrasi & generate |
@@ -144,7 +144,7 @@ Buat file `.env` di root direktori proyek:
 DATABASE_URL="mysql://username:password@localhost:3306/nama_database"
 ```
 
-Sesuaikan `username`, `password`, dan `nama_database` dengan konfigurasi MariaDB kamu.
+Sesuaikan `username`, `password`, dan `nama_database` dengan konfigurasi MySQL kamu.
 
 ### 4. Setup Database
 
@@ -191,7 +191,7 @@ Aplikasi akan berjalan di: **`http://localhost:3000`** *(atau port yang dikonfig
 
 ## 🗄️ Database
 
-Proyek ini menggunakan **MariaDB** sebagai database relasional yang dikelola melalui **Prisma ORM**. Skema database didefinisikan di `prisma/schema.prisma`.
+Proyek ini menggunakan **MySQL** sebagai database relasional yang dikelola melalui **Prisma ORM**. Skema database didefinisikan di `prisma/schema.prisma`.
 
 ```
 📄 prisma/
