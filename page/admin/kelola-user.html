@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola User - RiseGig</title>
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-admin.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page active" id="page-admin-users">
+        <div class="app-shell">
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Rise<span>Gig</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">NU</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <a href="/page/admin/dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="/page/admin/kelola-user.html" class="nav-item active"><i class="fas fa-users-cog"></i> Kelola User</a>
+                    <div class="nav-item"><i class="fas fa-folder-open"></i> Daftar Project <span class="nav-badge">8</span></div>
+                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</div>
+
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">2</span></div>
+                    <div class="nav-item"><i class="fas fa-cog"></i> Pengaturan</div>
+                </nav>
+
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Kelola User</h2>
+                        <p>Kelola data admin, sponsor, dan freelance RiseGig</p>
+                    </div>
+                    <div class="topbar-right">
+                        <a href="/page/admin/dashboard.html" class="btn btn-outline btn-sm">
+                            <i class="fas fa-arrow-left"></i> Dashboard
+                        </a>
+                        <button class="topbar-icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-dot"></span>
+                        </button>
+                        <div class="topbar-avatar">YS</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+                    <div class="section-header">
+                        <div>
+                            <h3>Status User</h3>
+                            <p>Ringkasan jumlah user berdasarkan role</p>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-icon purple"><i class="fas fa-user-shield"></i></div>
+                            <div class="stat-value" id="totalAdminCount">0</div>
+                            <div class="stat-label">Total Admin</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-icon green"><i class="fas fa-user-tie"></i></div>
+                            <div class="stat-value" id="totalFreelanceCount">0</div>
+                            <div class="stat-label">Total Freelance</div>
+                        </div>
+                    </div>
+
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Data User</h3>
+                                <p>Daftar user lengkap dengan aksi update dan hapus data</p>
+                            </div>
+                        </div>
+                        <div class="table-card">
+                            <div id="userMessage"></div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nama User</th>
+                                            <th>Email</th>
+                                            <th>Role</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="userTableBody">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/js/dashboard-admin.js"></script>
+    <script src="/js/sidebar-user.js"></script>
+</body>
+</html>

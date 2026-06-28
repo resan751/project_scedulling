@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Freelance - WorkDesk</title>
+    <title>Dashboard Freelance - RiseGig</title>
     
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/dashboard-freelance.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,16 +20,16 @@
                 <div class="sidebar-brand">
                     <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
                     <div class="sidebar-brand-text">
-                        <div class="name">Work<span>Desk</span></div>
+                        <div class="name">Rise<span>Gig</span></div>
                         <div class="tagline">Scheduling System</div>
                     </div>
                 </div>
                 
                 <div class="sidebar-user">
-                    <div class="sidebar-avatar">RD</div>
+                    <div class="sidebar-avatar">NU</div>
                     <div class="sidebar-user-info">
-                        <div class="uname">Rudi Dermawan</div>
-                        <div class="urole">Karyawan Utama</div>
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
                     </div>
                 </div>
                 
@@ -48,7 +48,7 @@
                 </nav>
                 
                 <div class="sidebar-logout">
-                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                    <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
                 </div>
             </aside>
 
@@ -57,7 +57,7 @@
                 <header class="topbar">
                     <div class="topbar-title">
                         <h2>Dashboard Freelance</h2>
-                        <p>Temukan project baru dan kelola peran Anda dalam tim</p>
+                        <p id="userWelcome">Temukan project baru dan kelola peran Anda dalam tim</p>
                     </div>
                     <div class="topbar-right">
                         <button class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
@@ -71,12 +71,12 @@
                     <div class="stats-grid">
                         <div class="stat-card purple">
                             <div class="stat-icon purple"><i class="fas fa-briefcase"></i></div>
-                            <div class="stat-value">0</div>
+                            <div class="stat-value" id="availableProjectCount">0</div>
                             <div class="stat-label">Project Tersedia</div>
                         </div>
                         <div class="stat-card green">
                             <div class="stat-icon green"><i class="fas fa-user-check"></i></div>
-                            <div class="stat-value">0</div>
+                            <div class="stat-value" id="registeredProjectCount">0</div>
                             <div class="stat-label">Project Diikuti</div>
                         </div>
                     </div>
@@ -90,6 +90,7 @@
                             </div>
                         </div>
                         <div class="table-card">
+                            <div id="availableMessage"></div>
                             <div class="table-wrapper">
                                 <table>
                                     <thead>
@@ -97,14 +98,15 @@
                                             <th>ID</th>
                                             <th>Project</th>
                                             <th>Role Tersedia</th>
+                                            <th>Bayaran</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Deadline</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="availableTableBody">
                                         <tr>
-                                            <td colspan="6" class="text-center text-muted" style="padding: 24px;">
+                                            <td colspan="7" class="text-center text-muted" style="padding: 24px;">
                                                 <i class="fas fa-spinner fa-spin"></i> Memuat data project...
                                             </td>
                                         </tr>
@@ -126,6 +128,7 @@
                             </a>
                         </div>
                         <div class="table-card">
+                            <div id="registeredMessage"></div>
                             <div class="table-wrapper">
                                 <table>
                                     <thead>
@@ -133,15 +136,16 @@
                                             <th>ID</th>
                                             <th>Project</th>
                                             <th>Role Anda</th>
+                                            <th>Bayaran</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Deadline</th>
                                             <th>Status Project</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody id="registeredTableBody">
                                         <tr>
-                                            <td colspan="7" class="text-center text-muted" style="padding: 24px;">
+                                            <td colspan="8" class="text-center text-muted" style="padding: 24px;">
                                                 <i class="fas fa-spinner fa-spin"></i> Memuat data project...
                                             </td>
                                         </tr>
@@ -155,5 +159,7 @@
             </main>
         </div>
     </div>
+    <script src="/js/dashboard-freelance.js"></script>
+    <script src="/js/sidebar-user.js"></script>
 </body>
 </html>

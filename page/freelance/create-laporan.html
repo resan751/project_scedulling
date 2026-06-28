@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Buat Laporan - WorkDesk</title>
+    <title>Buat Laporan - RiseGig</title>
     
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/dashboard-freelance.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,16 +20,16 @@
                 <div class="sidebar-brand">
                     <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
                     <div class="sidebar-brand-text">
-                        <div class="name">Work<span>Desk</span></div>
+                        <div class="name">Rise<span>Gig</span></div>
                         <div class="tagline">Scheduling System</div>
                     </div>
                 </div>
                 
                 <div class="sidebar-user">
-                    <div class="sidebar-avatar">RD</div>
+                    <div class="sidebar-avatar">NU</div>
                     <div class="sidebar-user-info">
-                        <div class="uname">Rudi Dermawan</div>
-                        <div class="urole">Karyawan Utama</div>
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
                     </div>
                 </div>
                 
@@ -47,7 +47,7 @@
                 </nav>
                 
                 <div class="sidebar-logout">
-                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                    <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
                 </div>
             </aside>
 
@@ -72,38 +72,36 @@
                         </div>
                         <div class="card-body">
                             <form id="form-create-laporan">
+                                <div id="formMessage"></div>
                                 
                                 <div class="two-col mb-20">
                                     <div class="field-group" style="margin-bottom: 0;">
                                         <label class="field-label">Nama Project *</label>
-                                        <select class="field-input field-select" required>
+                                        <select class="field-input field-select" id="namaProject" name="nama_project" required>
                                             <option value="">-- Pilih Project --</option>
-                                            <option>Redesign Website Utama</option>
-                                            <option>Migrasi Database</option>
                                         </select>
                                     </div>
                                     <div class="field-group" style="margin-bottom: 0;">
                                         <label class="field-label">Role Project *</label>
-                                        <select class="field-input field-select" required>
+                                        <select class="field-input field-select" id="roleProject" name="role_project" required>
                                             <option value="">-- Pilih Role --</option>
-                                            <option>Senior Developer</option>
-                                            <option>Backend Developer</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 <div class="field-group">
                                     <label class="field-label">Bukti (Upload File) *</label>
-                                    <div class="upload-area">
+                                    <input type="file" id="bukti" name="bukti" accept=".pdf,.jpg,.jpeg,.png" hidden required>
+                                    <div class="upload-area" id="uploadArea">
                                         <i class="fas fa-cloud-upload-alt"></i>
-                                        <p>Klik atau drag file ke sini</p>
+                                        <p id="buktiFileName">Klik atau drag file ke sini</p>
                                         <span class="text-sm text-muted">Format: PDF, JPG, PNG. Max 5MB</span>
                                     </div>
                                 </div>
 
                                 <div class="field-group">
                                     <label class="field-label">Jenis Laporan *</label>
-                                    <select class="field-input field-select" required>
+                                    <select class="field-input field-select" id="jenisLaporan" name="jenis_laporan" required>
                                         <option value="">-- Pilih Jenis Laporan --</option>
                                         <option value="progress">Progress</option>
                                         <option value="problem">Problem</option>
@@ -113,12 +111,12 @@
 
                                 <div class="field-group">
                                     <label class="field-label">Deskripsi Laporan *</label>
-                                    <textarea class="field-input field-textarea" rows="5" placeholder="Jelaskan detail progress atau kendala yang dihadapi..." required></textarea>
+                                    <textarea class="field-input field-textarea" id="deskripsi" name="deskripsi_laporan" rows="5" placeholder="Jelaskan detail progress atau kendala yang dihadapi..." required></textarea>
                                 </div>
 
                                 <div class="action-group" style="margin-top: 28px; justify-content: flex-end; display: flex; gap: 12px;">
                                     <a href="dashboard.html" class="btn btn-outline">Batal</a>
-                                    <button type="submit" class="btn btn-primary">
+                                    <button type="submit" class="btn btn-primary" id="submitBtn">
                                         <i class="fas fa-paper-plane"></i> Buat Laporan
                                     </button>
                                 </div>
@@ -130,5 +128,7 @@
             </main>
         </div>
     </div>
+    <script src="/js/create-laporan.js"></script>
+    <script src="/js/sidebar-user.js"></script>
 </body>
 </html>

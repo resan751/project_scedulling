@@ -17,14 +17,17 @@ model user {
 model project {
   id_project        Int      @id @default(autoincrement())
   nama_project      String   @db.VarChar(100)
-  nama_user         String   @db.VarChar(255)
+  pembuat           String   @db.VarChar(100)
+  id_user           String   @db.VarChar(255)
   role_project      String   @db.VarChar(255)
+  bayaran           Int
   tgl_mulai         DateTime @db.DateTime
   deadline          DateTime @db.DateTime
   status_project    String   @db.VarChar(100)
   deskripsi_project String   @db.VarChar(255)
 
-  @@index([nama_user])
+  @@index([pembuat])
+  @@index([id_user])
   @@index([nama_project, role_project])
 }
 

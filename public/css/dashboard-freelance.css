@@ -13,6 +13,121 @@
     font-style: italic;
 }
 
+#availableMessage,
+#registeredMessage,
+#detailMessage,
+#submitMessage,
+#laporanMessage {
+    min-height: 20px;
+    padding: 10px 16px 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#detailMessage,
+#submitMessage,
+#laporanMessage {
+    padding: 0;
+    margin-bottom: 12px;
+}
+
+.message.success {
+    color: #047857;
+}
+
+.message.error {
+    color: #B91C1C;
+}
+
+.empty-text {
+    color: var(--text-muted);
+    font-style: italic;
+    text-align: center;
+    padding: 24px;
+}
+
+.link-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 8px;
+    background: var(--purple-50);
+    border: 1px solid var(--purple-200);
+    color: var(--purple-700);
+    font-weight: 800;
+    transition: var(--transition);
+}
+
+.link-btn:hover {
+    color: white;
+    background: var(--purple-600);
+    border-color: var(--purple-600);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(108, 61, 224, 0.22);
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+
+.status-badge.waiting,
+.status-badge.pending {
+    color: #92400E;
+    background: #FEF3C7;
+}
+
+.status-badge.progress {
+    color: var(--purple-800);
+    background: var(--purple-100);
+}
+
+.status-badge.done {
+    color: #065F46;
+    background: #D1FAE5;
+}
+
+.status-badge.rejected {
+    color: #991B1B;
+    background: #FEE2E2;
+}
+
+.role-choice-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.employee-option {
+    padding: 12px 14px;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--purple-100);
+    background: var(--purple-50);
+    transition: var(--transition);
+}
+
+.employee-option:has(input:not(:disabled)) {
+    cursor: pointer;
+}
+
+.employee-option:hover {
+    border-color: var(--purple-300);
+    background: white;
+}
+
+.employee-option input {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--purple-600);
+}
+
 /* Responsive adjustments khusus Freelance */
 @media (max-width: 900px) {
     .left-main {

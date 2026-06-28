@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - WorkDesk</title>
+    <title>Register - RiseGig</title>
     
     <!-- Global Design System CSS -->
-    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/css/global.css">
     <!-- Page Specific Override CSS -->
-    <link rel="stylesheet" href="/public/css/register.css">
+    <link rel="stylesheet" href="/css/register.css">
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
         <div class="login-card">
             <div class="login-brand">
                 <div class="login-brand-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="login-brand-name">Work<span>Desk</span></div>
+                <div class="login-brand-name">Rise<span>Gig</span></div>
             </div>
             
             <h2 class="login-title">Daftar Akun Baru</h2>
@@ -39,7 +39,7 @@
                     <label class="form-label">Nama Lengkap</label>
                     <div class="input-icon-wrap">
                         <i class="fas fa-user fi"></i>
-                        <input type="text" class="form-input" placeholder="Masukkan nama lengkap" required>
+                        <input type="text" class="form-input" name="nama_user" placeholder="Masukkan nama lengkap" required>
                     </div>
                 </div>
 
@@ -48,7 +48,7 @@
                     <label class="form-label">Email</label>
                     <div class="input-icon-wrap">
                         <i class="fas fa-envelope fi"></i>
-                        <input type="email" class="form-input" placeholder="contoh@email.com" required>
+                        <input type="email" class="form-input" name="email" placeholder="contoh@email.com" required>
                     </div>
                 </div>
 
@@ -57,7 +57,18 @@
                     <label class="form-label">Password</label>
                     <div class="input-icon-wrap">
                         <i class="fas fa-lock fi"></i>
-                        <input type="password" class="form-input" placeholder="Buat password yang aman" required>
+                        <input type="password" class="form-input" name="password" placeholder="Buat password yang aman" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Role User</label>
+                    <div class="input-icon-wrap">
+                        <i class="fas fa-user-tag fi"></i>
+                        <select class="form-input" name="role_user" required>
+                            <option value="freelance" selected>Freelance / Karyawan</option>
+                            <option value="sponsor">Sponsor</option>
+                        </select>
                     </div>
                 </div>
 
@@ -69,5 +80,39 @@
             </div>
         </div>
     </div>
+    <script>
+        document.getElementById('form-register').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(event.currentTarget);
+            const payload = {
+                nama_user: String(formData.get('nama_user') || '').trim(),
+                email: String(formData.get('email') || '').trim(),
+                password: String(formData.get('password') || ''),
+                role_user: String(formData.get('role_user') || '').trim(),
+            };
+
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+                const result = await response.json();
+
+                if (!response.ok) {
+                    alert(result.message || 'Registrasi gagal.');
+                    return;
+                }
+
+                alert(result.message || 'Registrasi berhasil.');
+                window.location.href = result.redirectTo || '/login.html';
+            } catch (error) {
+                alert('Terjadi kesalahan saat registrasi.');
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-const logoutBtn = document.getElementById('logoutBtn');
+const logoutBtn = document.getElementById('logoutBtn') || document.querySelector('.btn-logout');
 const calendarDays = document.getElementById('calendarDays');
 const calendarCurrent = document.getElementById('calendarCurrent');
 const monthSelect = document.getElementById('monthSelect');
@@ -9,9 +9,13 @@ const userTableBody = document.getElementById('userTableBody');
 const userMessage = document.getElementById('userMessage');
 const projectTableBody = document.getElementById('projectTableBody');
 const projectMessage = document.getElementById('projectMessage');
+const myProjectTableBody = document.getElementById('myProjectTableBody');
+const myProjectMessage = document.getElementById('myProjectMessage');
 const totalProjectCount = document.getElementById('totalProjectCount');
-const waitingProjectCount = document.getElementById('waitingProjectCount');
-const approvedProjectCount = document.getElementById('approvedProjectCount');
+const totalAdminCount = document.getElementById('totalAdminCount');
+const pendingProjectCount = document.getElementById('pendingProjectCount');
+const totalFreelanceCount = document.getElementById('totalFreelanceCount');
+const finishedProjectCount = document.getElementById('finishedProjectCount');
 const editProjectModal = document.getElementById('editProjectModal');
 const editProjectForm = document.getElementById('editProjectForm');
 const closeEditModalBtn = document.getElementById('closeEditModalBtn');
@@ -19,12 +23,18 @@ const cancelEditBtn = document.getElementById('cancelEditBtn');
 const saveEditBtn = document.getElementById('saveEditBtn');
 const editProjectId = document.getElementById('editProjectId');
 const editNamaProject = document.getElementById('editNamaProject');
+const editPembuat = document.getElementById('editPembuat');
+const editBayaran = document.getElementById('editBayaran');
 const editEmployeeList = document.getElementById('editEmployeeList');
 const addEditRoleProjectBtn = document.getElementById('addEditRoleProjectBtn');
 const editTanggalMulai = document.getElementById('editTanggalMulai');
 const editDeadline = document.getElementById('editDeadline');
 const editDeskripsi = document.getElementById('editDeskripsi');
 const editProjectMessage = document.getElementById('editProjectMessage');
+const isSponsorArea = window.location.pathname.includes('/sponsor/');
+const projectApiBase = isSponsorArea ? '/api/sponsor/projects' : '/api/admin/projects';
+const projectUsersApi = isSponsorArea ? '/api/sponsor/users' : '/api/admin/users';
+let currentUser = null;
 
 const monthNames = [
     'Januari',
@@ -57,6 +67,8 @@ async function readJson(response) {
 }
 
 function setMessage(element, message, type = '') {
+    if (!element) return;
+
     element.textContent = message;
     element.className = `message ${type}`.trim();
 }
@@ -78,6 +90,14 @@ function formatDateInput(value) {
     return `${year}-${month}-${day}`;
 }
 
+function formatRupiah(value) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+    }).format(Number(value || 0));
+}
+
 function getStatusClass(status) {
     if (status === 'pending') return 'waiting';
     if (status === 'belum dimulai') return 'pending';
@@ -87,19 +107,40 @@ function getStatusClass(status) {
     return '';
 }
 
-function renderProjectSummary(projects) {
-    const waitingProjects = projects.filter((project) => project.status_project === 'pending').length;
-    const approvedProjects = projects.filter((project) => (
-        ['belum dimulai', 'sedang dikerjakan', 'selesai'].includes(project.status_project)
-    )).length;
+function isProjectWaitingForRoles(project) {
+    const roles = getListValue(project.role_project);
+    const freelancerIds = getListValue(project.id_user);
 
-    if (!totalProjectCount || !waitingProjectCount || !approvedProjectCount) {
+    return roles.length > 0 && roles.some((_, index) => !String(freelancerIds[index] || '').trim());
+}
+
+function isOwnedProject(project) {
+    return String(project.pembuat || '').trim() === String(currentUser?.nama_user || '').trim();
+}
+
+function renderProjectSummary(projects, users = []) {
+    if (!totalProjectCount || !pendingProjectCount || !totalFreelanceCount || !finishedProjectCount) {
         return;
     }
 
+    const pendingProjects = projects.filter(isProjectWaitingForRoles).length;
+    const totalFreelancers = users.filter((user) => user.role === 'freelance').length;
+    const finishedProjects = projects.filter((project) => project.status_project === 'selesai').length;
+
     totalProjectCount.textContent = projects.length;
-    waitingProjectCount.textContent = waitingProjects;
-    approvedProjectCount.textContent = approvedProjects;
+    pendingProjectCount.textContent = pendingProjects;
+    totalFreelanceCount.textContent = totalFreelancers;
+    finishedProjectCount.textContent = finishedProjects;
+}
+
+function renderUserSummary(users) {
+    if (totalAdminCount) {
+        totalAdminCount.textContent = users.filter((user) => user.role === 'admin').length;
+    }
+
+    if (totalFreelanceCount && !totalProjectCount) {
+        totalFreelanceCount.textContent = users.filter((user) => user.role === 'freelance').length;
+    }
 }
 
 function getListValue(value) {
@@ -123,9 +164,10 @@ function createRoleProjectInput(container, value = '', removable = true) {
     const row = document.createElement('div');
     const input = document.createElement('input');
 
-    row.className = 'role-project-row';
+    row.className = `role-project-row${removable ? ' can-remove' : ''}`;
     input.type = 'text';
     input.name = 'role_project';
+    input.className = 'field-input';
     input.placeholder = 'Contoh: backend';
     input.required = true;
     input.value = value;
@@ -133,9 +175,9 @@ function createRoleProjectInput(container, value = '', removable = true) {
 
     if (removable) {
         const removeButton = document.createElement('button');
-        removeButton.className = 'icon-btn';
+        removeButton.className = 'role-remove-btn';
         removeButton.type = 'button';
-        removeButton.textContent = 'x';
+        removeButton.innerHTML = '<i class="fas fa-trash"></i>';
         removeButton.setAttribute('aria-label', 'Hapus role project');
         removeButton.addEventListener('click', () => {
             row.remove();
@@ -204,15 +246,20 @@ function renderUsers(users) {
         roleCell.appendChild(roleBadge);
 
         rowActions.className = 'row-actions';
+        actionCell.className = 'action-cell';
         updateLink.className = 'action-btn update';
         updateLink.href = `/page/admin/user-update.html?id=${user.id_user}`;
-        updateLink.textContent = 'Update';
+        updateLink.title = 'Update user';
+        updateLink.setAttribute('aria-label', `Update user ${user.nama_user}`);
+        updateLink.innerHTML = '<i class="fas fa-pen"></i><span>Update</span>';
 
         deleteButton.className = 'action-btn delete user-delete-btn';
         deleteButton.type = 'button';
         deleteButton.dataset.id = user.id_user;
         deleteButton.dataset.name = user.nama_user;
-        deleteButton.textContent = 'Delete';
+        deleteButton.title = 'Hapus user';
+        deleteButton.setAttribute('aria-label', `Hapus user ${user.nama_user}`);
+        deleteButton.innerHTML = '<i class="fas fa-trash"></i><span>Hapus</span>';
 
         rowActions.append(updateLink, deleteButton);
         actionCell.appendChild(rowActions);
@@ -224,6 +271,8 @@ function renderUsers(users) {
 function openEditProjectModal(project) {
     editProjectId.value = project.id_project;
     editNamaProject.value = project.nama_project;
+    editPembuat.value = project.pembuat || '-';
+    editBayaran.value = project.bayaran ?? 0;
     editTanggalMulai.value = formatDateInput(project.tgl_mulai);
     editDeadline.value = formatDateInput(project.deadline);
     editDeskripsi.value = project.deskripsi_project || '';
@@ -239,6 +288,10 @@ function closeEditProjectModal() {
     setMessage(editProjectMessage, '');
 }
 
+function showEditValidationMessage() {
+    setMessage(editProjectMessage, 'Lengkapi semua field wajib sebelum menyimpan perubahan project.', 'error');
+}
+
 async function deleteProject(project) {
     const shouldDelete = confirm(`Hapus project "${project.nama_project}"?`);
     if (!shouldDelete) {
@@ -248,7 +301,7 @@ async function deleteProject(project) {
     setMessage(projectMessage, 'Menghapus project...');
 
     try {
-        const response = await fetch(`/api/admin/projects/${project.id_project}`, {
+        const response = await fetch(`${projectApiBase}/${project.id_project}`, {
             method: 'DELETE',
         });
         const result = await readJson(response);
@@ -263,33 +316,42 @@ async function deleteProject(project) {
     }
 }
 
-function renderProjects(projects) {
+function renderProjects(projects, targetTableBody = projectTableBody) {
+    if (!targetTableBody) return;
+
     if (!projects.length) {
-        projectTableBody.innerHTML = '<tr><td colspan="8">Belum ada data project.</td></tr>';
+        targetTableBody.innerHTML = '<tr><td colspan="10">Belum ada data project.</td></tr>';
         return;
     }
 
-    projectTableBody.innerHTML = '';
+    targetTableBody.innerHTML = '';
 
     projects.forEach((project) => {
         const row = document.createElement('tr');
         const idCell = document.createElement('td');
         const projectCell = document.createElement('td');
+        const makerCell = document.createElement('td');
         const creatorCell = document.createElement('td');
         const employeeCell = document.createElement('td');
+        const paymentCell = document.createElement('td');
         const startCell = document.createElement('td');
         const deadlineCell = document.createElement('td');
         const statusCell = document.createElement('td');
         const actionCell = document.createElement('td');
         const statusBadge = document.createElement('span');
+        const rowActions = document.createElement('div');
+        const detailLink = document.createElement('a');
         const editButton = document.createElement('button');
         const deleteButton = document.createElement('button');
+        const sponsorOwnsProject = isSponsorArea && isOwnedProject(project);
 
         idCell.textContent = project.id_project;
         projectCell.textContent = project.nama_project;
+        makerCell.textContent = project.pembuat || '-';
         const freelancers = getListValue(project.nama_user).filter(Boolean);
         creatorCell.textContent = freelancers.length > 0 ? freelancers.join(', ') : 'Belum ada freelance';
         renderRoleProjectToggle(project, employeeCell);
+        paymentCell.textContent = formatRupiah(project.bayaran);
         startCell.textContent = formatDate(project.tgl_mulai);
         deadlineCell.textContent = formatDate(project.deadline);
         statusBadge.className = `status-badge ${getStatusClass(project.status_project)}`.trim();
@@ -297,16 +359,35 @@ function renderProjects(projects) {
         statusCell.appendChild(statusBadge);
 
         actionCell.className = 'action-cell';
-        if (project.status_project === 'pending') {
+        rowActions.className = 'row-actions project-actions';
+
+        if (sponsorOwnsProject) {
+            detailLink.className = 'action-btn detail';
+            detailLink.href = `/page/sponsor/detail-project.html?id=${project.id_project}`;
+            detailLink.title = 'Lihat detail project';
+            detailLink.setAttribute('aria-label', `Lihat detail project ${project.nama_project}`);
+            detailLink.innerHTML = '<i class="fas fa-eye"></i><span>Detail</span>';
+            rowActions.appendChild(detailLink);
+        }
+
+        if (sponsorOwnsProject && project.status_project === 'pending') {
             editButton.className = 'action-btn edit';
             editButton.type = 'button';
-            editButton.textContent = 'Edit';
+            editButton.title = 'Edit project';
+            editButton.setAttribute('aria-label', `Edit project ${project.nama_project}`);
+            editButton.innerHTML = '<i class="fas fa-pen"></i><span>Edit</span>';
             editButton.addEventListener('click', () => openEditProjectModal(project));
             deleteButton.className = 'action-btn delete';
             deleteButton.type = 'button';
-            deleteButton.textContent = 'Hapus';
+            deleteButton.title = 'Hapus project';
+            deleteButton.setAttribute('aria-label', `Hapus project ${project.nama_project}`);
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i><span>Hapus</span>';
             deleteButton.addEventListener('click', () => deleteProject(project));
-            actionCell.append(editButton, deleteButton);
+            rowActions.append(editButton, deleteButton);
+        }
+
+        if (rowActions.children.length) {
+            actionCell.appendChild(rowActions);
         } else {
             const text = document.createElement('span');
             text.className = 'disabled-text';
@@ -314,8 +395,8 @@ function renderProjects(projects) {
             actionCell.appendChild(text);
         }
 
-        row.append(idCell, projectCell, creatorCell, employeeCell, startCell, deadlineCell, statusCell, actionCell);
-        projectTableBody.appendChild(row);
+        row.append(idCell, projectCell, makerCell, creatorCell, employeeCell, paymentCell, startCell, deadlineCell, statusCell, actionCell);
+        targetTableBody.appendChild(row);
     });
 }
 
@@ -323,19 +404,42 @@ async function loadProjects(successMessage = '', successType = '') {
     setMessage(projectMessage, 'Memuat data project...');
 
     try {
-        const response = await fetch('/api/admin/projects');
-        const result = await readJson(response);
+        const [projectResponse, userResponse, meResponse] = await Promise.all([
+            fetch(projectApiBase),
+            fetch(projectUsersApi),
+            fetch('/api/me'),
+        ]);
+        const result = await readJson(projectResponse);
+        const userResult = await readJson(userResponse);
+        const meResult = await readJson(meResponse);
 
-        if (!response.ok) {
+        if (!projectResponse.ok) {
             throw new Error(result.message || 'Data project gagal dimuat.');
         }
 
+        if (!userResponse.ok) {
+            throw new Error(userResult.message || 'Data freelance gagal dimuat.');
+        }
+
+        if (!meResponse.ok) {
+            throw new Error(meResult.message || 'Data user login gagal dimuat.');
+        }
+
+        currentUser = meResult.user || null;
         projectsData = result.projects || [];
-        renderProjectSummary(projectsData);
-        renderProjects(projectsData);
+        renderProjectSummary(projectsData, userResult.users || []);
+        renderProjects(projectsData, projectTableBody);
+        if (myProjectTableBody) {
+            renderProjects(projectsData.filter(isOwnedProject), myProjectTableBody);
+            setMessage(myProjectMessage, successMessage, successType);
+        }
         setMessage(projectMessage, successMessage, successType);
     } catch (error) {
-        projectTableBody.innerHTML = '<tr><td colspan="8">Data gagal dimuat.</td></tr>';
+        projectTableBody.innerHTML = '<tr><td colspan="10">Data gagal dimuat.</td></tr>';
+        if (myProjectTableBody) {
+            myProjectTableBody.innerHTML = '<tr><td colspan="10">Data gagal dimuat.</td></tr>';
+            setMessage(myProjectMessage, error.message, 'error');
+        }
         setMessage(projectMessage, error.message, 'error');
     }
 }
@@ -351,7 +455,9 @@ async function loadUsers(successMessage = '', successType = '') {
             throw new Error(result.message || 'Data user gagal dimuat.');
         }
 
-        renderUsers(result.users || []);
+        const users = result.users || [];
+        renderUserSummary(users);
+        renderUsers(users);
         setMessage(userMessage, successMessage, successType);
     } catch (error) {
         userTableBody.innerHTML = '<tr><td colspan="5">Data gagal dimuat.</td></tr>';
@@ -517,36 +623,62 @@ if (userTableBody && userMessage) {
             }
 
             await loadUsers(result.message || 'User berhasil dihapus.', 'success');
-            await loadProjects();
+            if (projectTableBody && projectMessage) {
+                await loadProjects();
+            }
         } catch (error) {
             setMessage(userMessage, error.message, 'error');
             deleteButton.disabled = false;
-            deleteButton.textContent = 'Delete';
+            deleteButton.innerHTML = '<i class="fas fa-trash"></i><span>Hapus</span>';
         }
     });
 }
 
 if (editProjectForm) {
+    editProjectForm.addEventListener('invalid', showEditValidationMessage, true);
+
+    if (saveEditBtn) {
+        saveEditBtn.addEventListener('click', () => {
+            if (!editProjectForm.checkValidity()) {
+                showEditValidationMessage();
+            }
+        });
+    }
+
     editProjectForm.addEventListener('submit', async (event) => {
         event.preventDefault();
+
+        if (!editProjectForm.checkValidity()) {
+            showEditValidationMessage();
+            editProjectForm.reportValidity();
+            return;
+        }
 
         const formData = new FormData(editProjectForm);
         const payload = Object.fromEntries(formData.entries());
         payload.role_project = [...new Set(formData.getAll('role_project')
             .map((role) => String(role || '').trim())
             .filter(Boolean))];
+        payload.bayaran = Number(payload.bayaran);
 
         if (!payload.role_project.length) {
             setMessage(editProjectMessage, 'Isi minimal satu role project.', 'error');
             return;
         }
 
-        saveEditBtn.disabled = true;
-        saveEditBtn.textContent = 'Menyimpan...';
+        if (!Number.isInteger(payload.bayaran) || payload.bayaran < 0) {
+            setMessage(editProjectMessage, 'Bayaran harus berupa angka 0 atau lebih.', 'error');
+            return;
+        }
+
+        if (saveEditBtn) {
+            saveEditBtn.disabled = true;
+            saveEditBtn.textContent = 'Menyimpan...';
+        }
         setMessage(editProjectMessage, '');
 
         try {
-            const response = await fetch(`/api/admin/projects/${editProjectId.value}`, {
+            const response = await fetch(`${projectApiBase}/${editProjectId.value}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -564,8 +696,10 @@ if (editProjectForm) {
         } catch (error) {
             setMessage(editProjectMessage, error.message, 'error');
         } finally {
-            saveEditBtn.disabled = false;
-            saveEditBtn.textContent = 'Simpan';
+            if (saveEditBtn) {
+                saveEditBtn.disabled = false;
+                saveEditBtn.textContent = 'Simpan';
+            }
         }
     });
 }

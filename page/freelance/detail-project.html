@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Detail Project - WorkDesk</title>
+    <title>Detail Project - RiseGig</title>
     
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/dashboard-freelance.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
     
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,16 +20,16 @@
                 <div class="sidebar-brand">
                     <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
                     <div class="sidebar-brand-text">
-                        <div class="name">Work<span>Desk</span></div>
+                        <div class="name">Rise<span>Gig</span></div>
                         <div class="tagline">Scheduling System</div>
                     </div>
                 </div>
                 
                 <div class="sidebar-user">
-                    <div class="sidebar-avatar">RD</div>
+                    <div class="sidebar-avatar">NU</div>
                     <div class="sidebar-user-info">
-                        <div class="uname">Rudi Dermawan</div>
-                        <div class="urole">Karyawan Utama</div>
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
                     </div>
                 </div>
                 
@@ -69,23 +69,24 @@
                         <!-- Info Project -->
                         <div class="card">
                             <div class="card-head">
-                                <h3><i class="fas fa-rocket" style="color: var(--purple-500); margin-right: 8px;"></i> Memuat Nama Project...</h3>
-                                <span class="badge badge-progress"><span class="badge-dot"></span> Memuat...</span>
+                                <h3><i class="fas fa-rocket" style="color: var(--purple-500); margin-right: 8px;"></i> <span id="projectTitle">Memuat Nama Project...</span></h3>
+                                <span class="status-badge progress" id="projectStatus">Memuat...</span>
                             </div>
                             <div class="card-body">
+                                <div id="detailMessage"></div>
                                 <div class="field-group">
                                     <label class="field-label">Deskripsi Project</label>
-                                    <p class="text-muted">Memuat deskripsi...</p>
+                                    <p class="text-muted" id="projectDescription">Memuat deskripsi...</p>
                                 </div>
 
                                 <div class="two-col mb-20">
                                     <div class="field-group" style="margin-bottom: 0;">
                                         <label class="field-label">Tanggal Mulai</label>
-                                        <div class="field-input" style="background: white; border-color: var(--purple-200);">-</div>
+                                        <input type="text" class="field-input" id="projectStartDate" value="-" readonly>
                                     </div>
                                     <div class="field-group" style="margin-bottom: 0;">
                                         <label class="field-label">Deadline</label>
-                                        <div class="field-input" style="background: white; border-color: var(--purple-200);">-</div>
+                                        <input type="text" class="field-input" id="projectDeadline" value="-" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -97,27 +98,54 @@
                                 <h3>Pilih Peran / Role</h3>
                             </div>
                             <div class="card-body">
-                                <p class="text-sm text-muted mb-12">Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.</p>
-                                
-                                <div class="field-group">
-                                    <label class="field-label">Role Project Tersedia</label>
-                                    <div class="upload-area" style="padding: 20px; cursor: default;">
-                                        <i class="fas fa-spinner fa-spin" style="font-size: 20px;"></i>
-                                        <p style="margin-top: 8px;">Memuat peran project...</p>
+                                <form id="registerForm">
+                                    <p class="text-sm text-muted mb-12">Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.</p>
+                                    
+                                    <div class="field-group">
+                                        <label class="field-label">Role Project Tersedia</label>
+                                        <div class="role-choice-list" id="rolesList">
+                                            <div class="empty-state" style="padding: 24px;">
+                                                <i class="fas fa-spinner fa-spin" style="font-size: 20px;"></i>
+                                                <p>Memuat peran project...</p>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div class="field-group">
-                                    <label class="field-label">Daftar Peran Terpilih</label>
-                                    <div class="empty-state" style="padding: 24px;">
-                                        <i class="fas fa-inbox" style="font-size: 24px;"></i>
-                                        <p>Belum ada peran dipilih</p>
-                                    </div>
-                                </div>
+                                    <div id="submitMessage"></div>
 
-                                <button class="btn btn-primary" style="width: 100%; justify-content: center;">
-                                    <i class="fas fa-check"></i> Daftar Peran Terpilih
-                                </button>
+                                    <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; justify-content: center;" disabled>
+                                        <i class="fas fa-check"></i> Daftar Peran Terpilih
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Laporan Project -->
+                        <div class="card">
+                            <div class="card-head">
+                                <h3><i class="fas fa-file-alt" style="color: var(--purple-500); margin-right: 8px;"></i> Laporan Project</h3>
+                            </div>
+                            <div class="card-body">
+                                <div id="laporanMessage"></div>
+                                <div class="table-wrapper">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Nama User</th>
+                                                <th>Role</th>
+                                                <th>Jenis</th>
+                                                <th>Deskripsi</th>
+                                                <th>Bukti</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="laporanTableBody">
+                                            <tr>
+                                                <td colspan="6" class="empty-text">Memuat laporan project...</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -125,5 +153,7 @@
             </main>
         </div>
     </div>
+    <script src="/js/detail-project.js"></script>
+    <script src="/js/sidebar-user.js"></script>
 </body>
 </html>

@@ -69,6 +69,45 @@ function getListValue(value) {
     }
 }
 
+async function attachProjectUserNames(projects) {
+    const userIds = [...new Set(projects
+        .flatMap((project) => getListValue(project.id_user))
+        .map((id) => Number(id))
+        .filter((id) => Number.isInteger(id) && id > 0))]
+
+    if (!userIds.length) {
+        return projects.map((project) => ({
+            ...project,
+            role_project: getListValue(project.role_project),
+            id_user: getListValue(project.id_user),
+            nama_user: getListValue(project.id_user).map(() => ''),
+        }))
+    }
+
+    const users = await prisma.user.findMany({
+        where: {
+            id_user: {
+                in: userIds,
+            },
+        },
+        select: {
+            id_user: true,
+            nama_user: true,
+        },
+    })
+    const userNameById = new Map(users.map((user) => [String(user.id_user), user.nama_user]))
+
+    return projects.map((project) => {
+        const assignedIds = getListValue(project.id_user)
+        return {
+            ...project,
+            role_project: getListValue(project.role_project),
+            id_user: assignedIds,
+            nama_user: assignedIds.map((id) => (id ? userNameById.get(String(id)) || 'User tidak ditemukan' : '')),
+        }
+    })
+}
+
 function getApprovedStatus(tgl_mulai) {
     const today = new Date()
     const startDate = new Date(tgl_mulai)
@@ -130,11 +169,7 @@ export const getProjects = async (req, res) => {
 
         const syncedProjects = await Promise.all(dbProjects.map(syncProjectStatus))
 
-        const projects = syncedProjects.map((project) => ({
-            ...project,
-            role_project: getListValue(project.role_project),
-            nama_user: getListValue(project.nama_user),
-        }))
+        const projects = await attachProjectUserNames(syncedProjects)
 
         res.json({ projects })
     } catch (error) {
@@ -164,16 +199,50 @@ export const getProject = async (req, res) => {
 
         const syncedProject = await syncProjectStatus(dbProject)
 
-        const project = {
-            ...syncedProject,
-            role_project: getListValue(syncedProject.role_project),
-            nama_user: getListValue(syncedProject.nama_user),
-        }
+        const [project] = await attachProjectUserNames([syncedProject])
 
         res.json({ project })
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Data project gagal dimuat.' })
+    }
+}
+
+export const getProjectLaporan = async (req, res) => {
+    if (!requireFreelanceApi(req, res)) return
+
+    const id_project = Number(req.params.id)
+    if (!Number.isInteger(id_project) || id_project <= 0) {
+        return res.status(400).json({ message: 'ID project tidak valid.' })
+    }
+
+    try {
+        const project = await prisma.project.findUnique({
+            where: {
+                id_project,
+            },
+            select: {
+                nama_project: true,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        const laporan = await prisma.laporan.findMany({
+            where: {
+                nama_project: project.nama_project,
+            },
+            orderBy: {
+                id_laporan: 'desc',
+            },
+        })
+
+        res.json({ laporan })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data laporan gagal dimuat.' })
     }
 }
 
@@ -207,11 +276,11 @@ export const registerProject = async (req, res) => {
         }
 
         const roles = getListValue(project.role_project)
-        const freelancers = getListValue(project.nama_user)
+        const freelancerIds = getListValue(project.id_user)
 
-        // Ensure freelancers array has the same length as roles
-        while (freelancers.length < roles.length) {
-            freelancers.push('')
+        // Ensure registered user id array has the same length as roles
+        while (freelancerIds.length < roles.length) {
+            freelancerIds.push('')
         }
 
         // Validate roles
@@ -220,7 +289,7 @@ export const registerProject = async (req, res) => {
             if (index === -1) {
                 return res.status(400).json({ message: `Role "${role}" tidak tersedia untuk project ini.` })
             }
-            if (freelancers[index] !== '') {
+            if (String(freelancerIds[index] || '').trim() !== '') {
                 return res.status(400).json({ message: `Role "${role}" sudah diambil oleh freelance lain.` })
             }
         }
@@ -228,11 +297,11 @@ export const registerProject = async (req, res) => {
         // Update selected roles
         for (const role of selectedRoles) {
             const index = roles.indexOf(role)
-            freelancers[index] = session.nama_user
+            freelancerIds[index] = session.id_user
         }
 
         // Check if all roles are now filled (no empty string/null)
-        const allFilled = freelancers.every((name) => name && name.trim() !== '')
+        const allFilled = freelancerIds.every((id) => String(id || '').trim() !== '')
 
         let status_project = 'pending'
         if (allFilled) {
@@ -244,18 +313,15 @@ export const registerProject = async (req, res) => {
                 id_project,
             },
             data: {
-                nama_user: JSON.stringify(freelancers),
+                id_user: JSON.stringify(freelancerIds),
                 status_project,
             },
         })
+        const [hydratedProject] = await attachProjectUserNames([updatedProject])
 
         res.json({
             message: 'Berhasil mendaftar ke project.',
-            project: {
-                ...updatedProject,
-                role_project: roles,
-                nama_user: freelancers,
-            },
+            project: hydratedProject,
         })
     } catch (error) {
         console.error(error)
@@ -279,8 +345,21 @@ export const createLaporan = async (req, res) => {
     }
 
     try {
+        const currentUser = await prisma.user.findUnique({
+            where: {
+                id_user: session.id_user,
+            },
+            select: {
+                nama_user: true,
+            },
+        })
+
+        if (!currentUser) {
+            return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
         // Verify that the user is registered in the specified project with the specified role
-        const project = await prisma.project.findUnique({
+        const project = await prisma.project.findFirst({
             where: {
                 nama_project,
             },
@@ -291,14 +370,14 @@ export const createLaporan = async (req, res) => {
         }
 
         const roles = getListValue(project.role_project)
-        const freelancers = getListValue(project.nama_user)
+        const freelancerIds = getListValue(project.id_user)
 
         const roleIndex = roles.indexOf(role_project)
         if (roleIndex === -1) {
             return res.status(400).json({ message: 'Role project tidak ditemukan dalam project ini.' })
         }
 
-        if (freelancers[roleIndex] !== session.nama_user) {
+        if (String(freelancerIds[roleIndex] || '') !== String(session.id_user)) {
             return res.status(403).json({ message: 'Anda tidak terdaftar dalam role ini untuk project ini.' })
         }
 
@@ -308,7 +387,7 @@ export const createLaporan = async (req, res) => {
         const laporan = await prisma.laporan.create({
             data: {
                 nama_project,
-                nama_user: session.nama_user,
+                nama_user: currentUser.nama_user,
                 role_project,
                 bukti: buktiPath,
                 jenis_laporan,

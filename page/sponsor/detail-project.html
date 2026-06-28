@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Project Sponsor - RiseGig</title>
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-admin.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="page active" id="page-sponsor-detail">
+        <div class="app-shell">
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Rise<span>Gig</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">SP</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Sponsor</div>
+                        <div class="urole">role_user</div>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <a href="/page/sponsor/dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="/page/sponsor/project-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Buat Project Baru</a>
+                    <div class="nav-item active"><i class="fas fa-folder-open"></i> Detail Project</div>
+
+                    <div class="nav-section-title">Lainnya</div>
+                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi</div>
+                    <div class="nav-item"><i class="fas fa-cog"></i> Pengaturan</div>
+                </nav>
+
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Detail Project</h2>
+                        <p>Informasi project, role, dan laporan freelancer</p>
+                    </div>
+                    <div class="topbar-right">
+                        <a href="/page/sponsor/dashboard.html" class="btn btn-outline btn-sm">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </a>
+                        <div class="topbar-avatar">SP</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+                    <div class="card mb-24">
+                        <div class="card-head">
+                            <h3><i class="fas fa-rocket" style="color: var(--purple-500); margin-right: 8px;"></i> <span id="projectTitle">Memuat Nama Project...</span></h3>
+                            <span class="status-badge progress" id="projectStatus">Memuat...</span>
+                        </div>
+                        <div class="card-body">
+                            <div id="detailMessage"></div>
+                            <div class="field-group">
+                                <label class="field-label">Deskripsi Project</label>
+                                <p class="text-muted" id="projectDescription">Memuat deskripsi...</p>
+                            </div>
+
+                            <div class="two-col mb-20">
+                                <div class="field-group" style="margin-bottom: 0;">
+                                    <label class="field-label">Pembuat</label>
+                                    <input type="text" class="field-input" id="projectMaker" value="-" readonly>
+                                </div>
+                                <div class="field-group" style="margin-bottom: 0;">
+                                    <label class="field-label">Bayaran</label>
+                                    <input type="text" class="field-input" id="projectPayment" value="-" readonly>
+                                </div>
+                            </div>
+
+                            <div class="two-col">
+                                <div class="field-group" style="margin-bottom: 0;">
+                                    <label class="field-label">Tanggal Mulai</label>
+                                    <input type="text" class="field-input" id="projectStartDate" value="-" readonly>
+                                </div>
+                                <div class="field-group" style="margin-bottom: 0;">
+                                    <label class="field-label">Deadline</label>
+                                    <input type="text" class="field-input" id="projectDeadline" value="-" readonly>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card mb-24">
+                        <div class="card-head">
+                            <h3>Role Project</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="role-choice-list" id="rolesList">
+                                <div class="empty-state" style="padding: 24px;">
+                                    <i class="fas fa-spinner fa-spin" style="font-size: 20px;"></i>
+                                    <p>Memuat role project...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-head">
+                            <h3><i class="fas fa-file-alt" style="color: var(--purple-500); margin-right: 8px;"></i> Laporan Project</h3>
+                        </div>
+                        <div class="card-body">
+                            <div id="laporanMessage"></div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nama User</th>
+                                            <th>Role</th>
+                                            <th>Jenis</th>
+                                            <th>Deskripsi</th>
+                                            <th>Bukti</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="laporanTableBody">
+                                        <tr>
+                                            <td colspan="6" class="empty-text">Memuat laporan project...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/js/detail-project-sponsor.js"></script>
+    <script src="/js/sidebar-user.js"></script>
+</body>
+</html>

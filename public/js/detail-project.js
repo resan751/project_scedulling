@@ -1,4 +1,4 @@
-const logoutBtn = document.getElementById('logoutBtn');
+const logoutBtn = document.getElementById('logoutBtn') || document.querySelector('.btn-logout');
 const projectTitle = document.getElementById('projectTitle');
 const projectStatus = document.getElementById('projectStatus');
 const projectDescription = document.getElementById('projectDescription');
@@ -9,6 +9,8 @@ const registerForm = document.getElementById('registerForm');
 const submitBtn = document.getElementById('submitBtn');
 const detailMessage = document.getElementById('detailMessage');
 const submitMessage = document.getElementById('submitMessage');
+const laporanMessage = document.getElementById('laporanMessage');
+const laporanTableBody = document.getElementById('laporanTableBody');
 
 let currentUser = null;
 let projectId = null;
@@ -23,6 +25,8 @@ async function readJson(response) {
 }
 
 function setMessage(element, message, type = '') {
+    if (!element) return;
+
     element.textContent = message;
     element.className = `message ${type}`.trim();
     if (!message) {
@@ -47,6 +51,16 @@ function getStatusClass(status) {
     if (status === 'selesai') return 'done';
     if (status === 'ditolak') return 'rejected';
     return '';
+}
+
+function getLaporanTypeLabel(type) {
+    const labels = {
+        progress: 'Progress',
+        problem: 'Problem',
+        notice: 'Notice',
+    };
+
+    return labels[type] || type || '-';
 }
 
 async function checkAuth() {
@@ -77,13 +91,21 @@ async function checkAuth() {
     }
 }
 
-function renderRoles(roles, freelancers) {
+function renderRoles(roles, freelancers, freelancerIds) {
     rolesList.innerHTML = '';
+    submitBtn.disabled = true;
     
     let hasVacantRoles = false;
 
+    if (!roles.length) {
+        rolesList.innerHTML = '<div class="empty-state" style="padding: 24px;"><i class="fas fa-inbox" style="font-size: 24px;"></i><p>Belum ada role project.</p></div>';
+        submitBtn.disabled = true;
+        return;
+    }
+
     roles.forEach((role, index) => {
         const assignedUser = freelancers[index];
+        const assignedUserId = freelancerIds[index];
         const container = document.createElement('label');
         container.className = 'employee-option';
         container.style.display = 'flex';
@@ -109,7 +131,7 @@ function renderRoles(roles, freelancers) {
             badge.style.fontSize = '0.8rem';
             badge.style.padding = '3px 8px';
             badge.style.borderRadius = '4px';
-            if (assignedUser === currentUser.nama_user) {
+            if (String(assignedUserId) === String(currentUser.id_user)) {
                 badge.textContent = 'Diisi oleh Anda';
                 badge.style.background = 'rgba(22, 101, 52, 0.15)';
                 badge.style.color = '#166534';
@@ -170,7 +192,10 @@ function renderRoles(roles, freelancers) {
             cb.parentElement.parentElement.style.opacity = '0.7';
         });
     } else {
-        submitBtn.textContent = 'Daftar Peran Terpilih';
+        submitBtn.innerHTML = hasVacantRoles
+            ? '<i class="fas fa-check"></i> Daftar Peran Terpilih'
+            : 'Tidak Ada Role Tersedia';
+        submitBtn.disabled = true;
     }
 }
 
@@ -195,11 +220,74 @@ async function loadProjectDetails() {
         projectStartDate.value = formatDate(projectData.tgl_mulai);
         projectDeadline.value = formatDate(projectData.deadline);
 
-        renderRoles(projectData.role_project, projectData.nama_user);
+        renderRoles(projectData.role_project, projectData.nama_user, projectData.id_user || []);
+        loadProjectLaporan();
         setMessage(detailMessage, '');
     } catch (error) {
         console.error(error);
         setMessage(detailMessage, error.message, 'error');
+    }
+}
+
+async function loadProjectLaporan() {
+    if (!laporanTableBody) return;
+
+    setMessage(laporanMessage, 'Memuat laporan project...');
+    laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Memuat laporan project...</td></tr>';
+
+    try {
+        const response = await fetch(`/api/freelance/projects/${projectId}/laporan`);
+        const result = await readJson(response);
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Gagal memuat laporan project.');
+        }
+
+        const laporan = result.laporan || [];
+
+        if (!laporan.length) {
+            laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Belum ada laporan untuk project ini.</td></tr>';
+            setMessage(laporanMessage, '');
+            return;
+        }
+
+        laporanTableBody.innerHTML = '';
+        laporan.forEach((item) => {
+            const row = document.createElement('tr');
+
+            const idCell = document.createElement('td');
+            idCell.textContent = item.id_laporan;
+
+            const userCell = document.createElement('td');
+            userCell.textContent = item.nama_user;
+
+            const roleCell = document.createElement('td');
+            roleCell.textContent = item.role_project;
+
+            const typeCell = document.createElement('td');
+            typeCell.textContent = getLaporanTypeLabel(item.jenis_laporan);
+
+            const descriptionCell = document.createElement('td');
+            descriptionCell.textContent = item.deskripsi_laporan;
+
+            const proofCell = document.createElement('td');
+            const proofLink = document.createElement('a');
+            proofLink.className = 'link-btn';
+            proofLink.href = item.bukti;
+            proofLink.target = '_blank';
+            proofLink.rel = 'noopener noreferrer';
+            proofLink.innerHTML = '<i class="fas fa-eye"></i> Lihat';
+            proofCell.appendChild(proofLink);
+
+            row.append(idCell, userCell, roleCell, typeCell, descriptionCell, proofCell);
+            laporanTableBody.appendChild(row);
+        });
+
+        setMessage(laporanMessage, '');
+    } catch (error) {
+        console.error(error);
+        laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Laporan gagal dimuat.</td></tr>';
+        setMessage(laporanMessage, error.message, 'error');
     }
 }
 
@@ -216,7 +304,7 @@ if (registerForm) {
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Mendaftar...';
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendaftar...';
         setMessage(submitMessage, '');
 
         try {
@@ -241,7 +329,7 @@ if (registerForm) {
         } catch (error) {
             setMessage(submitMessage, error.message, 'error');
             submitBtn.disabled = false;
-            submitBtn.textContent = 'Daftar Peran Terpilih';
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Daftar Peran Terpilih';
         }
     });
 }

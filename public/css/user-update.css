@@ -13,6 +13,21 @@
     background: white;
 }
 
+.form-message {
+    min-height: 20px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.form-message.success {
+    color: #047857;
+}
+
+.form-message.error {
+    color: #B91C1C;
+}
+
 /* Responsive Form Actions */
 @media (max-width: 768px) {
     .action-group {

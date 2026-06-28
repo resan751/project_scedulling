@@ -1,9 +1,11 @@
-const logoutBtn = document.getElementById('logoutBtn');
-const createLaporanForm = document.getElementById('createLaporanForm');
+const logoutBtn = document.getElementById('logoutBtn') || document.querySelector('.btn-logout');
+const createLaporanForm = document.getElementById('form-create-laporan');
 const formMessage = document.getElementById('formMessage');
 const namaProjectSelect = document.getElementById('namaProject');
 const roleProjectSelect = document.getElementById('roleProject');
 const buktiInput = document.getElementById('bukti');
+const uploadArea = document.getElementById('uploadArea');
+const buktiFileName = document.getElementById('buktiFileName');
 const jenisLaporanSelect = document.getElementById('jenisLaporan');
 const submitBtn = document.getElementById('submitBtn');
 
@@ -19,6 +21,8 @@ async function readJson(response) {
 }
 
 function setMessage(element, message, type = '') {
+    if (!element) return;
+
     element.textContent = message;
     element.className = `message ${type}`.trim();
     if (!message) {
@@ -61,12 +65,19 @@ async function loadRegisteredProjects() {
 
         // Filter only registered projects (projects where current user is a member)
         const registeredProjects = projectsData.filter((project) => {
-            const freelancers = project.nama_user || [];
-            return freelancers.includes(currentUser.nama_user);
+            const freelancerIds = project.id_user || [];
+            return freelancerIds.some((id) => String(id) === String(currentUser.id_user));
         });
 
         // Populate nama_project select
         namaProjectSelect.innerHTML = '<option value="">-- Pilih Project --</option>';
+
+        if (!registeredProjects.length) {
+            setMessage(formMessage, 'Anda belum mengikuti project apa pun. Daftar ke project terlebih dahulu sebelum mengirim laporan.', 'error');
+            submitBtn.disabled = true;
+            return;
+        }
+
         registeredProjects.forEach((project) => {
             const option = document.createElement('option');
             option.value = project.nama_project;
@@ -95,12 +106,12 @@ function populateRoleProject() {
 
     // Get roles and freelancers arrays
     const roles = selectedProject.role_project || [];
-    const freelancers = selectedProject.nama_user || [];
+    const freelancerIds = selectedProject.id_user || [];
 
     // Find roles where current user is assigned
     const userRoles = [];
-    freelancers.forEach((user, index) => {
-        if (user === currentUser.nama_user) {
+    freelancerIds.forEach((id, index) => {
+        if (String(id) === String(currentUser.id_user)) {
             userRoles.push(roles[index]);
         }
     });
@@ -138,6 +149,12 @@ function validateFile(file) {
     return true;
 }
 
+function setSelectedFile(file) {
+    if (buktiFileName) {
+        buktiFileName.textContent = file ? file.name : 'Klik atau drag file ke sini';
+    }
+}
+
 async function handleSubmit(e) {
     e.preventDefault();
     setMessage(formMessage, '');
@@ -159,6 +176,7 @@ async function handleSubmit(e) {
     }
 
     submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Menyimpan...';
     setMessage(formMessage, 'Menyimpan laporan...');
 
     try {
@@ -183,8 +201,9 @@ async function handleSubmit(e) {
 
         setMessage(formMessage, 'Laporan berhasil dibuat!', 'success');
         createLaporanForm.reset();
-        namaProjectSelect.innerHTML = '<option value="">-- Pilih Project --</option>';
         roleProjectSelect.innerHTML = '<option value="">-- Pilih Role --</option>';
+        setSelectedFile(null);
+        await loadRegisteredProjects();
 
         // Redirect after 2 seconds
         setTimeout(() => {
@@ -195,19 +214,55 @@ async function handleSubmit(e) {
         setMessage(formMessage, error.message, 'error');
     } finally {
         submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Buat Laporan';
     }
 }
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST' });
-        window.location.href = '/login.html';
+        try {
+            await fetch('/api/logout', { method: 'POST' });
+        } finally {
+            window.location.href = '/login.html';
+        }
     });
 }
 
-namaProjectSelect.addEventListener('change', populateRoleProject);
+if (namaProjectSelect) {
+    namaProjectSelect.addEventListener('change', populateRoleProject);
+}
 
-createLaporanForm.addEventListener('submit', handleSubmit);
+if (buktiInput) {
+    buktiInput.addEventListener('change', () => {
+        setSelectedFile(buktiInput.files[0]);
+    });
+}
+
+if (uploadArea && buktiInput) {
+    uploadArea.addEventListener('click', () => buktiInput.click());
+    uploadArea.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        uploadArea.classList.add('is-dragging');
+    });
+    uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('is-dragging');
+    });
+    uploadArea.addEventListener('drop', (event) => {
+        event.preventDefault();
+        uploadArea.classList.remove('is-dragging');
+
+        if (!event.dataTransfer.files.length) return;
+
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(event.dataTransfer.files[0]);
+        buktiInput.files = dataTransfer.files;
+        setSelectedFile(buktiInput.files[0]);
+    });
+}
+
+if (createLaporanForm) {
+    createLaporanForm.addEventListener('submit', handleSubmit);
+}
 
 // Initialize on page load
 checkAuth();

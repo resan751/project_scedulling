@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - WorkDesk</title>
+    <title>Login - RiseGig</title>
     
     <!-- Global Design System CSS -->
-    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/css/global.css">
     <!-- Page Specific Override CSS -->
-    <link rel="stylesheet" href="/public/css/login.css">
+    <link rel="stylesheet" href="/css/login.css">
     
     <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -26,7 +26,7 @@
         <div class="login-card">
             <div class="login-brand">
                 <div class="login-brand-icon"><i class="fas fa-briefcase"></i></div>
-                <div class="login-brand-name">Work<span>Desk</span></div>
+                <div class="login-brand-name">Rise<span>Gig</span></div>
             </div>
             
             <h2 class="login-title">Selamat Datang</h2>
@@ -34,24 +34,12 @@
 
             <form class="login-form" id="form-login">
                 
-                <!-- Role Selector -->
-                <div class="role-selector">
-                    <div class="role-btn" data-role="admin">
-                        <i class="fas fa-user-shield"></i>
-                        <span>Admin</span>
-                    </div>
-                    <div class="role-btn" data-role="karyawan">
-                        <i class="fas fa-user"></i>
-                        <span>Freelancer</span>
-                    </div>
-                </div>
-
-                <!-- Email -->
+                <!-- Username -->
                 <div class="form-group">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">Nama Pengguna</label>
                     <div class="input-icon-wrap">
-                        <i class="fas fa-envelope fi"></i>
-                        <input type="email" class="form-input" placeholder="Masukkan email" required>
+                        <i class="fas fa-user fi"></i>
+                        <input type="text" class="form-input" name="nama_user" placeholder="Masukkan nama pengguna" required>
                     </div>
                 </div>
 
@@ -60,7 +48,7 @@
                     <label class="form-label">Password</label>
                     <div class="input-icon-wrap">
                         <i class="fas fa-lock fi"></i>
-                        <input type="password" class="form-input" placeholder="Masukkan password" required>
+                        <input type="password" class="form-input" name="password" placeholder="Masukkan password" required>
                     </div>
                 </div>
 
@@ -74,12 +62,45 @@
     </div>
 
     <script>
-        // Role Selector Interaction
-        document.querySelectorAll('.role-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-            });
+        // Form Login Handler
+        document.getElementById('form-login').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nama_user = document.querySelector('input[name="nama_user"]').value;
+            const password = document.querySelector('input[name="password"]').value;
+
+            if (!nama_user || !password) {
+                alert('Nama pengguna dan password harus diisi');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        nama_user,
+                        password,
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    alert(data.message || 'Login gagal');
+                    return;
+                }
+
+                // Login berhasil, redirect ke dashboard
+                if (data.redirectTo) {
+                    window.location.href = data.redirectTo;
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat login');
+            }
         });
     </script>
 </body>

@@ -27,6 +27,22 @@
     margin-bottom: 22px;
 }
 
+#formMessage {
+    min-height: 20px;
+    margin-bottom: 16px;
+    color: var(--text-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#formMessage.message.success {
+    color: #047857;
+}
+
+#formMessage.message.error {
+    color: #B91C1C;
+}
+
 /* Penyesuaian visual textarea */
 #form-create-project .field-textarea {
     min-height: 120px;
@@ -36,6 +52,25 @@
 /* Efek fokus yang lebih baik pada form */
 #form-create-project .field-input:focus {
     background: white;
+}
+
+.currency-input {
+    position: relative;
+}
+
+.currency-input span {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--purple-700);
+    font-size: 12px;
+    font-weight: 800;
+    pointer-events: none;
+}
+
+.currency-input .field-input {
+    padding-left: 46px;
 }
 
 /* Responsive Form Grid */

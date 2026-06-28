@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Admin - RiseGig</title>
+    <title>Dashboard Sponsor - RiseGig</title>
     
     <!-- Global Design System CSS -->
     <link rel="stylesheet" href="/css/global.css">
@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="page active" id="page-admin">
+    <div class="page active" id="page-sponsor">
         <div class="app-shell">
             
             <!-- SIDEBAR -->
@@ -38,10 +38,9 @@
                 
                 <nav class="sidebar-nav">
                     <div class="nav-section-title">Menu Utama</div>
-                    <div class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</div>
-                    <a href="/page/admin/kelola-user.html" class="nav-item"><i class="fas fa-users-cog"></i> Kelola User</a>
+                    <a href="/page/sponsor/dashboard.html" class="nav-item active"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="/page/sponsor/project-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Buat Project Baru</a>
                     <div class="nav-item"><i class="fas fa-folder-open"></i> Daftar Project <span class="nav-badge">8</span></div>
-                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</div>
                     
                     <div class="nav-section-title">Lainnya</div>
                     <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">2</span></div>
@@ -58,8 +57,8 @@
                 <!-- TOPBAR -->
                 <header class="topbar">
                     <div class="topbar-title">
-                        <h2>Dashboard Admin</h2>
-                        <p>Awasi data project dan jadwal perusahaan</p>
+                        <h2>Dashboard Sponsor</h2>
+                        <p>Kelola project dan jadwal perusahaan</p>
                     </div>
                     <div class="topbar-right">
                         <div class="topbar-search">
@@ -106,7 +105,7 @@
                         <div class="section-header">
                             <div>
                                 <h3>Semua Project</h3>
-                                <p>Awasi seluruh project tanpa mengubah data project</p>
+                                <p>Kelola project (update/hapus hanya untuk yang masih pending)</p>
                             </div>
                         </div>
                         <div class="table-card">
@@ -134,93 +133,35 @@
                         </div>
                     </div>
 
-                    <!-- KALENDER & PROJECT BULAN INI -->
-                    <div class="left-main">
-                        <div class="card">
-                            <div class="card-head">
-                                <h3>Jadwal Kalender</h3>
-                                <span class="badge badge-progress"><span class="badge-dot"></span> Januari 2025</span>
-                            </div>
-                            <div class="card-body admin-calendar-wrap">
-                                <div class="cal-nav">
-                                    <button class="cal-nav-btn"><i class="fas fa-chevron-left"></i></button>
-                                    <div class="cal-month">Januari 2025</div>
-                                    <button class="cal-nav-btn"><i class="fas fa-chevron-right"></i></button>
-                                </div>
-                                <div class="calendar-grid">
-                                    <div class="cal-header">Min</div>
-                                    <div class="cal-header">Sen</div>
-                                    <div class="cal-header">Sel</div>
-                                    <div class="cal-header">Rab</div>
-                                    <div class="cal-header">Kam</div>
-                                    <div class="cal-header">Jum</div>
-                                    <div class="cal-header">Sab</div>
-                                    
-                                    <!-- Days Dummy Data -->
-                                    <div class="cal-day other-month">29</div>
-                                    <div class="cal-day other-month">30</div>
-                                    <div class="cal-day other-month">31</div>
-                                    <div class="cal-day">1</div>
-                                    <div class="cal-day">2</div>
-                                    <div class="cal-day">3</div>
-                                    <div class="cal-day">4</div>
-                                    <div class="cal-day">5</div>
-                                    <div class="cal-day">6</div>
-                                    <div class="cal-day">7</div>
-                                    <div class="cal-day">8</div>
-                                    <div class="cal-day">9</div>
-                                    <div class="cal-day has-event">10</div>
-                                    <div class="cal-day">11</div>
-                                    <div class="cal-day">12</div>
-                                    <div class="cal-day">13</div>
-                                    <div class="cal-day">14</div>
-                                    <div class="cal-day has-event today">15</div>
-                                    <div class="cal-day">16</div>
-                                    <div class="cal-day">17</div>
-                                    <div class="cal-day">18</div>
-                                    <div class="cal-day has-event">19</div>
-                                    <div class="cal-day">20</div>
-                                    <div class="cal-day">21</div>
-                                    <div class="cal-day">22</div>
-                                    <div class="cal-day">23</div>
-                                    <div class="cal-day">24</div>
-                                    <div class="cal-day">25</div>
-                                    <div class="cal-day">26</div>
-                                    <div class="cal-day">27</div>
-                                    <div class="cal-day">28</div>
-                                    <div class="cal-day">29</div>
-                                    <div class="cal-day">30</div>
-                                    <div class="cal-day">31</div>
-                                </div>
+                    <!-- PROJECT SAYA (TABLE) -->
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Project yang Saya Buat</h3>
+                                <p>Update dan hapus hanya tersedia untuk project yang Anda buat dan masih pending</p>
                             </div>
                         </div>
-                        <div class="card">
-                            <div class="card-head">
-                                <h3>Project Bulan Ini</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="project-list">
-                                    <div class="proj-card c-purple" style="padding: 12px;">
-                                        <div class="proj-title" style="font-size: 13px;">Migrasi Database</div>
-                                        <div class="proj-meta" style="margin-top: 6px;">
-                                            <div class="proj-meta-item"><i class="fas fa-calendar"></i> 10 - 20 Jan</div>
-                                        </div>
-                                    </div>
-                                    <div class="proj-card c-amber" style="padding: 12px;">
-                                        <div class="proj-title" style="font-size: 13px;">Redesign Website Utama</div>
-                                        <div class="proj-meta" style="margin-top: 6px; flex-wrap: wrap;">
-                                            <div class="proj-meta-item"><i class="fas fa-calendar"></i> 15 Jan - 28 Feb</div>
-                                            <span class="badge badge-pending" style="font-size:9px; padding: 2px 6px;"><span class="badge-dot"></span> Pending</span>
-                                        </div>
-                                    </div>
-                                    <div class="proj-card c-amber" style="padding: 12px;">
-                                        <div class="proj-title" style="font-size: 13px;">Audit Sistem Keamanan</div>
-                                        <div class="proj-meta" style="margin-top: 6px; flex-wrap: wrap;">
-                                            <div class="proj-meta-item"><i class="fas fa-calendar"></i> 20 Jan - 5 Feb</div>
-                                            <span class="badge badge-pending" style="font-size:9px; padding: 2px 6px;"><span class="badge-dot"></span> Pending</span>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="table-card">
+                            <div id="myProjectMessage"></div>
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Nama Project</th>
+                                            <th>Pembuat</th>
+                                            <th>Pengguna</th>
+                                            <th>Role Project</th>
+                                            <th>Bayaran</th>
+                                            <th>Tanggal Mulai</th>
+                                            <th>Deadline</th>
+                                            <th>Status</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="myProjectTableBody">
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

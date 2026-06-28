@@ -1,4 +1,4 @@
-const logoutBtn = document.getElementById('logoutBtn');
+const logoutBtn = document.getElementById('logoutBtn') || document.querySelector('.btn-logout');
 const userWelcome = document.getElementById('userWelcome');
 const availableTableBody = document.getElementById('availableTableBody');
 const availableMessage = document.getElementById('availableMessage');
@@ -19,6 +19,8 @@ async function readJson(response) {
 }
 
 function setMessage(element, message, type = '') {
+    if (!element) return;
+
     element.textContent = message;
     element.className = `message ${type}`.trim();
     if (!message) {
@@ -34,6 +36,14 @@ function formatDate(value) {
         month: 'short',
         year: 'numeric',
     }).format(new Date(value));
+}
+
+function formatRupiah(value) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+    }).format(Number(value || 0));
 }
 
 function getStatusClass(status) {
@@ -58,7 +68,9 @@ async function checkAuth() {
             window.location.href = '/login.html';
             return;
         }
-        userWelcome.textContent = `Halo, ${currentUser.nama_user}`;
+        if (userWelcome) {
+            userWelcome.textContent = `Halo, ${currentUser.nama_user}. Temukan project baru dan kelola peran Anda dalam tim`;
+        }
         loadProjects();
     } catch (error) {
         console.error(error);
@@ -67,19 +79,14 @@ async function checkAuth() {
 }
 
 function renderAvailableProjects(projects) {
-    const available = projects.filter((project) => {
-        if (project.status_project !== 'pending') return false;
-        
-        // Check if there is at least one vacant role
-        const freelancers = project.nama_user || [];
-        const roles = project.role_project || [];
-        return roles.some((_, index) => !freelancers[index]);
-    });
+    const available = projects;
 
-    availableProjectCount.textContent = available.length;
+    if (availableProjectCount) {
+        availableProjectCount.textContent = available.length;
+    }
 
     if (!available.length) {
-        availableTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Belum ada project tersedia untuk didaftar.</td></tr>';
+        availableTableBody.innerHTML = '<tr><td colspan="7" class="empty-text">Belum ada project tersedia untuk didaftar.</td></tr>';
         return;
     }
 
@@ -94,8 +101,11 @@ function renderAvailableProjects(projects) {
         nameCell.textContent = project.nama_project;
 
         const rolesCell = document.createElement('td');
-        const vacantRoles = (project.role_project || []).filter((_, index) => !(project.nama_user || [])[index]);
-        rolesCell.textContent = vacantRoles.join(', ');
+        const vacantRoles = (project.role_project || []).filter((_, index) => !(project.id_user || [])[index]);
+        rolesCell.textContent = vacantRoles.length ? vacantRoles.join(', ') : 'Tidak ada role kosong';
+
+        const paymentCell = document.createElement('td');
+        paymentCell.textContent = formatRupiah(project.bayaran);
 
         const startCell = document.createElement('td');
         startCell.textContent = formatDate(project.tgl_mulai);
@@ -109,24 +119,26 @@ function renderAvailableProjects(projects) {
         detailLink.style.padding = '6px 12px';
         detailLink.style.fontSize = '12px';
         detailLink.href = `/page/freelance/detail-project.html?id=${project.id_project}`;
-        detailLink.textContent = 'Detail & Daftar';
+        detailLink.innerHTML = '<i class="fas fa-eye"></i> Detail';
         actionCell.appendChild(detailLink);
 
-        row.append(idCell, nameCell, rolesCell, startCell, deadlineCell, actionCell);
+        row.append(idCell, nameCell, rolesCell, paymentCell, startCell, deadlineCell, actionCell);
         availableTableBody.appendChild(row);
     });
 }
 
 function renderRegisteredProjects(projects) {
     const registered = projects.filter((project) => {
-        const freelancers = project.nama_user || [];
-        return freelancers.includes(currentUser.nama_user);
+        const freelancerIds = project.id_user || [];
+        return freelancerIds.some((id) => String(id) === String(currentUser.id_user));
     });
 
-    registeredProjectCount.textContent = registered.length;
+    if (registeredProjectCount) {
+        registeredProjectCount.textContent = registered.length;
+    }
 
     if (!registered.length) {
-        registeredTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Anda belum mengikuti project apa pun.</td></tr>';
+        registeredTableBody.innerHTML = '<tr><td colspan="8" class="empty-text">Anda belum mengikuti project apa pun.</td></tr>';
         return;
     }
 
@@ -142,12 +154,15 @@ function renderRegisteredProjects(projects) {
 
         const rolesCell = document.createElement('td');
         const myRoles = [];
-        (project.nama_user || []).forEach((user, index) => {
-            if (user === currentUser.nama_user) {
+        (project.id_user || []).forEach((id, index) => {
+            if (String(id) === String(currentUser.id_user)) {
                 myRoles.push((project.role_project || [])[index]);
             }
         });
         rolesCell.textContent = myRoles.join(', ');
+
+        const paymentCell = document.createElement('td');
+        paymentCell.textContent = formatRupiah(project.bayaran);
 
         const startCell = document.createElement('td');
         startCell.textContent = formatDate(project.tgl_mulai);
@@ -167,10 +182,10 @@ function renderRegisteredProjects(projects) {
         detailLink.style.padding = '6px 12px';
         detailLink.style.fontSize = '12px';
         detailLink.href = `/page/freelance/detail-project.html?id=${project.id_project}`;
-        detailLink.textContent = 'Detail';
+        detailLink.innerHTML = '<i class="fas fa-eye"></i> Detail';
         actionCell.appendChild(detailLink);
 
-        row.append(idCell, nameCell, rolesCell, startCell, deadlineCell, statusCell, actionCell);
+        row.append(idCell, nameCell, rolesCell, paymentCell, startCell, deadlineCell, statusCell, actionCell);
         registeredTableBody.appendChild(row);
     });
 }
@@ -194,8 +209,8 @@ async function loadProjects() {
         setMessage(availableMessage, '');
         setMessage(registeredMessage, '');
     } catch (error) {
-        availableTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Data gagal dimuat.</td></tr>';
-        registeredTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Data gagal dimuat.</td></tr>';
+        availableTableBody.innerHTML = '<tr><td colspan="7" class="empty-text">Data gagal dimuat.</td></tr>';
+        registeredTableBody.innerHTML = '<tr><td colspan="8" class="empty-text">Data gagal dimuat.</td></tr>';
         setMessage(availableMessage, error.message, 'error');
         setMessage(registeredMessage, error.message, 'error');
     }
@@ -203,8 +218,11 @@ async function loadProjects() {
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST' });
-        window.location.href = '/login.html';
+        try {
+            await fetch('/api/logout', { method: 'POST' });
+        } finally {
+            window.location.href = '/login.html';
+        }
     });
 }
 

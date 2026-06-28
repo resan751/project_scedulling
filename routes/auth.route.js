@@ -14,11 +14,16 @@ import {
   deleteUser,
   getUser,
   getUsers,
+  getSponsorUsers,
   getProjects as getAdminProjects,
+  getSponsorProject,
+  getSponsorProjectLaporan,
   getProjectKaryawanOptions,
+  kelolaUserPage,
   projectCreatePage,
   registerPage,
   registerUser,
+  sponsorDetailProjectPage,
   updateProject,
   updateUser,
   userCreatePage,
@@ -27,6 +32,7 @@ import {
 import {
   getProjects as getFreelanceProjects,
   getProject as getFreelanceProject,
+  getProjectLaporan,
   registerProject,
   detailProjectPage,
   createLaporanPage,
@@ -45,28 +51,37 @@ AuthRouter.post('/api/logout', logout)
 AuthRouter.get('/api/me', me)
 AuthRouter.post('/api/register', registerUser)
 AuthRouter.get('/api/admin/users', getUsers)
+AuthRouter.get('/api/sponsor/users', getSponsorUsers)
 AuthRouter.get('/api/admin/users/:id', getUser)
 AuthRouter.post('/api/admin/users', createUser)
 AuthRouter.put('/api/admin/users/:id', updateUser)
 AuthRouter.delete('/api/admin/users/:id', deleteUser)
 AuthRouter.get('/api/project-karyawan', getProjectKaryawanOptions)
-AuthRouter.post('/api/projects', createProject)
 AuthRouter.get('/api/admin/projects', getAdminProjects)
-AuthRouter.put('/api/admin/projects/:id', updateProject)
-AuthRouter.delete('/api/admin/projects/:id', deleteProject)
+AuthRouter.get('/api/sponsor/projects', getAdminProjects)
+AuthRouter.get('/api/sponsor/projects/:id', getSponsorProject)
+AuthRouter.get('/api/sponsor/projects/:id/laporan', getSponsorProjectLaporan)
+AuthRouter.post('/api/sponsor/projects', createProject)
+AuthRouter.put('/api/sponsor/projects/:id', updateProject)
+AuthRouter.delete('/api/sponsor/projects/:id', deleteProject)
 AuthRouter.get('/api/freelance/projects', getFreelanceProjects)
 AuthRouter.get('/api/freelance/projects/:id', getFreelanceProject)
+AuthRouter.get('/api/freelance/projects/:id/laporan', getProjectLaporan)
 AuthRouter.post('/api/freelance/projects/:id/register', registerProject)
 
-AuthRouter.get('/page/admin/project-create.html', projectCreatePage)
+AuthRouter.get('/page/sponsor/project-create.html', projectCreatePage)
+AuthRouter.get('/page/sponsor/detail-project.html', sponsorDetailProjectPage)
+AuthRouter.get('/page/admin/kelola-user.html', kelolaUserPage)
 AuthRouter.get('/page/admin/user-create.html', userCreatePage)
 AuthRouter.get('/page/admin/user-update.html', userUpdatePage)
 AuthRouter.get('/register.html', registerPage)
 AuthRouter.get('/page/register.html', registerPage)
 AuthRouter.get('/page/admin/dashboard.html', dashboardPage('admin'))
-AuthRouter.get('/page/karyawan/dashboard.html', dashboardPage('freelance'))
+AuthRouter.get('/page/sponsor/dashboard.html', dashboardPage('sponsor'))
+AuthRouter.get('/page/freelance/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/admin/dashboard.html', dashboardPage('admin'))
-AuthRouter.get('/karyawan/dashboard.html', dashboardPage('freelance'))
+AuthRouter.get('/sponsor/dashboard.html', dashboardPage('sponsor'))
+AuthRouter.get('/freelance/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/page/freelance/detail-project.html', detailProjectPage)
 AuthRouter.get('/page/freelance/create-laporan.html', createLaporanPage)
 AuthRouter.post('/api/freelance/laporan/create', upload.single('bukti'), createLaporan)

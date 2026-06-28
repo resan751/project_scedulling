@@ -10,7 +10,8 @@ const pbkdf2Async = promisify(pbkdf2)
 const sessionSecret = process.env.SESSION_SECRET || 'project-scedulling-session-secret'
 const roleRedirects = {
     admin: '/page/admin/dashboard.html',
-    freelance: '/page/karyawan/dashboard.html',
+    sponsor: '/page/sponsor/dashboard.html',
+    freelance: '/page/freelance/dashboard.html',
 }
 
 export function normalizeRole(role) {
