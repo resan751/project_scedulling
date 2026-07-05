@@ -12,6 +12,9 @@ model user {
   role_user String @db.VarChar(100)
   email     String @db.VarChar(100)
   password  String @db.VarChar(100)
+  cv        String? @db.VarChar(255)
+
+  pendaftaran pendaftaran[]
 }
 
 model project {
@@ -24,7 +27,9 @@ model project {
   tgl_mulai         DateTime @db.DateTime
   deadline          DateTime @db.DateTime
   status_project    String   @db.VarChar(100)
-  deskripsi_project String   @db.VarChar(255)
+  deskripsi_project String @db.VarChar(255)
+
+  pendaftaran pendaftaran[]
 
   @@index([pembuat])
   @@index([id_user])
@@ -42,4 +47,21 @@ model laporan {
 
   @@index([nama_user])
   @@index([nama_project, role_project])
+}
+
+model pendaftaran {
+  id_pendaftaran Int      @id @default(autoincrement())
+  id_project     Int
+  id_user        Int
+  role_project   String   @db.VarChar(255)
+  status         String   @db.VarChar(50) @default("pending")
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  project project @relation(fields: [id_project], references: [id_project], onDelete: Cascade)
+  user    user    @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+
+  @@index([id_project])
+  @@index([id_user])
+  @@unique([id_project, id_user, role_project])
 }

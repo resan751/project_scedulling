@@ -8,6 +8,8 @@ const projectStartDate = document.getElementById('projectStartDate');
 const projectDeadline = document.getElementById('projectDeadline');
 const rolesList = document.getElementById('rolesList');
 const detailMessage = document.getElementById('detailMessage');
+const applicationsMessage = document.getElementById('applicationsMessage');
+const applicationsTableBody = document.getElementById('applicationsTableBody');
 const laporanMessage = document.getElementById('laporanMessage');
 const laporanTableBody = document.getElementById('laporanTableBody');
 
@@ -161,6 +163,7 @@ async function loadProjectDetails() {
         projectDeadline.value = formatDate(project.deadline);
 
         renderRoles(project);
+        await loadProjectApplications();
         await loadProjectLaporan();
         setMessage(detailMessage, '');
     } catch (error) {
@@ -221,6 +224,98 @@ async function loadProjectLaporan() {
         console.error(error);
         laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Laporan gagal dimuat.</td></tr>';
         setMessage(laporanMessage, error.message, 'error');
+    }
+}
+
+function renderApplicationStatus(status) {
+    if (status === 'pending') return 'Menunggu';
+    if (status === 'approved') return 'Disetujui';
+    if (status === 'rejected') return 'Ditolak';
+    return status || '-';
+}
+
+async function approveApplication(applicationId) {
+    try {
+        const response = await fetch(`/api/sponsor/projects/${projectId}/applications/${applicationId}/approve`, {
+            method: 'PUT',
+        });
+        const result = await readJson(response);
+        if (!response.ok) {
+            throw new Error(result.message || 'Gagal menyetujui aplikasi.');
+        }
+        await loadProjectDetails();
+        await loadProjectApplications();
+    } catch (error) {
+        console.error(error);
+        setMessage(applicationsMessage, error.message, 'error');
+    }
+}
+
+async function loadProjectApplications() {
+    setMessage(applicationsMessage, 'Memuat aplikasi freelance...');
+    applicationsTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Memuat data pendaftar...</td></tr>';
+
+    try {
+        const response = await fetch(`/api/sponsor/projects/${projectId}/applications`);
+        const result = await readJson(response);
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Gagal memuat aplikasi.');
+        }
+
+        const applications = result.applications || [];
+        if (!applications.length) {
+            applicationsTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Belum ada pendaftar untuk role ini.</td></tr>';
+            setMessage(applicationsMessage, '');
+            return;
+        }
+
+        applicationsTableBody.innerHTML = '';
+        applications.forEach((app) => {
+            const row = document.createElement('tr');
+            const roleCell = document.createElement('td');
+            const nameCell = document.createElement('td');
+            const emailCell = document.createElement('td');
+            const statusCell = document.createElement('td');
+            const cvCell = document.createElement('td');
+            const actionCell = document.createElement('td');
+
+            roleCell.textContent = app.role_project;
+            nameCell.textContent = app.user?.nama_user || 'Tidak diketahui';
+            emailCell.textContent = app.user?.email || '-';
+            statusCell.textContent = renderApplicationStatus(app.status);
+
+            if (app.user?.cv) {
+                const cvLink = document.createElement('a');
+                cvLink.href = app.user.cv;
+                cvLink.target = '_blank';
+                cvLink.rel = 'noopener noreferrer';
+                cvLink.className = 'link-btn';
+                cvLink.textContent = 'Lihat CV';
+                cvCell.appendChild(cvLink);
+            } else {
+                cvCell.textContent = 'Tidak ada CV';
+            }
+
+            if (app.status === 'pending') {
+                const approveButton = document.createElement('button');
+                approveButton.className = 'btn btn-sm btn-primary';
+                approveButton.textContent = 'Setujui';
+                approveButton.addEventListener('click', () => approveApplication(app.id_pendaftaran));
+                actionCell.appendChild(approveButton);
+            } else {
+                actionCell.textContent = '-';
+            }
+
+            row.append(roleCell, nameCell, emailCell, statusCell, cvCell, actionCell);
+            applicationsTableBody.appendChild(row);
+        });
+
+        setMessage(applicationsMessage, '');
+    } catch (error) {
+        console.error(error);
+        applicationsTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Aplikasi gagal dimuat.</td></tr>';
+        setMessage(applicationsMessage, error.message, 'error');
     }
 }
 

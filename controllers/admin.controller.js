@@ -742,6 +742,163 @@ export const getSponsorProjectLaporan = async (req, res) => {
     }
 }
 
+export const getSponsorProjectApplications = async (req, res) => {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const id_project = getProjectId(req, res)
+    if (!id_project) return
+
+    try {
+        const project = await prisma.project.findUnique({
+            where: {
+                id_project,
+            },
+            select: {
+                pembuat: true,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        if (!isProjectOwner(project, session)) {
+            return res.status(403).json({ message: 'Anda hanya dapat melihat aplikasi untuk project Anda.' })
+        }
+
+        const applications = await prisma.pendaftaran.findMany({
+            where: {
+                id_project,
+            },
+            orderBy: [
+                { role_project: 'asc' },
+                { status: 'asc' },
+                { created_at: 'desc' },
+            ],
+            include: {
+                user: {
+                    select: {
+                        id_user: true,
+                        nama_user: true,
+                        email: true,
+                        cv: true,
+                    },
+                },
+            },
+        })
+
+        res.json({ applications })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data aplikasi gagal dimuat.' })
+    }
+}
+
+export const approveSponsorProjectApplication = async (req, res) => {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const id_project = getProjectId(req, res)
+    if (!id_project) return
+
+    const id_pendaftaran = Number(req.params.applicationId)
+    if (!Number.isInteger(id_pendaftaran) || id_pendaftaran <= 0) {
+        return res.status(400).json({ message: 'ID aplikasi tidak valid.' })
+    }
+
+    try {
+        const application = await prisma.pendaftaran.findUnique({
+            where: {
+                id_pendaftaran,
+            },
+            include: {
+                project: true,
+            },
+        })
+
+        if (!application) {
+            return res.status(404).json({ message: 'Aplikasi tidak ditemukan.' })
+        }
+
+        if (application.id_project !== id_project) {
+            return res.status(400).json({ message: 'Aplikasi tidak sesuai dengan project.' })
+        }
+
+        const project = application.project
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        if (!isProjectOwner(project, session)) {
+            return res.status(403).json({ message: 'Anda hanya dapat menyetujui aplikasi untuk project Anda.' })
+        }
+
+        if (application.status !== 'pending') {
+            return res.status(400).json({ message: 'Aplikasi sudah tidak dalam status pending.' })
+        }
+
+        const roles = getStoredListValue(project.role_project)
+        const acceptedIds = getStoredListValue(project.id_user)
+
+        while (acceptedIds.length < roles.length) {
+            acceptedIds.push('')
+        }
+
+        const roleIndex = roles.indexOf(application.role_project)
+        if (roleIndex === -1) {
+            return res.status(400).json({ message: 'Role aplikasi tidak ditemukan di project.' })
+        }
+
+        if (String(acceptedIds[roleIndex] || '').trim() !== '') {
+            return res.status(400).json({ message: 'Role ini sudah memiliki freelance yang disetujui.' })
+        }
+
+        acceptedIds[roleIndex] = String(application.id_user)
+
+        const allFilled = acceptedIds.every((id) => String(id || '').trim() !== '')
+        const status_project = allFilled ? getApprovedStatus(project.tgl_mulai) : 'pending'
+
+        await prisma.$transaction([
+            prisma.pendaftaran.update({
+                where: {
+                    id_pendaftaran,
+                },
+                data: {
+                    status: 'approved',
+                },
+            }),
+            prisma.pendaftaran.updateMany({
+                where: {
+                    id_project,
+                    role_project: application.role_project,
+                    status: 'pending',
+                    NOT: {
+                        id_pendaftaran,
+                    },
+                },
+                data: {
+                    status: 'rejected',
+                },
+            }),
+            prisma.project.update({
+                where: {
+                    id_project,
+                },
+                data: {
+                    id_user: JSON.stringify(acceptedIds),
+                    status_project,
+                },
+            }),
+        ])
+
+        res.json({ message: 'Aplikasi berhasil disetujui.' })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal menyetujui aplikasi.' })
+    }
+}
+
 export const createProject = async (req, res) => {
     const session = requireSponsorApi(req, res)
     if (!session) return

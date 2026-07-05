@@ -69,6 +69,56 @@ function getListValue(value) {
     }
 }
 
+export async function getFreelanceProfile(req, res) {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id_user: session.id_user },
+            select: {
+                id_user: true,
+                nama_user: true,
+                role_user: true,
+                email: true,
+                cv: true,
+            },
+        })
+
+        if (!user) {
+            return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
+        res.json({ user })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memuat profil freelance.' })
+    }
+}
+
+export async function uploadFreelanceCv(req, res) {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    if (!req.file) {
+        return res.status(400).json({ message: 'File CV harus diunggah.' })
+    }
+
+    try {
+        const cvPath = `/uploads/${req.file.filename}`
+        const user = await prisma.user.update({
+            where: { id_user: session.id_user },
+            data: { cv: cvPath },
+            select: { id_user: true, nama_user: true, cv: true },
+        })
+
+        res.json({ message: 'CV berhasil diunggah.', user })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal mengunggah CV.' })
+    }
+}
+
 async function attachProjectUserNames(projects) {
     const userIds = [...new Set(projects
         .flatMap((project) => getListValue(project.id_user))
@@ -276,52 +326,87 @@ export const registerProject = async (req, res) => {
         }
 
         const roles = getListValue(project.role_project)
-        const freelancerIds = getListValue(project.id_user)
+        const acceptedIds = getListValue(project.id_user)
 
-        // Ensure registered user id array has the same length as roles
-        while (freelancerIds.length < roles.length) {
-            freelancerIds.push('')
+        // Ensure accepted user array has the same length as roles
+        while (acceptedIds.length < roles.length) {
+            acceptedIds.push('')
         }
 
-        // Validate roles
+        const createApplications = []
         for (const role of selectedRoles) {
             const index = roles.indexOf(role)
             if (index === -1) {
                 return res.status(400).json({ message: `Role "${role}" tidak tersedia untuk project ini.` })
             }
-            if (String(freelancerIds[index] || '').trim() !== '') {
-                return res.status(400).json({ message: `Role "${role}" sudah diambil oleh freelance lain.` })
+
+            if (String(acceptedIds[index] || '').trim() !== '') {
+                return res.status(400).json({ message: `Role "${role}" sudah memiliki freelance yang disetujui.` })
+            }
+
+            const existingApplication = await prisma.pendaftaran.findFirst({
+                where: {
+                    id_project,
+                    id_user: session.id_user,
+                    role_project: role,
+                },
+                orderBy: {
+                    created_at: 'desc',
+                },
+            })
+
+            if (existingApplication) {
+                if (existingApplication.status === 'pending') {
+                    return res.status(400).json({ message: `Anda sudah mengajukan role "${role}". Tunggu persetujuan sponsor.` })
+                }
+
+                if (existingApplication.status === 'approved') {
+                    return res.status(400).json({ message: `Anda sudah diterima untuk role "${role}".` })
+                }
+
+                if (existingApplication.status === 'rejected') {
+                    createApplications.push({ action: 'update', role })
+                    continue
+                }
+            }
+
+            createApplications.push({ action: 'create', role })
+        }
+
+        const applications = []
+        for (const item of createApplications) {
+            if (item.action === 'create') {
+                const application = await prisma.pendaftaran.create({
+                    data: {
+                        id_project,
+                        id_user: session.id_user,
+                        role_project: item.role,
+                        status: 'pending',
+                    },
+                })
+                applications.push(application)
+                continue
+            }
+
+            const application = await prisma.pendaftaran.updateMany({
+                where: {
+                    id_project,
+                    id_user: session.id_user,
+                    role_project: item.role,
+                    status: 'rejected',
+                },
+                data: {
+                    status: 'pending',
+                },
+            })
+            if (application.count) {
+                applications.push({ id_project, id_user: session.id_user, role_project: item.role, status: 'pending' })
             }
         }
 
-        // Update selected roles
-        for (const role of selectedRoles) {
-            const index = roles.indexOf(role)
-            freelancerIds[index] = session.id_user
-        }
-
-        // Check if all roles are now filled (no empty string/null)
-        const allFilled = freelancerIds.every((id) => String(id || '').trim() !== '')
-
-        let status_project = 'pending'
-        if (allFilled) {
-            status_project = getApprovedStatus(project.tgl_mulai)
-        }
-
-        const updatedProject = await prisma.project.update({
-            where: {
-                id_project,
-            },
-            data: {
-                id_user: JSON.stringify(freelancerIds),
-                status_project,
-            },
-        })
-        const [hydratedProject] = await attachProjectUserNames([updatedProject])
-
         res.json({
-            message: 'Berhasil mendaftar ke project.',
-            project: hydratedProject,
+            message: 'Pendaftaran berhasil diajukan. Tunggu persetujuan sponsor.',
+            applications,
         })
     } catch (error) {
         console.error(error)

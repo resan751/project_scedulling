@@ -6,9 +6,17 @@ const registeredTableBody = document.getElementById('registeredTableBody');
 const registeredMessage = document.getElementById('registeredMessage');
 const availableProjectCount = document.getElementById('availableProjectCount');
 const registeredProjectCount = document.getElementById('registeredProjectCount');
+const cvInput = document.getElementById('cvInput');
+const btnSelectCv = document.getElementById('btnSelectCv');
+const btnUploadCv = document.getElementById('btnUploadCv');
+const cvFileName = document.getElementById('cvFileName');
+const cvStatusText = document.getElementById('cvStatusText');
+const cvLink = document.getElementById('cvLink');
+const cvMessage = document.getElementById('cvMessage');
 
 let currentUser = null;
 let projectsData = [];
+let selectedCvFile = null;
 
 async function readJson(response) {
     const contentType = response.headers.get('content-type') || '';
@@ -71,6 +79,7 @@ async function checkAuth() {
         if (userWelcome) {
             userWelcome.textContent = `Halo, ${currentUser.nama_user}. Temukan project baru dan kelola peran Anda dalam tim`;
         }
+        await loadFreelanceProfile();
         loadProjects();
     } catch (error) {
         console.error(error);
@@ -214,6 +223,106 @@ async function loadProjects() {
         setMessage(availableMessage, error.message, 'error');
         setMessage(registeredMessage, error.message, 'error');
     }
+}
+
+async function loadFreelanceProfile() {
+    if (!cvStatusText) return;
+
+    try {
+        const response = await fetch('/api/freelance/profile');
+        const result = await readJson(response);
+        if (!response.ok) {
+            throw new Error(result.message || 'Gagal memuat profil CV.');
+        }
+
+        const user = result.user;
+        if (!user) {
+            throw new Error('Profil freelance tidak ditemukan.');
+        }
+
+        if (cvStatusText) {
+            cvStatusText.textContent = user.cv ? 'CV Anda sudah terunggah.' : 'Belum ada CV yang diunggah.';
+        }
+
+        if (cvLink) {
+            if (user.cv) {
+                cvLink.href = user.cv;
+                cvLink.style.display = 'inline-block';
+            } else {
+                cvLink.style.display = 'none';
+            }
+        }
+
+        if (btnUploadCv) {
+            btnUploadCv.disabled = !selectedCvFile;
+        }
+    } catch (error) {
+        console.error(error);
+        setMessage(cvMessage, error.message, 'error');
+        if (cvStatusText) {
+            cvStatusText.textContent = 'Gagal memuat status CV.';
+        }
+    }
+}
+
+if (btnSelectCv && cvInput) {
+    btnSelectCv.addEventListener('click', () => {
+        cvInput.click();
+    });
+}
+
+if (cvInput) {
+    cvInput.addEventListener('change', () => {
+        selectedCvFile = cvInput.files?.[0] || null;
+        if (cvFileName) {
+            cvFileName.textContent = selectedCvFile ? selectedCvFile.name : 'Belum ada file terpilih';
+        }
+        if (btnUploadCv) {
+            btnUploadCv.disabled = !selectedCvFile;
+        }
+        setMessage(cvMessage, '');
+    });
+}
+
+if (btnUploadCv) {
+    btnUploadCv.addEventListener('click', async () => {
+        if (!selectedCvFile) {
+            setMessage(cvMessage, 'Pilih file CV terlebih dahulu.', 'error');
+            return;
+        }
+
+        btnUploadCv.disabled = true;
+        btnUploadCv.textContent = 'Mengunggah...';
+        setMessage(cvMessage, '');
+
+        try {
+            const formData = new FormData();
+            formData.append('cv', selectedCvFile);
+
+            const response = await fetch('/api/freelance/profile/cv', {
+                method: 'POST',
+                body: formData,
+            });
+            const result = await readJson(response);
+            if (!response.ok) {
+                throw new Error(result.message || 'Gagal mengunggah CV.');
+            }
+
+            setMessage(cvMessage, 'CV berhasil diunggah.', 'success');
+            selectedCvFile = null;
+            if (cvInput) cvInput.value = '';
+            if (cvFileName) cvFileName.textContent = 'Belum ada file terpilih';
+            await loadFreelanceProfile();
+        } catch (error) {
+            console.error(error);
+            setMessage(cvMessage, error.message, 'error');
+        } finally {
+            if (btnUploadCv) {
+                btnUploadCv.disabled = !selectedCvFile;
+                btnUploadCv.textContent = 'Unggah CV';
+            }
+        }
+    });
 }
 
 if (logoutBtn) {

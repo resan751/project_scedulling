@@ -18,6 +18,8 @@ import {
   getProjects as getAdminProjects,
   getSponsorProject,
   getSponsorProjectLaporan,
+  getSponsorProjectApplications,
+  approveSponsorProjectApplication,
   getProjectKaryawanOptions,
   kelolaUserPage,
   projectCreatePage,
@@ -37,6 +39,8 @@ import {
   detailProjectPage,
   createLaporanPage,
   createLaporan,
+  getFreelanceProfile,
+  uploadFreelanceCv,
 } from '../controllers/freelance.controller.js';
 import { upload } from '../config/multer.js'
 
@@ -61,6 +65,8 @@ AuthRouter.get('/api/admin/projects', getAdminProjects)
 AuthRouter.get('/api/sponsor/projects', getAdminProjects)
 AuthRouter.get('/api/sponsor/projects/:id', getSponsorProject)
 AuthRouter.get('/api/sponsor/projects/:id/laporan', getSponsorProjectLaporan)
+AuthRouter.get('/api/sponsor/projects/:id/applications', getSponsorProjectApplications)
+AuthRouter.put('/api/sponsor/projects/:id/applications/:applicationId/approve', approveSponsorProjectApplication)
 AuthRouter.post('/api/sponsor/projects', createProject)
 AuthRouter.put('/api/sponsor/projects/:id', updateProject)
 AuthRouter.delete('/api/sponsor/projects/:id', deleteProject)
@@ -68,6 +74,8 @@ AuthRouter.get('/api/freelance/projects', getFreelanceProjects)
 AuthRouter.get('/api/freelance/projects/:id', getFreelanceProject)
 AuthRouter.get('/api/freelance/projects/:id/laporan', getProjectLaporan)
 AuthRouter.post('/api/freelance/projects/:id/register', registerProject)
+AuthRouter.get('/api/freelance/profile', getFreelanceProfile)
+AuthRouter.post('/api/freelance/profile/cv', upload.single('cv'), uploadFreelanceCv)
 
 AuthRouter.get('/page/sponsor/project-create.html', projectCreatePage)
 AuthRouter.get('/page/sponsor/detail-project.html', sponsorDetailProjectPage)

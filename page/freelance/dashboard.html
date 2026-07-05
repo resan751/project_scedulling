@@ -81,6 +81,30 @@
                         </div>
                     </div>
 
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Curriculum Vitae</h3>
+                                <p>Unggah CV Anda agar sponsor dapat melihatnya saat menilai pendaftaran.</p>
+                            </div>
+                        </div>
+                        <div class="table-card">
+                            <div id="cvMessage"></div>
+                            <div class="card-body">
+                                <p class="text-muted" id="cvStatusText">Memuat status CV...</p>
+                                <div class="field-group" style="align-items: center; gap: 12px;">
+                                    <button type="button" class="btn btn-outline btn-sm" id="btnSelectCv">Pilih CV</button>
+                                    <span id="cvFileName" class="text-muted">Belum ada file terpilih</span>
+                                </div>
+                                <input type="file" id="cvInput" name="cv" accept=".pdf,.jpg,.jpeg,.png" hidden>
+                                <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center;">
+                                    <button type="button" class="btn btn-primary" id="btnUploadCv" disabled>Unggah CV</button>
+                                    <a id="cvLink" href="#" class="link-btn" target="_blank" rel="noopener noreferrer" style="display: none;">Lihat CV Anda</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <!-- PROJECT TERSEDIA -->
                     <div class="mb-24">
                         <div class="section-header">
