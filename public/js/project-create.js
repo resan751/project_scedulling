@@ -64,7 +64,7 @@ async function loadCurrentAdmin() {
     if (!pembuatProjectInput) return;
 
     try {
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -130,6 +130,7 @@ if (createProjectForm) {
     try {
         const response = await fetch('/api/sponsor/projects', {
             method: 'POST',
+            credentials: 'same-origin',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -155,7 +156,7 @@ if (createProjectForm) {
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST' });
+        await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         window.location.href = '/login.html';
     });
 }

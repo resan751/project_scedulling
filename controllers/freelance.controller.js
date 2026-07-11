@@ -229,7 +229,8 @@ export const getProjects = async (req, res) => {
 }
 
 export const getProject = async (req, res) => {
-    if (!requireFreelanceApi(req, res)) return
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
 
     const id_project = Number(req.params.id)
     if (!Number.isInteger(id_project) || id_project <= 0) {
@@ -247,11 +248,34 @@ export const getProject = async (req, res) => {
             return res.status(404).json({ message: 'Project tidak ditemukan.' })
         }
 
+        // Debug: log project and session info for troubleshooting frontend load failures
+        try {
+            console.log('[DEBUG] getProject called', { id_project, session, dbProjectExists: !!dbProject })
+        } catch (e) {
+            console.error('[DEBUG] failed to log getProject debug info', e)
+        }
+
         const syncedProject = await syncProjectStatus(dbProject)
+
+        const userApplications = await prisma.pendaftaran.findMany({
+            where: {
+                id_project,
+                id_user: session.id_user,
+            },
+            select: {
+                role_project: true,
+                status: true,
+            },
+        })
+
+        const normalizedApplications = userApplications.map((application) => ({
+            role_project: String(application.role_project).trim(),
+            status: application.status,
+        }))
 
         const [project] = await attachProjectUserNames([syncedProject])
 
-        res.json({ project })
+        res.json({ project: { ...project, userApplications: normalizedApplications } })
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Data project gagal dimuat.' })
@@ -296,6 +320,13 @@ export const getProjectLaporan = async (req, res) => {
     }
 }
 
+function parseSelectedRoles(rawRoles) {
+    const roles = Array.isArray(rawRoles) ? rawRoles : [rawRoles]
+    return [...new Set(roles
+        .map((role) => String(role || '').trim())
+        .filter(Boolean))]
+}
+
 export const registerProject = async (req, res) => {
     const session = requireFreelanceApi(req, res)
     if (!session) return
@@ -306,41 +337,41 @@ export const registerProject = async (req, res) => {
     }
 
     try {
-        const project = await prisma.project.findUnique({
+        const rawProject = await prisma.project.findUnique({
             where: {
                 id_project,
             },
         })
 
-        if (!project) {
+        if (!rawProject) {
             return res.status(404).json({ message: 'Project tidak ditemukan.' })
         }
 
+        const project = await syncProjectStatus(rawProject)
         if (project.status_project !== 'pending') {
             return res.status(400).json({ message: 'Pendaftaran ditutup karena status project bukan pending.' })
         }
 
-        const selectedRoles = req.body.roles // array of string role names
-        if (!Array.isArray(selectedRoles) || selectedRoles.length === 0) {
+        const normalizedSelectedRoles = parseSelectedRoles(req.body.roles)
+        if (!normalizedSelectedRoles.length) {
             return res.status(400).json({ message: 'Pilih minimal satu role project.' })
         }
 
-        const roles = getListValue(project.role_project)
+        const roles = getListValue(project.role_project).map((role) => String(role).trim())
         const acceptedIds = getListValue(project.id_user)
 
-        // Ensure accepted user array has the same length as roles
         while (acceptedIds.length < roles.length) {
             acceptedIds.push('')
         }
 
-        const createApplications = []
-        for (const role of selectedRoles) {
-            const index = roles.indexOf(role)
-            if (index === -1) {
+        const applications = []
+        for (const role of normalizedSelectedRoles) {
+            const roleIndex = roles.indexOf(role)
+            if (roleIndex === -1) {
                 return res.status(400).json({ message: `Role "${role}" tidak tersedia untuk project ini.` })
             }
 
-            if (String(acceptedIds[index] || '').trim() !== '') {
+            if (String(acceptedIds[roleIndex] || '').trim() !== '') {
                 return res.status(400).json({ message: `Role "${role}" sudah memiliki freelance yang disetujui.` })
             }
 
@@ -365,43 +396,28 @@ export const registerProject = async (req, res) => {
                 }
 
                 if (existingApplication.status === 'rejected') {
-                    createApplications.push({ action: 'update', role })
+                    const updatedApplication = await prisma.pendaftaran.update({
+                        where: {
+                            id_pendaftaran: existingApplication.id_pendaftaran,
+                        },
+                        data: {
+                            status: 'pending',
+                        },
+                    })
+                    applications.push(updatedApplication)
                     continue
                 }
             }
 
-            createApplications.push({ action: 'create', role })
-        }
-
-        const applications = []
-        for (const item of createApplications) {
-            if (item.action === 'create') {
-                const application = await prisma.pendaftaran.create({
-                    data: {
-                        id_project,
-                        id_user: session.id_user,
-                        role_project: item.role,
-                        status: 'pending',
-                    },
-                })
-                applications.push(application)
-                continue
-            }
-
-            const application = await prisma.pendaftaran.updateMany({
-                where: {
+            const createdApplication = await prisma.pendaftaran.create({
+                data: {
                     id_project,
                     id_user: session.id_user,
-                    role_project: item.role,
-                    status: 'rejected',
-                },
-                data: {
+                    role_project: role,
                     status: 'pending',
                 },
             })
-            if (application.count) {
-                applications.push({ id_project, id_user: session.id_user, role_project: item.role, status: 'pending' })
-            }
+            applications.push(createdApplication)
         }
 
         res.json({

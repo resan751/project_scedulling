@@ -3,7 +3,7 @@ const logoutButton = document.getElementById('logoutBtn') || document.querySelec
 if (logoutButton) {
     logoutButton.addEventListener('click', async () => {
         try {
-            await fetch('/api/logout', { method: 'POST' });
+            await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         } finally {
             window.location.href = '/login.html';
         }

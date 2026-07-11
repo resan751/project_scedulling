@@ -34,7 +34,7 @@ function setMessage(element, message, type = '') {
 
 async function checkAuth() {
     try {
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'same-origin' });
         if (!response.ok) {
             window.location.href = '/login.html';
             return;
@@ -54,7 +54,7 @@ async function checkAuth() {
 
 async function loadRegisteredProjects() {
     try {
-        const response = await fetch('/api/freelance/projects');
+        const response = await fetch('/api/freelance/projects', { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -190,6 +190,7 @@ async function handleSubmit(e) {
 
         const response = await fetch('/api/freelance/laporan/create', {
             method: 'POST',
+            credentials: 'same-origin',
             body: formData,
         });
 
@@ -221,7 +222,7 @@ async function handleSubmit(e) {
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
         try {
-            await fetch('/api/logout', { method: 'POST' });
+            await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         } finally {
             window.location.href = '/login.html';
         }

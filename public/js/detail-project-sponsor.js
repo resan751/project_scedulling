@@ -86,7 +86,7 @@ function getLaporanTypeLabel(type) {
 
 async function checkAuth() {
     try {
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'same-origin' });
         if (!response.ok) {
             window.location.href = '/login.html';
             return;
@@ -145,7 +145,7 @@ async function loadProjectDetails() {
     setMessage(detailMessage, 'Memuat detail project...');
 
     try {
-        const response = await fetch(`/api/sponsor/projects/${projectId}`);
+        const response = await fetch(`/api/sponsor/projects/${projectId}`, { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -177,7 +177,7 @@ async function loadProjectLaporan() {
     laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Memuat laporan project...</td></tr>';
 
     try {
-        const response = await fetch(`/api/sponsor/projects/${projectId}/laporan`);
+        const response = await fetch(`/api/sponsor/projects/${projectId}/laporan`, { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -238,6 +238,7 @@ async function approveApplication(applicationId) {
     try {
         const response = await fetch(`/api/sponsor/projects/${projectId}/applications/${applicationId}/approve`, {
             method: 'PUT',
+            credentials: 'same-origin',
         });
         const result = await readJson(response);
         if (!response.ok) {
@@ -256,7 +257,7 @@ async function loadProjectApplications() {
     applicationsTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Memuat data pendaftar...</td></tr>';
 
     try {
-        const response = await fetch(`/api/sponsor/projects/${projectId}/applications`);
+        const response = await fetch(`/api/sponsor/projects/${projectId}/applications`, { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -321,7 +322,7 @@ async function loadProjectApplications() {
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST' });
+        await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         window.location.href = '/login.html';
     });
 }

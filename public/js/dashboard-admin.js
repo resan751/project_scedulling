@@ -405,9 +405,9 @@ async function loadProjects(successMessage = '', successType = '') {
 
     try {
         const [projectResponse, userResponse, meResponse] = await Promise.all([
-            fetch(projectApiBase),
-            fetch(projectUsersApi),
-            fetch('/api/me'),
+            fetch(projectApiBase, { credentials: 'same-origin' }),
+            fetch(projectUsersApi, { credentials: 'same-origin' }),
+            fetch('/api/me', { credentials: 'same-origin' }),
         ]);
         const result = await readJson(projectResponse);
         const userResult = await readJson(userResponse);
@@ -448,7 +448,7 @@ async function loadUsers(successMessage = '', successType = '') {
     setMessage(userMessage, 'Memuat data user...');
 
     try {
-        const response = await fetch('/api/admin/users');
+        const response = await fetch('/api/admin/users', { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -570,7 +570,7 @@ function moveMonth(step) {
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST' });
+        await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         window.location.href = '/login.html';
     });
 }

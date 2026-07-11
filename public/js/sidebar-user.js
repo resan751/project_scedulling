@@ -7,7 +7,7 @@ async function syncSidebarUser() {
     if (!sidebarName && !sidebarRole && !sidebarAvatar && !topbarAvatar) return;
 
     try {
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'same-origin' });
         if (!response.ok) return;
 
         const result = await response.json();

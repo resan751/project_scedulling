@@ -8,29 +8,31 @@ import {
   protectedPageFallback,
 } from '../controllers/auth.controller.js';
 import {
-  createProject,
   createUser,
-  deleteProject,
   deleteUser,
   getUser,
   getUsers,
   getSponsorUsers,
+  getProjectKaryawanOptions,
+  kelolaUserPage,
+  registerPage,
+  registerUser,
+  updateUser,
+  userCreatePage,
+  userUpdatePage,
   getProjects as getAdminProjects,
+} from '../controllers/admin.controller.js';
+import {
+  createProject,
+  deleteProject,
   getSponsorProject,
   getSponsorProjectLaporan,
   getSponsorProjectApplications,
   approveSponsorProjectApplication,
-  getProjectKaryawanOptions,
-  kelolaUserPage,
   projectCreatePage,
-  registerPage,
-  registerUser,
   sponsorDetailProjectPage,
   updateProject,
-  updateUser,
-  userCreatePage,
-  userUpdatePage,
-} from '../controllers/admin.controller.js';
+} from '../controllers/sponsor.controller.js';
 import {
   getProjects as getFreelanceProjects,
   getProject as getFreelanceProject,

@@ -6,9 +6,12 @@ const registeredTableBody = document.getElementById('registeredTableBody');
 const registeredMessage = document.getElementById('registeredMessage');
 const availableProjectCount = document.getElementById('availableProjectCount');
 const registeredProjectCount = document.getElementById('registeredProjectCount');
+const cvMenuItem = document.getElementById('cvMenuItem');
+const cvPanel = document.getElementById('cvPanel');
 const cvInput = document.getElementById('cvInput');
-const btnSelectCv = document.getElementById('btnSelectCv');
 const btnUploadCv = document.getElementById('btnUploadCv');
+const btnChangeCv = document.getElementById('btnChangeCv');
+const btnSubmitCv = document.getElementById('btnSubmitCv');
 const cvFileName = document.getElementById('cvFileName');
 const cvStatusText = document.getElementById('cvStatusText');
 const cvLink = document.getElementById('cvLink');
@@ -63,9 +66,15 @@ function getStatusClass(status) {
     return '';
 }
 
+function showCvPanel() {
+    if (cvPanel) {
+        cvPanel.style.display = 'block';
+    }
+}
+
 async function checkAuth() {
     try {
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'same-origin' });
         if (!response.ok) {
             window.location.href = '/login.html';
             return;
@@ -204,7 +213,7 @@ async function loadProjects() {
     setMessage(registeredMessage, 'Memuat data project...');
 
     try {
-        const response = await fetch('/api/freelance/projects');
+        const response = await fetch('/api/freelance/projects', { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -229,7 +238,7 @@ async function loadFreelanceProfile() {
     if (!cvStatusText) return;
 
     try {
-        const response = await fetch('/api/freelance/profile');
+        const response = await fetch('/api/freelance/profile', { credentials: 'same-origin' });
         const result = await readJson(response);
         if (!response.ok) {
             throw new Error(result.message || 'Gagal memuat profil CV.');
@@ -240,21 +249,42 @@ async function loadFreelanceProfile() {
             throw new Error('Profil freelance tidak ditemukan.');
         }
 
+        currentUser = user;
+        const hasCv = Boolean(user.cv);
+
         if (cvStatusText) {
-            cvStatusText.textContent = user.cv ? 'CV Anda sudah terunggah.' : 'Belum ada CV yang diunggah.';
+            cvStatusText.textContent = hasCv ? 'CV Anda sudah terunggah.' : 'Belum ada CV yang diunggah.';
+        }
+
+        if (cvMenuItem) {
+            cvMenuItem.innerHTML = `<i class="fas fa-file-alt"></i> ${hasCv ? 'Lihat CV Saya' : 'Unggah CV'}`;
         }
 
         if (cvLink) {
-            if (user.cv) {
+            if (hasCv) {
                 cvLink.href = user.cv;
-                cvLink.style.display = 'inline-block';
+                cvLink.style.display = 'inline-flex';
             } else {
                 cvLink.style.display = 'none';
             }
         }
 
+        if (btnChangeCv) {
+            btnChangeCv.style.display = hasCv ? 'inline-block' : 'none';
+        }
+
         if (btnUploadCv) {
-            btnUploadCv.disabled = !selectedCvFile;
+            btnUploadCv.style.display = hasCv ? 'none' : 'inline-block';
+        }
+
+        if (btnSubmitCv) {
+            btnSubmitCv.style.display = selectedCvFile ? 'inline-block' : 'none';
+            btnSubmitCv.disabled = !selectedCvFile;
+            btnSubmitCv.textContent = hasCv ? 'Ganti CV' : 'Unggah CV';
+        }
+
+        if (cvFileName) {
+            cvFileName.textContent = selectedCvFile ? selectedCvFile.name : '';
         }
     } catch (error) {
         console.error(error);
@@ -265,9 +295,15 @@ async function loadFreelanceProfile() {
     }
 }
 
-if (btnSelectCv && cvInput) {
-    btnSelectCv.addEventListener('click', () => {
-        cvInput.click();
+if (btnUploadCv && cvInput) {
+    btnUploadCv.addEventListener('click', () => {
+        if (cvInput) cvInput.click();
+    });
+}
+
+if (btnChangeCv && cvInput) {
+    btnChangeCv.addEventListener('click', () => {
+        if (cvInput) cvInput.click();
     });
 }
 
@@ -275,24 +311,25 @@ if (cvInput) {
     cvInput.addEventListener('change', () => {
         selectedCvFile = cvInput.files?.[0] || null;
         if (cvFileName) {
-            cvFileName.textContent = selectedCvFile ? selectedCvFile.name : 'Belum ada file terpilih';
+            cvFileName.textContent = selectedCvFile ? selectedCvFile.name : '';
         }
-        if (btnUploadCv) {
-            btnUploadCv.disabled = !selectedCvFile;
+        if (btnSubmitCv) {
+            btnSubmitCv.style.display = selectedCvFile ? 'inline-block' : 'none';
+            btnSubmitCv.disabled = !selectedCvFile;
         }
         setMessage(cvMessage, '');
     });
 }
 
-if (btnUploadCv) {
-    btnUploadCv.addEventListener('click', async () => {
+if (btnSubmitCv) {
+    btnSubmitCv.addEventListener('click', async () => {
         if (!selectedCvFile) {
             setMessage(cvMessage, 'Pilih file CV terlebih dahulu.', 'error');
             return;
         }
 
-        btnUploadCv.disabled = true;
-        btnUploadCv.textContent = 'Mengunggah...';
+        btnSubmitCv.disabled = true;
+        btnSubmitCv.textContent = currentUser?.cv ? 'Mengganti...' : 'Mengunggah...';
         setMessage(cvMessage, '');
 
         try {
@@ -301,6 +338,7 @@ if (btnUploadCv) {
 
             const response = await fetch('/api/freelance/profile/cv', {
                 method: 'POST',
+                credentials: 'same-origin',
                 body: formData,
             });
             const result = await readJson(response);
@@ -311,24 +349,39 @@ if (btnUploadCv) {
             setMessage(cvMessage, 'CV berhasil diunggah.', 'success');
             selectedCvFile = null;
             if (cvInput) cvInput.value = '';
-            if (cvFileName) cvFileName.textContent = 'Belum ada file terpilih';
+            if (cvFileName) cvFileName.textContent = '';
+            if (btnSubmitCv) {
+                btnSubmitCv.style.display = 'none';
+            }
             await loadFreelanceProfile();
+            showCvPanel();
         } catch (error) {
             console.error(error);
             setMessage(cvMessage, error.message, 'error');
         } finally {
-            if (btnUploadCv) {
-                btnUploadCv.disabled = !selectedCvFile;
-                btnUploadCv.textContent = 'Unggah CV';
+            if (btnSubmitCv) {
+                btnSubmitCv.disabled = !selectedCvFile;
+                btnSubmitCv.textContent = currentUser?.cv ? 'Ganti CV' : 'Unggah CV';
             }
         }
+    });
+}
+
+if (cvMenuItem) {
+    cvMenuItem.addEventListener('click', async (event) => {
+        event.preventDefault();
+        await loadFreelanceProfile();
+        if (currentUser?.cv) {
+            window.open(currentUser.cv, '_blank');
+        }
+        showCvPanel();
     });
 }
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
         try {
-            await fetch('/api/logout', { method: 'POST' });
+            await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         } finally {
             window.location.href = '/login.html';
         }

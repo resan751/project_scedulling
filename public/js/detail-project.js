@@ -65,7 +65,7 @@ function getLaporanTypeLabel(type) {
 
 async function checkAuth() {
     try {
-        const response = await fetch('/api/me');
+        const response = await fetch('/api/me', { credentials: 'same-origin' });
         if (!response.ok) {
             window.location.href = '/login.html';
             return;
@@ -91,11 +91,12 @@ async function checkAuth() {
     }
 }
 
-function renderRoles(roles, freelancers, freelancerIds) {
+function renderRoles(roles, freelancers, freelancerIds, userApplications = []) {
     rolesList.innerHTML = '';
     submitBtn.disabled = true;
     
     let hasVacantRoles = false;
+    const userApplicationsByRole = new Map(userApplications.map((app) => [app.role_project, app.status]));
 
     if (!roles.length) {
         rolesList.innerHTML = '<div class="empty-state" style="padding: 24px;"><i class="fas fa-inbox" style="font-size: 24px;"></i><p>Belum ada role project.</p></div>';
@@ -106,6 +107,7 @@ function renderRoles(roles, freelancers, freelancerIds) {
     roles.forEach((role, index) => {
         const assignedUser = freelancers[index];
         const assignedUserId = freelancerIds[index];
+        const userApplicationStatus = userApplicationsByRole.get(role);
         const container = document.createElement('label');
         container.className = 'employee-option';
         container.style.display = 'flex';
@@ -126,7 +128,6 @@ function renderRoles(roles, freelancers, freelancerIds) {
         const rightSide = document.createElement('div');
 
         if (assignedUser) {
-            // Already taken
             const badge = document.createElement('span');
             badge.style.fontSize = '0.8rem';
             badge.style.padding = '3px 8px';
@@ -147,8 +148,48 @@ function renderRoles(roles, freelancers, freelancerIds) {
             container.appendChild(rightSide);
             container.style.cursor = 'not-allowed';
             container.style.opacity = '0.8';
+        } else if (userApplicationStatus) {
+            const badge = document.createElement('span');
+            badge.style.fontSize = '0.8rem';
+            badge.style.padding = '3px 8px';
+            badge.style.borderRadius = '4px';
+            badge.style.background = 'rgba(59, 130, 246, 0.15)';
+            badge.style.color = '#1d4ed8';
+            badge.style.border = '1px solid rgba(59, 130, 246, 0.3)';
+
+            if (userApplicationStatus === 'pending') {
+                badge.textContent = 'Anda sudah mendaftar (Menunggu)';
+                container.style.cursor = 'not-allowed';
+                container.style.opacity = '0.8';
+            } else if (userApplicationStatus === 'approved') {
+                badge.textContent = 'Anda sudah diterima';
+                container.style.cursor = 'not-allowed';
+                container.style.opacity = '0.8';
+            } else {
+                badge.textContent = 'Anda pernah ditolak (Daftar ulang)';
+                badge.style.background = 'rgba(251, 191, 36, 0.15)';
+                badge.style.color = '#92400e';
+                badge.style.border = '1px solid rgba(251, 191, 36, 0.3)';
+
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.name = 'roles';
+                checkbox.value = role;
+                checkbox.style.cursor = 'pointer';
+
+                checkbox.addEventListener('change', () => {
+                    const checkedCount = document.querySelectorAll('input[name="roles"]:checked').length;
+                    submitBtn.disabled = checkedCount === 0;
+                });
+
+                leftSide.prepend(checkbox);
+                hasVacantRoles = true;
+            }
+
+            rightSide.appendChild(badge);
+            container.appendChild(leftSide);
+            container.appendChild(rightSide);
         } else {
-            // Vacant
             hasVacantRoles = true;
             
             const checkbox = document.createElement('input');
@@ -182,10 +223,8 @@ function renderRoles(roles, freelancers, freelancerIds) {
     });
 
     if (projectData.status_project !== 'pending') {
-        // If project is not pending, disable registration completely
         submitBtn.disabled = true;
         submitBtn.textContent = 'Pendaftaran Ditutup';
-        // Disable any vacant checkboxes
         document.querySelectorAll('input[name="roles"]').forEach(cb => {
             cb.disabled = true;
             cb.parentElement.parentElement.style.cursor = 'not-allowed';
@@ -195,7 +234,7 @@ function renderRoles(roles, freelancers, freelancerIds) {
         submitBtn.innerHTML = hasVacantRoles
             ? '<i class="fas fa-check"></i> Daftar Peran Terpilih'
             : 'Tidak Ada Role Tersedia';
-        submitBtn.disabled = true;
+        submitBtn.disabled = !hasVacantRoles;
     }
 }
 
@@ -203,7 +242,7 @@ async function loadProjectDetails() {
     setMessage(detailMessage, 'Memuat detail project...');
     
     try {
-        const response = await fetch(`/api/freelance/projects/${projectId}`);
+        const response = await fetch(`/api/freelance/projects/${projectId}`, { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -220,7 +259,7 @@ async function loadProjectDetails() {
         projectStartDate.value = formatDate(projectData.tgl_mulai);
         projectDeadline.value = formatDate(projectData.deadline);
 
-        renderRoles(projectData.role_project, projectData.nama_user, projectData.id_user || []);
+        renderRoles(projectData.role_project, projectData.nama_user, projectData.id_user || [], projectData.userApplications || []);
         loadProjectLaporan();
         setMessage(detailMessage, '');
     } catch (error) {
@@ -236,7 +275,7 @@ async function loadProjectLaporan() {
     laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Memuat laporan project...</td></tr>';
 
     try {
-        const response = await fetch(`/api/freelance/projects/${projectId}/laporan`);
+        const response = await fetch(`/api/freelance/projects/${projectId}/laporan`, { credentials: 'same-origin' });
         const result = await readJson(response);
 
         if (!response.ok) {
@@ -310,6 +349,7 @@ if (registerForm) {
         try {
             const response = await fetch(`/api/freelance/projects/${projectId}/register`, {
                 method: 'POST',
+                credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -336,7 +376,7 @@ if (registerForm) {
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {
-        await fetch('/api/logout', { method: 'POST' });
+        await fetch('/api/logout', { method: 'POST', credentials: 'same-origin' });
         window.location.href = '/login.html';
     });
 }

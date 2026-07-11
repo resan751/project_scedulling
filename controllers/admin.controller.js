@@ -83,7 +83,7 @@ function requireProjectViewerApi(req, res) {
 }
 
 function isProjectOwner(project, session) {
-    return String(project.pembuat || '').trim() === String(session.nama_user || '').trim()
+    return String(project.pembuat || '').trim().toLowerCase() === String(session.nama_user || '').trim().toLowerCase()
 }
 
 function getUserId(req, res) {
