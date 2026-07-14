@@ -34,16 +34,11 @@
                 </div>
                 
                 <nav class="sidebar-nav">
-                    <div class="nav-section-title">Menu</div>
                     <a href="dashboard.html" class="nav-item"><i class="fas fa-folder-open"></i> Project Saya</a>
                     
                     <div class="nav-section-title">Laporan</div>
                     <a href="create-laporan.html" class="nav-item"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
-                    <div class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</div>
-                    
-                    <div class="nav-section-title">Lainnya</div>
-                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Kalender</div>
-                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi</div>
+                    <a href="laporan.html" class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</a>
                 </nav>
                 
                 <div class="sidebar-logout">
@@ -110,10 +105,15 @@
                             </div>
                             <div class="card-body">
                                 <form id="registerForm">
-                                    <p class="text-sm text-muted mb-12">Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.</p>
-                                    
-                                    <div class="field-group">
-                                        <label class="field-label">Role Project Tersedia</label>
+                                    <p class="text-sm text-muted mb-12" style="padding: 0 2px 4px; border-left: 3px solid var(--purple-300); padding-left: 10px; background: var(--purple-50); border-radius: 0 6px 6px 0; padding: 8px 12px;">
+                                        Anda dapat mendaftar untuk satu atau lebih peran yang masih tersedia.
+                                    </p>
+
+                                    <div class="field-group" style="margin-top: 16px;">
+                                        <label class="field-label" style="margin-bottom: 12px; display: block;">
+                                            <i class="fas fa-users" style="color: var(--purple-500); margin-right: 6px;"></i>
+                                            Role Project Tersedia
+                                        </label>
                                         <div class="role-choice-list" id="rolesList">
                                             <div class="empty-state" style="padding: 24px;">
                                                 <i class="fas fa-spinner fa-spin" style="font-size: 20px;"></i>
@@ -124,9 +124,11 @@
 
                                     <div id="submitMessage"></div>
 
-                                    <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; justify-content: center;" disabled>
-                                        <i class="fas fa-check"></i> Daftar Peran Terpilih
-                                    </button>
+                                    <div style="border-top: 1px solid var(--purple-100); margin-top: 20px; padding-top: 16px;">
+                                        <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%; justify-content: center;" disabled>
+                                            <i class="fas fa-check"></i> Daftar Peran Terpilih
+                                        </button>
+                                    </div>
                                 </form>
                             </div>
                         </div>
@@ -148,11 +150,12 @@
                                                 <th>Jenis</th>
                                                 <th>Deskripsi</th>
                                                 <th>Bukti</th>
+                                                <th>Status</th>
                                             </tr>
                                         </thead>
                                         <tbody id="laporanTableBody">
                                             <tr>
-                                                <td colspan="6" class="empty-text">Memuat laporan project...</td>
+                                                <td colspan="7" class="empty-text">Memuat laporan project...</td>
                                             </tr>
                                         </tbody>
                                     </table>

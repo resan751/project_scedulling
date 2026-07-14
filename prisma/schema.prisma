@@ -44,6 +44,7 @@ model laporan {
   bukti              String @db.VarChar(255)
   jenis_laporan      String @db.VarChar(100)
   deskripsi_laporan  String @db.VarChar(255)
+  status_laporan     String @db.VarChar(50) @default("pending")
 
   @@index([nama_user])
   @@index([nama_project, role_project])

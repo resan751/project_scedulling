@@ -1101,6 +1101,10 @@ tbody tr:last-child td {
   gap: 20px;
 }
 
+.two-col > * {
+  min-width: 0;
+}
+
 .three-col {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -1111,6 +1115,10 @@ tbody tr:last-child td {
   display: grid;
   grid-template-columns: 2fr 1fr;
   gap: 20px;
+}
+
+.left-main > * {
+  min-width: 0;
 }
 
 .card {

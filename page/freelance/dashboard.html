@@ -34,18 +34,11 @@
                 </div>
                 
                 <nav class="sidebar-nav">
-                    <div class="nav-section-title">Menu</div>
                     <a href="dashboard.html" class="nav-item active"><i class="fas fa-folder-open"></i> Project Saya</a>
-                    <a href="detail-project.html" class="nav-item"><i class="fas fa-folder-open"></i> Detail Project</a>
-                    <a href="#" class="nav-item" id="cvMenuItem"><i class="fas fa-file-alt"></i> CV Saya</a>
                     
                     <div class="nav-section-title">Laporan</div>
                     <a href="create-laporan.html" class="nav-item"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
-                    <div class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</div>
-                    
-                    <div class="nav-section-title">Lainnya</div>
-                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Kalender</div>
-                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">3</span></div>
+                    <a href="laporan.html" class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</a>
                 </nav>
                 
                 <div class="sidebar-logout">
@@ -61,7 +54,6 @@
                         <p id="userWelcome">Temukan project baru dan kelola peran Anda dalam tim</p>
                     </div>
                     <div class="topbar-right">
-                        <button class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></button>
                         <div class="topbar-avatar">RD</div>
                     </div>
                 </header>
@@ -82,23 +74,36 @@
                         </div>
                     </div>
 
-                    <div class="mb-24" id="cvPanel" style="display: none;">
+                    <div class="mb-24" id="cvPanel">
                         <div class="section-header">
                             <div>
                                 <h3>CV Saya</h3>
-                                <p>Kelola CV Anda dari menu sisi kiri. Jika sudah terunggah, Anda dapat langsung melihat CV dan menggantinya dari sini.</p>
+                                <p>Unggah atau perbarui CV Anda di bawah ini. CV diperlukan untuk mendaftar ke project.</p>
                             </div>
                         </div>
                         <div class="table-card">
                             <div id="cvMessage"></div>
                             <div class="card-body">
                                 <p class="text-muted" id="cvStatusText">Memuat status CV...</p>
-                                <div id="cvActionRow" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 12px;">
-                                    <a id="cvLink" href="#" class="link-btn" target="_blank" rel="noopener noreferrer" style="display: none;">Lihat CV Anda</a>
-                                    <button type="button" class="btn btn-primary" id="btnUploadCv" style="display: none;">Unggah CV</button>
-                                    <button type="button" class="btn btn-outline btn-sm" id="btnChangeCv" style="display: none;">Ganti CV</button>
-                                    <button type="button" class="btn btn-primary" id="btnSubmitCv" style="display: none;">Unggah CV</button>
-                                    <span id="cvFileName" class="text-muted"></span>
+                                <div id="cvActionRow" style="display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 16px;">
+                                    <!-- Tombol untuk melihat CV (muncul jika sudah ada CV) -->
+                                    <a id="cvLink" href="#" class="link-btn" target="_blank" rel="noopener noreferrer" style="display: none; padding: 8px 16px;">
+                                        <i class="fas fa-eye"></i> Lihat CV Saya
+                                    </a>
+                                    <!-- Tombol pilih file (untuk upload pertama kali) -->
+                                    <button type="button" class="btn btn-primary" id="btnUploadCv" style="display: none;">
+                                        <i class="fas fa-upload"></i> Pilih File CV
+                                    </button>
+                                    <!-- Tombol pilih file baru (untuk ganti CV yang sudah ada) -->
+                                    <button type="button" class="btn btn-outline" id="btnChangeCv" style="display: none;">
+                                        <i class="fas fa-exchange-alt"></i> Ganti CV
+                                    </button>
+                                    <!-- Nama file yang dipilih -->
+                                    <span id="cvFileName" class="text-muted" style="font-size: 13px; font-style: italic;"></span>
+                                    <!-- Tombol simpan/kirim file yang sudah dipilih -->
+                                    <button type="button" class="btn btn-primary" id="btnSubmitCv" style="display: none;">
+                                        <i class="fas fa-cloud-upload-alt"></i> Simpan & Unggah CV
+                                    </button>
                                 </div>
                                 <input type="file" id="cvInput" name="cv" accept=".pdf,.jpg,.jpeg,.png" hidden>
                             </div>

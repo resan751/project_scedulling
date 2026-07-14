@@ -2,6 +2,8 @@ const logoutBtn = document.getElementById('logoutBtn') || document.querySelector
 const projectTitle = document.getElementById('projectTitle');
 const projectStatus = document.getElementById('projectStatus');
 const projectDescription = document.getElementById('projectDescription');
+const projectMaker = document.getElementById('projectMaker');
+const projectPayment = document.getElementById('projectPayment');
 const projectStartDate = document.getElementById('projectStartDate');
 const projectDeadline = document.getElementById('projectDeadline');
 const rolesList = document.getElementById('rolesList');
@@ -42,6 +44,14 @@ function formatDate(value) {
         month: 'long',
         year: 'numeric',
     }).format(new Date(value));
+}
+
+function formatRupiah(value) {
+    return new Intl.NumberFormat('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+    }).format(Number(value || 0));
 }
 
 function getStatusClass(status) {
@@ -256,6 +266,10 @@ async function loadProjectDetails() {
         projectStatus.textContent = projectData.status_project;
         
         projectDescription.textContent = projectData.deskripsi_project || 'Tidak ada deskripsi.';
+        
+        if (projectMaker) projectMaker.value = projectData.pembuat || '-';
+        if (projectPayment) projectPayment.value = formatRupiah(projectData.bayaran);
+        
         projectStartDate.value = formatDate(projectData.tgl_mulai);
         projectDeadline.value = formatDate(projectData.deadline);
 
@@ -285,7 +299,7 @@ async function loadProjectLaporan() {
         const laporan = result.laporan || [];
 
         if (!laporan.length) {
-            laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Belum ada laporan untuk project ini.</td></tr>';
+            laporanTableBody.innerHTML = '<tr><td colspan="7" class="empty-text">Belum ada laporan untuk project ini.</td></tr>';
             setMessage(laporanMessage, '');
             return;
         }
@@ -318,7 +332,13 @@ async function loadProjectLaporan() {
             proofLink.innerHTML = '<i class="fas fa-eye"></i> Lihat';
             proofCell.appendChild(proofLink);
 
-            row.append(idCell, userCell, roleCell, typeCell, descriptionCell, proofCell);
+            const statusCell = document.createElement('td');
+            const statusBadge = document.createElement('span');
+            statusBadge.className = `status-badge ${getStatusClass(item.status_laporan)}`.trim();
+            statusBadge.textContent = item.status_laporan;
+            statusCell.appendChild(statusBadge);
+
+            row.append(idCell, userCell, roleCell, typeCell, descriptionCell, proofCell, statusCell);
             laporanTableBody.appendChild(row);
         });
 

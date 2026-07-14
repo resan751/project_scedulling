@@ -37,6 +37,14 @@ export const createLaporanPage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'create-laporan.html'))
 }
 
+export const listLaporanPage = (req, res) => {
+    setNoCache(res)
+
+    if (!requireFreelance(req, res)) return
+
+    res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'laporan.html'))
+}
+
 function requireFreelanceApi(req, res) {
     const session = readSession(req)
     if (!session) {

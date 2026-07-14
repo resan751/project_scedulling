@@ -6,7 +6,6 @@ const registeredTableBody = document.getElementById('registeredTableBody');
 const registeredMessage = document.getElementById('registeredMessage');
 const availableProjectCount = document.getElementById('availableProjectCount');
 const registeredProjectCount = document.getElementById('registeredProjectCount');
-const cvMenuItem = document.getElementById('cvMenuItem');
 const cvPanel = document.getElementById('cvPanel');
 const cvInput = document.getElementById('cvInput');
 const btnUploadCv = document.getElementById('btnUploadCv');
@@ -66,11 +65,7 @@ function getStatusClass(status) {
     return '';
 }
 
-function showCvPanel() {
-    if (cvPanel) {
-        cvPanel.style.display = 'block';
-    }
-}
+
 
 async function checkAuth() {
     try {
@@ -256,9 +251,6 @@ async function loadFreelanceProfile() {
             cvStatusText.textContent = hasCv ? 'CV Anda sudah terunggah.' : 'Belum ada CV yang diunggah.';
         }
 
-        if (cvMenuItem) {
-            cvMenuItem.innerHTML = `<i class="fas fa-file-alt"></i> ${hasCv ? 'Lihat CV Saya' : 'Unggah CV'}`;
-        }
 
         if (cvLink) {
             if (hasCv) {
@@ -280,7 +272,6 @@ async function loadFreelanceProfile() {
         if (btnSubmitCv) {
             btnSubmitCv.style.display = selectedCvFile ? 'inline-block' : 'none';
             btnSubmitCv.disabled = !selectedCvFile;
-            btnSubmitCv.textContent = hasCv ? 'Ganti CV' : 'Unggah CV';
         }
 
         if (cvFileName) {
@@ -354,29 +345,17 @@ if (btnSubmitCv) {
                 btnSubmitCv.style.display = 'none';
             }
             await loadFreelanceProfile();
-            showCvPanel();
         } catch (error) {
             console.error(error);
             setMessage(cvMessage, error.message, 'error');
         } finally {
             if (btnSubmitCv) {
                 btnSubmitCv.disabled = !selectedCvFile;
-                btnSubmitCv.textContent = currentUser?.cv ? 'Ganti CV' : 'Unggah CV';
             }
         }
     });
 }
 
-if (cvMenuItem) {
-    cvMenuItem.addEventListener('click', async (event) => {
-        event.preventDefault();
-        await loadFreelanceProfile();
-        if (currentUser?.cv) {
-            window.open(currentUser.cv, '_blank');
-        }
-        showCvPanel();
-    });
-}
 
 if (logoutBtn) {
     logoutBtn.addEventListener('click', async () => {

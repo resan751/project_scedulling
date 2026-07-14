@@ -32,6 +32,7 @@ import {
   projectCreatePage,
   sponsorDetailProjectPage,
   updateProject,
+  updateSponsorProjectLaporanStatus,
 } from '../controllers/sponsor.controller.js';
 import {
   getProjects as getFreelanceProjects,
@@ -43,6 +44,7 @@ import {
   createLaporan,
   getFreelanceProfile,
   uploadFreelanceCv,
+  listLaporanPage,
 } from '../controllers/freelance.controller.js';
 import { upload } from '../config/multer.js'
 
@@ -67,6 +69,7 @@ AuthRouter.get('/api/admin/projects', getAdminProjects)
 AuthRouter.get('/api/sponsor/projects', getAdminProjects)
 AuthRouter.get('/api/sponsor/projects/:id', getSponsorProject)
 AuthRouter.get('/api/sponsor/projects/:id/laporan', getSponsorProjectLaporan)
+AuthRouter.put('/api/sponsor/projects/:id/laporan/:laporanId/status', updateSponsorProjectLaporanStatus)
 AuthRouter.get('/api/sponsor/projects/:id/applications', getSponsorProjectApplications)
 AuthRouter.put('/api/sponsor/projects/:id/applications/:applicationId/approve', approveSponsorProjectApplication)
 AuthRouter.post('/api/sponsor/projects', createProject)
@@ -94,6 +97,7 @@ AuthRouter.get('/sponsor/dashboard.html', dashboardPage('sponsor'))
 AuthRouter.get('/freelance/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/page/freelance/detail-project.html', detailProjectPage)
 AuthRouter.get('/page/freelance/create-laporan.html', createLaporanPage)
+AuthRouter.get('/page/freelance/laporan.html', listLaporanPage)
 AuthRouter.post('/api/freelance/laporan/create', upload.single('bukti'), createLaporan)
 AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 

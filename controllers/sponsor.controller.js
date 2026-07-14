@@ -289,6 +289,69 @@ export const getSponsorProjectLaporan = async (req, res) => {
     }
 }
 
+export const updateSponsorProjectLaporanStatus = async (req, res) => {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const id_project = getProjectId(req, res)
+    if (!id_project) return
+
+    const id_laporan = Number(req.params.laporanId)
+    if (!Number.isInteger(id_laporan) || id_laporan <= 0) {
+        return res.status(400).json({ message: 'ID laporan tidak valid.' })
+    }
+
+    const { status } = req.body
+    if (!['approve', 'ditolak'].includes(status)) {
+        return res.status(400).json({ message: 'Status tidak valid.' })
+    }
+
+    try {
+        const project = await prisma.project.findUnique({
+            where: {
+                id_project,
+            },
+            select: {
+                nama_project: true,
+                pembuat: true,
+            },
+        })
+
+        if (!project) {
+            return res.status(404).json({ message: 'Project tidak ditemukan.' })
+        }
+
+        if (!isProjectOwner(project, session)) {
+            return res.status(403).json({ message: 'Anda hanya dapat mengubah status laporan project yang Anda buat.' })
+        }
+
+        const existingLaporan = await prisma.laporan.findFirst({
+            where: {
+                id_laporan,
+                nama_project: project.nama_project,
+            },
+        })
+
+        if (!existingLaporan) {
+            return res.status(404).json({ message: 'Laporan tidak ditemukan.' })
+        }
+
+        const updatedLaporan = await prisma.laporan.update({
+            where: {
+                id_laporan,
+            },
+            data: {
+                status_laporan: status,
+            },
+        })
+
+        res.json({ message: 'Status laporan berhasil diperbarui.', laporan: updatedLaporan })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui status laporan.' })
+    }
+}
+
 export const getSponsorProjectApplications = async (req, res) => {
     const session = requireSponsorApi(req, res)
     if (!session) return

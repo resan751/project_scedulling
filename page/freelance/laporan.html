@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laporan Saya - RiseGig</title>
+    
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .laporan-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .laporan-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(108, 61, 224, 0.06);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .laporan-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .laporan-card-header {
+            padding: 16px 20px;
+            background: var(--purple-50);
+            border-bottom: 1px solid var(--purple-100);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .laporan-card-body {
+            padding: 20px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .laporan-card-footer {
+            padding: 16px 20px;
+            border-top: 1px solid rgba(108, 61, 224, 0.04);
+            background: rgba(245, 243, 255, 0.3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .laporan-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--purple-950);
+        }
+        .badge-type {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+        }
+        .badge-type.progress {
+            background: rgba(59, 130, 246, 0.15);
+            color: #1d4ed8;
+        }
+        .badge-type.problem {
+            background: rgba(239, 68, 68, 0.15);
+            color: #b91c1c;
+        }
+        .badge-type.notice {
+            background: rgba(245, 158, 11, 0.15);
+            color: #b45309;
+        }
+    </style>
+</head>
+<body>
+    <div class="page active" id="page-freelance-laporan-list">
+        <div class="app-shell">
+            
+            <!-- SIDEBAR KARYAWAN -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Rise<span>Gig</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+                
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">NU</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
+                    </div>
+                </div>
+                
+                <nav class="sidebar-nav">
+                    <a href="dashboard.html" class="nav-item"><i class="fas fa-folder-open"></i> Project Saya</a>
+                    
+                    <div class="nav-section-title">Laporan</div>
+                    <a href="create-laporan.html" class="nav-item"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
+                    <a href="laporan.html" class="nav-item active"><i class="fas fa-file-alt"></i> Laporan Saya</a>
+                </nav>
+                
+                <div class="sidebar-logout">
+                    <button class="btn-logout" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Laporan Saya</h2>
+                        <p>Daftar laporan kerja yang telah Anda kirimkan</p>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="topbar-avatar">RD</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+                    
+                    <!-- STATS -->
+                    <div class="stats-grid">
+                        <div class="stat-card purple">
+                            <div class="stat-icon purple"><i class="fas fa-file-invoice"></i></div>
+                            <div class="stat-value" id="totalLaporanCreated">0</div>
+                            <div class="stat-label">Total Laporan dibuat</div>
+                        </div>
+                        <div class="stat-card green">
+                            <div class="stat-icon green"><i class="fas fa-tasks"></i></div>
+                            <div class="stat-value" id="totalProjectRegistered">0</div>
+                            <div class="stat-label">Project yang Diikuti</div>
+                        </div>
+                        <div class="stat-card pink">
+                            <div class="stat-icon pink"><i class="fas fa-check-circle"></i></div>
+                            <div class="stat-value" id="totalProjectFinished">0</div>
+                            <div class="stat-label">Project Selesai</div>
+                        </div>
+                    </div>
+
+                    <!-- CARD CONTAINER -->
+                    <div class="mb-24">
+                        <div class="section-header">
+                            <div>
+                                <h3>Riwayat Laporan</h3>
+                                <p>Semua laporan progress, problem, dan notice Anda</p>
+                            </div>
+                            <a href="create-laporan.html" class="btn btn-primary btn-sm">
+                                <i class="fas fa-plus"></i> Kirim Laporan Baru
+                            </a>
+                        </div>
+                        
+                        <div id="laporanListMessage"></div>
+                        <div class="laporan-grid" id="laporanCardsContainer">
+                            <div class="empty-text" style="grid-column: 1 / -1;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 24px;"></i>
+                                <p style="margin-top: 10px;">Memuat data laporan...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/js/laporan-freelance.js"></script>
+    <script src="/js/sidebar-user.js"></script>
+</body>
+</html>

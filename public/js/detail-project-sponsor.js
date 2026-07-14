@@ -172,9 +172,30 @@ async function loadProjectDetails() {
     }
 }
 
+async function updateLaporanStatus(laporanId, status) {
+    try {
+        const response = await fetch(`/api/sponsor/projects/${projectId}/laporan/${laporanId}/status`, {
+            method: 'PUT',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ status })
+        });
+        const result = await readJson(response);
+        if (!response.ok) {
+            throw new Error(result.message || 'Gagal mengubah status laporan.');
+        }
+        await loadProjectLaporan();
+    } catch (error) {
+        console.error(error);
+        setMessage(laporanMessage, error.message, 'error');
+    }
+}
+
 async function loadProjectLaporan() {
     setMessage(laporanMessage, 'Memuat laporan project...');
-    laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Memuat laporan project...</td></tr>';
+    laporanTableBody.innerHTML = '<tr><td colspan="8" class="empty-text">Memuat laporan project...</td></tr>';
 
     try {
         const response = await fetch(`/api/sponsor/projects/${projectId}/laporan`, { credentials: 'same-origin' });
@@ -186,7 +207,7 @@ async function loadProjectLaporan() {
 
         const laporan = result.laporan || [];
         if (!laporan.length) {
-            laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Belum ada laporan untuk project ini.</td></tr>';
+            laporanTableBody.innerHTML = '<tr><td colspan="8" class="empty-text">Belum ada laporan untuk project ini.</td></tr>';
             setMessage(laporanMessage, '');
             return;
         }
@@ -201,6 +222,8 @@ async function loadProjectLaporan() {
             const descriptionCell = document.createElement('td');
             const proofCell = document.createElement('td');
             const proofLink = document.createElement('a');
+            const statusCell = document.createElement('td');
+            const actionCell = document.createElement('td');
 
             idCell.textContent = item.id_laporan;
             userCell.textContent = item.nama_user;
@@ -215,14 +238,40 @@ async function loadProjectLaporan() {
             proofLink.innerHTML = '<i class="fas fa-eye"></i> Lihat';
             proofCell.appendChild(proofLink);
 
-            row.append(idCell, userCell, roleCell, typeCell, descriptionCell, proofCell);
+            // Status Badge
+            const statusBadge = document.createElement('span');
+            statusBadge.className = `status-badge ${getStatusClass(item.status_laporan)}`.trim();
+            statusBadge.textContent = item.status_laporan;
+            statusCell.appendChild(statusBadge);
+
+            // Aksi Buttons
+            if (item.status_laporan === 'pending') {
+                const approveBtn = document.createElement('button');
+                approveBtn.className = 'btn btn-sm btn-primary';
+                approveBtn.style.marginRight = '6px';
+                approveBtn.textContent = 'Approve';
+                approveBtn.addEventListener('click', () => updateLaporanStatus(item.id_laporan, 'approve'));
+
+                const rejectBtn = document.createElement('button');
+                rejectBtn.className = 'btn btn-sm btn-outline';
+                rejectBtn.textContent = 'Tolak';
+                rejectBtn.style.borderColor = 'var(--red-500)';
+                rejectBtn.style.color = 'var(--red-500)';
+                rejectBtn.addEventListener('click', () => updateLaporanStatus(item.id_laporan, 'ditolak'));
+
+                actionCell.append(approveBtn, rejectBtn);
+            } else {
+                actionCell.textContent = '-';
+            }
+
+            row.append(idCell, userCell, roleCell, typeCell, descriptionCell, proofCell, statusCell, actionCell);
             laporanTableBody.appendChild(row);
         });
 
         setMessage(laporanMessage, '');
     } catch (error) {
         console.error(error);
-        laporanTableBody.innerHTML = '<tr><td colspan="6" class="empty-text">Laporan gagal dimuat.</td></tr>';
+        laporanTableBody.innerHTML = '<tr><td colspan="8" class="empty-text">Laporan gagal dimuat.</td></tr>';
         setMessage(laporanMessage, error.message, 'error');
     }
 }
