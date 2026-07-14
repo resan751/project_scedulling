@@ -537,3 +537,162 @@
 .admin-calendar-wrap .cal-month {
     font-size: 12px;
 }
+
+/* ============================================
+   STYLE BARU: Arsip Project, Pengaturan, Calendar Popup
+   ============================================ */
+
+/* === SETTING TOGGLE === */
+.setting-toggle-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.setting-toggle-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(108, 61, 224, 0.06);
+}
+.setting-toggle-item:last-child {
+    border-bottom: none;
+}
+.setting-toggle-title {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+.setting-toggle-desc {
+    font-size: 11.5px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 44px;
+    height: 24px;
+    flex-shrink: 0;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: var(--gray-200);
+    border-radius: 24px;
+    transition: var(--transition);
+}
+.toggle-slider::before {
+    content: '';
+    position: absolute;
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background: white;
+    border-radius: 50%;
+    transition: var(--transition);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+.toggle-switch input:checked + .toggle-slider {
+    background: linear-gradient(135deg, var(--purple-500), var(--violet-600));
+}
+.toggle-switch input:checked + .toggle-slider::before {
+    transform: translateX(20px);
+}
+
+/* === SETTING INFO === */
+.setting-info-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.setting-info-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(108, 61, 224, 0.06);
+}
+.setting-info-item:last-child {
+    border-bottom: none;
+}
+.setting-info-label {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+.setting-info-value {
+    font-size: 12.5px;
+    color: var(--text-primary);
+    font-weight: 800;
+    font-family: 'Outfit', sans-serif;
+}
+
+/* === ARSIP PROJECT === */
+.arsip-status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: capitalize;
+}
+.arsip-status-badge.selesai {
+    color: #065F46;
+    background: #D1FAE5;
+}
+.arsip-status-badge.kadaluarsa {
+    color: #92400E;
+    background: #FEF3C7;
+}
+.arsip-status-badge.dibatalkan {
+    color: #991B1B;
+    background: #FEE2E2;
+}
+
+/* === CALENDAR POPUP ENHANCEMENTS === */
+#calendarPopup .admin-modal-panel {
+    animation: slideUp 0.3s ease;
+}
+#calendarPopup .calendar-grid {
+    gap: 3px;
+}
+#calendarPopup .cal-header {
+    font-size: 10px;
+    padding: 6px 0;
+}
+#calendarPopup .cal-day {
+    font-size: 12px;
+    padding: 5px;
+    border-radius: 6px;
+}
+#calendarPopup .cal-day.has-event::after {
+    width: 4px;
+    height: 4px;
+    bottom: 3px;
+}
+
+/* === RESPONSIVE TAMBAHAN === */
+@media (max-width: 900px) {
+    .setting-toggle-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    .setting-info-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
+    #calendarPopup .admin-modal-panel {
+        max-width: 100%;
+    }
+}

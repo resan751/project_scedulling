@@ -1,0 +1,851 @@
+/* ============================================
+   JADWAL KALENDER - Compact Calendar
+   Shared base + Role-specific layouts
+   ============================================ */
+
+/* === COMPACT CALENDAR BASE === */
+.kalender-main-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(108, 61, 224, 0.08);
+    overflow: hidden;
+}
+
+.kalender-card-head {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(108, 61, 224, 0.06);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    background: linear-gradient(180deg, rgba(245, 243, 255, 0.4), transparent);
+}
+
+.kalender-card-head h3 {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kalender-card-head h3 i {
+    font-size: 15px;
+    color: var(--purple-600);
+}
+
+.kalender-legend {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.legend-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.legend-dot.deadline { background: var(--red-500); }
+.legend-dot.laporan { background: var(--purple-500); }
+.legend-dot.mulai { background: var(--emerald-500); }
+.legend-dot.milestone { background: var(--amber-500); }
+.legend-dot.today-dot { background: var(--blue-500); }
+
+.kalender-card-body {
+    padding: 14px 18px 16px;
+}
+
+/* === COMPACT CALENDAR GRID === */
+.kalender-main-card .cal-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.kalender-main-card .cal-nav-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
+    background: var(--purple-100);
+    color: var(--purple-700);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    font-size: 10px;
+    border: none;
+}
+
+.kalender-main-card .cal-nav-btn:hover {
+    background: var(--purple-200);
+    color: var(--purple-900);
+}
+
+.kalender-main-card .cal-month {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-primary);
+    flex: 1;
+    text-align: center;
+    letter-spacing: 0.3px;
+}
+
+.kalender-main-card .calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.kalender-main-card .cal-header {
+    text-align: center;
+    font-size: 9px;
+    font-weight: 800;
+    color: var(--purple-600);
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    padding: 4px 0;
+    background: var(--purple-50);
+    border-radius: 4px;
+}
+
+.kalender-main-card .cal-day {
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3px;
+    border-radius: 5px;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: var(--transition);
+    position: relative;
+    background: var(--bg-card);
+    border: 1px solid rgba(108, 61, 224, 0.05);
+}
+
+.kalender-main-card .cal-day:hover {
+    background: var(--purple-50);
+    border-color: var(--purple-200);
+    transform: translateY(-1px);
+}
+
+.kalender-main-card .cal-day.today {
+    background: linear-gradient(135deg, var(--purple-600), var(--violet-600));
+    color: white;
+    font-weight: 800;
+    border-color: transparent;
+    box-shadow: 0 2px 6px rgba(108, 61, 224, 0.3);
+}
+
+.kalender-main-card .cal-day.other-month {
+    color: var(--purple-200);
+    background: var(--gray-50);
+    border-color: transparent;
+    cursor: default;
+}
+
+/* === EVENT DOTS (Compact) === */
+.kalender-main-card .cal-day.has-deadline::after,
+.kalender-main-card .cal-day.has-laporan::after,
+.kalender-main-card .cal-day.has-mulai::after,
+.kalender-main-card .cal-day.has-milestone::after {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 0 1.5px var(--bg-card);
+}
+
+.kalender-main-card .cal-day.has-deadline::after { background: var(--red-500); }
+.kalender-main-card .cal-day.has-laporan::after { background: var(--purple-500); }
+.kalender-main-card .cal-day.has-mulai::after { background: var(--emerald-500); }
+.kalender-main-card .cal-day.has-milestone::after { background: var(--amber-500); }
+
+/* Multi-event indicator */
+.kalender-main-card .cal-day.has-deadline.has-laporan::after,
+.kalender-main-card .cal-day.has-deadline.has-mulai::after,
+.kalender-main-card .cal-day.has-deadline.has-milestone::after {
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(135deg, var(--red-500) 50%, var(--purple-500) 50%);
+}
+
+.kalender-main-card .cal-day.today.has-deadline::after,
+.kalender-main-card .cal-day.today.has-laporan::after,
+.kalender-main-card .cal-day.today.has-mulai::after,
+.kalender-main-card .cal-day.today.has-milestone::after {
+    box-shadow: 0 0 0 1.5px var(--purple-600);
+}
+
+/* ============================================
+   FREELANCER LAYOUT - Personal Task Focus
+   Vertical stack: Stats → Calendar + Sidebar → Timeline
+   ============================================ */
+.kalender-freelance .kalender-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+    align-items: start;
+}
+
+.kalender-freelance .kalender-main-card {
+    min-width: 0;
+}
+
+.kalender-freelance .event-sidebar {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(108, 61, 224, 0.08);
+    padding: 16px;
+    position: sticky;
+    top: calc(var(--topbar-height) + 28px);
+    max-height: calc(100vh - var(--topbar-height) - 56px);
+    overflow-y: auto;
+}
+
+.kalender-freelance .event-sidebar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(108, 61, 224, 0.08);
+}
+
+.kalender-freelance .event-sidebar-head h3 {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.kalender-freelance .event-sidebar-head h3 i {
+    color: var(--pink-500);
+    font-size: 13px;
+}
+
+.kalender-freelance .event-date {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--purple-600);
+    background: var(--purple-50);
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--purple-100);
+}
+
+.kalender-freelance .event-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.kalender-freelance .event-list:last-child {
+    margin-bottom: 0;
+}
+
+.kalender-freelance .event-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px;
+    background: var(--purple-50);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(108, 61, 224, 0.06);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.kalender-freelance .event-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+}
+
+.kalender-freelance .event-item.deadline::before { background: var(--red-500); }
+.kalender-freelance .event-item.laporan::before { background: var(--purple-500); }
+.kalender-freelance .event-item.mulai::before { background: var(--emerald-500); }
+
+.kalender-freelance .event-item:hover {
+    background: white;
+    border-color: var(--purple-200);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(2px);
+}
+
+.kalender-freelance .event-time {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--purple-700);
+    font-family: 'Outfit', sans-serif;
+    white-space: nowrap;
+    min-width: 38px;
+    padding-top: 2px;
+}
+
+.kalender-freelance .event-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.kalender-freelance .event-title {
+    font-size: 11.5px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    line-height: 1.3;
+}
+
+.kalender-freelance .event-desc {
+    font-size: 10px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 4px;
+}
+
+.kalender-freelance .event-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 6px;
+    border-radius: var(--radius-full);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.kalender-freelance .event-tag.urgent {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.kalender-freelance .event-tag.pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.kalender-freelance .event-tag.info {
+    background: var(--purple-100);
+    color: var(--purple-700);
+}
+
+/* ============================================
+   SPONSOR LAYOUT - Corporate Management
+   Grid: Calendar (left) + Event cards grid (right)
+   ============================================ */
+.kalender-sponsor .kalender-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 380px) 1fr;
+    gap: 16px;
+    align-items: stretch;
+}
+
+.kalender-sponsor .kalender-main-card {
+    min-width: 0;
+}
+
+/* Sponsor uses corporate blue accent */
+.kalender-sponsor .kalender-card-head h3 i {
+    color: var(--corp-blue-600, #2563EB);
+}
+
+.kalender-sponsor .cal-header {
+    color: var(--corp-blue-600, #2563EB);
+    background: var(--corp-blue-50, #EFF6FF);
+}
+
+.kalender-sponsor .cal-nav-btn {
+    background: var(--corp-blue-100, #DBEAFE);
+    color: var(--corp-blue-700, #1D4ED8);
+}
+
+.kalender-sponsor .cal-nav-btn:hover {
+    background: var(--corp-blue-200, #BFDBFE);
+}
+
+.kalender-sponsor .cal-day.today {
+    background: linear-gradient(135deg, var(--corp-blue-600, #2563EB), var(--corp-cyan-500, #06B6D4));
+    box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+}
+
+.kalender-sponsor .cal-day.today.has-deadline::after,
+.kalender-sponsor .cal-day.today.has-laporan::after,
+.kalender-sponsor .cal-day.today.has-milestone::after {
+    box-shadow: 0 0 0 1.5px var(--corp-blue-600, #2563EB);
+}
+
+/* Sponsor Event Grid (right side) */
+.kalender-sponsor .event-grid-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.kalender-sponsor .event-section {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(37, 99, 235, 0.08);
+    padding: 16px;
+}
+
+.kalender-sponsor .event-section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--corp-slate-200, #E2E8F0);
+}
+
+.kalender-sponsor .event-section-head h3 {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-primary);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.kalender-sponsor .event-section-head h3 i {
+    color: var(--corp-blue-600, #2563EB);
+    font-size: 14px;
+}
+
+.kalender-sponsor .event-count-badge {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--corp-blue-700, #1D4ED8);
+    background: var(--corp-blue-50, #EFF6FF);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--corp-blue-100, #DBEAFE);
+}
+
+.kalender-sponsor .event-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+}
+
+.kalender-sponsor .event-card {
+    padding: 12px;
+    background: var(--corp-slate-50, #F8FAFC);
+    border: 1px solid var(--corp-slate-200, #E2E8F0);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.kalender-sponsor .event-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+
+.kalender-sponsor .event-card.deadline::before {
+    background: linear-gradient(90deg, var(--red-500), #DC2626);
+}
+
+.kalender-sponsor .event-card.milestone::before {
+    background: linear-gradient(90deg, var(--amber-500), #D97706);
+}
+
+.kalender-sponsor .event-card.mulai::before {
+    background: linear-gradient(90deg, var(--emerald-500), #059669);
+}
+
+.kalender-sponsor .event-card.laporan::before {
+    background: linear-gradient(90deg, var(--corp-blue-500, #3B82F6), var(--corp-cyan-500, #06B6D4));
+}
+
+.kalender-sponsor .event-card:hover {
+    background: white;
+    border-color: var(--corp-blue-200, #BFDBFE);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+}
+
+.kalender-sponsor .ec-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.kalender-sponsor .ec-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: white;
+    flex-shrink: 0;
+}
+
+.kalender-sponsor .ec-icon.deadline { background: var(--red-500); }
+.kalender-sponsor .ec-icon.milestone { background: var(--amber-500); }
+.kalender-sponsor .ec-icon.mulai { background: var(--emerald-500); }
+.kalender-sponsor .ec-icon.laporan {
+    background: linear-gradient(135deg, var(--corp-blue-500, #3B82F6), var(--corp-cyan-500, #06B6D4));
+}
+
+.kalender-sponsor .ec-time {
+    font-size: 10px;
+    font-weight: 800;
+    color: var(--corp-slate-600, #475569);
+    font-family: 'Outfit', sans-serif;
+}
+
+.kalender-sponsor .ec-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 3px;
+    line-height: 1.3;
+}
+
+.kalender-sponsor .ec-desc {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    line-height: 1.4;
+    margin-bottom: 8px;
+}
+
+.kalender-sponsor .ec-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 8px;
+    border-top: 1px dashed var(--corp-slate-200, #E2E8F0);
+    font-size: 10px;
+}
+
+.kalender-sponsor .ec-project {
+    color: var(--corp-blue-600, #2563EB);
+    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60%;
+}
+
+.kalender-sponsor .ec-tag {
+    display: inline-flex;
+    padding: 2px 7px;
+    border-radius: var(--radius-full);
+    font-size: 9px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.kalender-sponsor .ec-tag.urgent {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.kalender-sponsor .ec-tag.pending {
+    background: #FEF3C7;
+    color: #92400E;
+}
+
+.kalender-sponsor .ec-tag.info {
+    background: var(--corp-blue-50, #EFF6FF);
+    color: var(--corp-blue-700, #1D4ED8);
+}
+
+/* ============================================
+   TIMELINE PROJECT - Shared
+   ============================================ */
+.timeline-project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.timeline-project-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(108, 61, 224, 0.06);
+    transition: var(--transition);
+    flex-wrap: wrap;
+}
+
+.timeline-project-card:hover {
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    border-color: var(--purple-200);
+}
+
+.tp-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.tp-color {
+    width: 4px;
+    height: 42px;
+    border-radius: var(--radius-full);
+    flex-shrink: 0;
+}
+
+.tp-color.purple { background: linear-gradient(to bottom, var(--purple-500), var(--violet-600)); }
+.tp-color.pink { background: linear-gradient(to bottom, var(--pink-500), #F97316); }
+.tp-color.emerald { background: linear-gradient(to bottom, var(--emerald-500), #06B6D4); }
+.tp-color.amber { background: linear-gradient(to bottom, var(--amber-500), var(--red-500)); }
+
+.tp-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.tp-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    font-family: 'Outfit', sans-serif;
+}
+
+.tp-role {
+    font-size: 10.5px;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+    font-weight: 600;
+}
+
+.tp-date {
+    font-size: 10.5px;
+    color: var(--purple-600);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.tp-date i {
+    font-size: 9px;
+}
+
+.tp-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-shrink: 0;
+}
+
+.tp-progress {
+    min-width: 140px;
+}
+
+.tp-progress-head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.tp-percent {
+    color: var(--purple-700);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+}
+
+.tp-days-left {
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tp-days-left.urgent {
+    background: #FEE2E2;
+    color: #991B1B;
+}
+
+.tp-days-left.safe {
+    background: #D1FAE5;
+    color: #065F46;
+}
+
+.tp-days-left.info {
+    background: var(--purple-100);
+    color: var(--purple-700);
+}
+
+/* ============================================
+   POPUP LEGEND
+   ============================================ */
+.popup-legend {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 10px;
+    background: var(--purple-50);
+    border-radius: var(--radius-md);
+    margin-top: 10px;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.popup-legend span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 1200px) {
+    .kalender-freelance .kalender-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .kalender-freelance .event-sidebar {
+        position: static;
+        max-height: none;
+    }
+
+    .kalender-sponsor .kalender-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 900px) {
+    .timeline-project-card {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tp-right {
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tp-progress {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .kalender-sponsor .event-cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    }
+}
+
+@media (max-width: 600px) {
+    .kalender-card-head {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 12px 14px;
+    }
+
+    .kalender-legend {
+        gap: 6px;
+    }
+
+    .legend-item {
+        font-size: 9px;
+    }
+
+    .kalender-main-card .cal-header {
+        font-size: 8px;
+        padding: 3px 0;
+    }
+
+    .kalender-main-card .cal-day {
+        font-size: 10px;
+        padding: 2px;
+    }
+
+    .kalender-freelance .event-item {
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .kalender-freelance .event-time {
+        min-width: auto;
+    }
+
+    .tp-left {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .tp-color {
+        width: 40px;
+        height: 4px;
+    }
+
+    .kalender-sponsor .event-cards-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .kalender-sponsor .ec-title {
+        font-size: 11px;
+    }
+
+    .kalender-sponsor .ec-desc {
+        font-size: 10px;
+    }
+}
+
+@media (max-width: 400px) {
+    .kalender-sponsor .event-cards-grid {
+        grid-template-columns: 1fr;
+    }
+}

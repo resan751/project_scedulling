@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jadwal Kalender - RiseGig</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
+    <link rel="stylesheet" href="/public/css/jadwal-kalender.css">
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- SIDEBAR SPONSOR -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon"><i class="fas fa-bolt"></i></div>
+            <div class="sidebar-brand-text">
+                <div class="name">Rise<span>Gig</span></div>
+                <div class="tagline">Scheduling System</div>
+            </div>
+        </div>
+        <div class="sidebar-user">
+            <div class="sidebar-avatar" style="background:linear-gradient(135deg,#2563EB,#06B6D4);">PT</div>
+            <div class="sidebar-user-info">
+                <div class="uname">PT. Teknologi Nusantara</div>
+                <div class="urole">Sponsor</div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Menu Utama</div>
+            <a href="/page/sponsor/dashboard.html" class="nav-item">
+                <i class="fas fa-briefcase"></i> Dashboard Project
+            </a>
+            <a href="/page/sponsor/project-create.html" class="nav-item">
+                <i class="fas fa-plus-circle"></i> Buat Project Baru
+            </a>
+
+            <div class="nav-section-title">Jadwal</div>
+            <a href="/page/sponsor/jadwal-kalender.html" class="nav-item active">
+                <i class="fas fa-calendar-alt"></i> Jadwal Kalender
+            </a>
+
+            <div class="nav-section-title">Pengaturan</div>
+            <div class="nav-parent" id="navPengaturan">
+                <button class="nav-item-toggle" data-toggle="pengaturan">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span class="nav-label">Pengaturan</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-submenu">
+                    <a href="/page/sponsor/pengaturan.html#perusahaan" class="nav-sub-item"><i class="fas fa-building"></i> Profil Perusahaan</a>
+                    <a href="/page/sponsor/pengaturan.html#keamanan" class="nav-sub-item"><i class="fas fa-shield-alt"></i> Keamanan</a>
+                    <a href="/page/sponsor/pengaturan.html#project" class="nav-sub-item"><i class="fas fa-tasks"></i> Preferensi Project</a>
+                    <a href="/page/sponsor/pengaturan.html#billing" class="nav-sub-item"><i class="fas fa-credit-card"></i> Billing & Escrow</a>
+                    <a href="/page/sponsor/pengaturan.html#tim" class="nav-sub-item"><i class="fas fa-users"></i> Tim & Kolaborasi</a>
+                </div>
+            </div>
+        </nav>
+        <div class="sidebar-logout">
+            <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <header class="topbar">
+            <div class="topbar-title">
+                <h2>Jadwal Kalender</h2>
+                <p>Monitor deadline project dan milestone tim Anda</p>
+            </div>
+            <div class="topbar-right">
+                <button class="btn btn-primary btn-sm" id="btnBukaKalender">
+                    <i class="fas fa-expand"></i> Pop-up
+                </button>
+                <div class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></div>
+                <div class="topbar-avatar" style="background:linear-gradient(135deg,#2563EB,#06B6D4);">PT</div>
+            </div>
+        </header>
+
+        <!-- WRAPPER DENGAN CLASS ROLE SPECIFIC -->
+        <div class="page-body kalender-sponsor">
+            
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card purple">
+                    <div class="stat-icon purple"><i class="fas fa-folder-open"></i></div>
+                    <div class="stat-value">5</div>
+                    <div class="stat-label">Project Aktif</div>
+                </div>
+                <div class="stat-card amber">
+                    <div class="stat-icon amber"><i class="fas fa-flag-checkered"></i></div>
+                    <div class="stat-value">3</div>
+                    <div class="stat-label">Milestone Minggu Ini</div>
+                </div>
+                <div class="stat-card pink">
+                    <div class="stat-icon pink"><i class="fas fa-user-clock"></i></div>
+                    <div class="stat-value">8</div>
+                    <div class="stat-label">Freelance Aktif</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-icon green"><i class="fas fa-check-double"></i></div>
+                    <div class="stat-value">12</div>
+                    <div class="stat-label">Laporan Diterima</div>
+                </div>
+            </div>
+
+            <!-- Layout: Calendar Left + Event Grid Right -->
+            <div class="kalender-layout">
+                <!-- Compact Calendar (Corporate Blue Theme via CSS) -->
+                <div class="kalender-main-card">
+                    <div class="kalender-card-head">
+                        <h3><i class="fas fa-calendar-alt"></i> Kalender Perusahaan</h3>
+                        <div class="kalender-legend">
+                            <span class="legend-item"><span class="legend-dot deadline"></span> Deadline</span>
+                            <span class="legend-item"><span class="legend-dot milestone"></span> Milestone</span>
+                            <span class="legend-item"><span class="legend-dot mulai"></span> Mulai</span>
+                            <span class="legend-item"><span class="legend-dot laporan"></span> Laporan</span>
+                        </div>
+                    </div>
+                    <div class="kalender-card-body">
+                        <div class="cal-nav">
+                            <button class="cal-nav-btn" id="calPrev"><i class="fas fa-chevron-left"></i></button>
+                            <span class="cal-month" id="calMonthLabel">Juli 2026</span>
+                            <button class="cal-nav-btn" id="calNext"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="calendar-grid" id="calendarGrid"></div>
+                    </div>
+                </div>
+
+                <!-- Event Cards Grid -->
+                <div class="event-grid-wrap">
+                    <!-- Section: Hari Ini -->
+                    <div class="event-section">
+                        <div class="event-section-head">
+                            <h3><i class="fas fa-bell"></i> Hari Ini</h3>
+                            <span class="event-count-badge">3 event</span>
+                        </div>
+                        <div class="event-cards-grid">
+                            <div class="event-card milestone">
+                                <div class="ec-head">
+                                    <div class="ec-icon milestone"><i class="fas fa-flag"></i></div>
+                                    <span class="ec-time">10:00</span>
+                                </div>
+                                <div class="ec-title">Milestone: Migrasi DB Tahap 2</div>
+                                <div class="ec-desc">Review progress dengan 3 freelance</div>
+                                <div class="ec-meta">
+                                    <span class="ec-project">Migrasi Database</span>
+                                    <span class="ec-tag urgent">Urgent</span>
+                                </div>
+                            </div>
+                            <div class="event-card laporan">
+                                <div class="ec-head">
+                                    <div class="ec-icon laporan"><i class="fas fa-file-alt"></i></div>
+                                    <span class="ec-time">13:00</span>
+                                </div>
+                                <div class="ec-title">Laporan Masuk: Redesign Web</div>
+                                <div class="ec-desc">2 laporan dari UI/UX Designer</div>
+                                <div class="ec-meta">
+                                    <span class="ec-project">Redesign Website</span>
+                                    <span class="ec-tag info">Review</span>
+                                </div>
+                            </div>
+                            <div class="event-card mulai">
+                                <div class="ec-head">
+                                    <div class="ec-icon mulai"><i class="fas fa-play"></i></div>
+                                    <span class="ec-time">15:00</span>
+                                </div>
+                                <div class="ec-title">Project Baru: API Integration</div>
+                                <div class="ec-desc">Kick-off meeting dengan tim</div>
+                                <div class="ec-meta">
+                                    <span class="ec-project">API Integration</span>
+                                    <span class="ec-tag pending">Upcoming</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section: Minggu Ini -->
+                    <div class="event-section">
+                        <div class="event-section-head">
+                            <h3><i class="fas fa-hourglass-half"></i> Minggu Ini</h3>
+                            <span class="event-count-badge">3 event</span>
+                        </div>
+                        <div class="event-cards-grid">
+                            <div class="event-card deadline">
+                                <div class="ec-head">
+                                    <div class="ec-icon deadline"><i class="fas fa-exclamation"></i></div>
+                                    <span class="ec-time">17 Jul</span>
+                                </div>
+                                <div class="ec-title">Deadline: Mobile App Phase 1</div>
+                                <div class="ec-desc">4 freelance, 2 role tersisa</div>
+                                <div class="ec-meta">
+                                    <span class="ec-project">Mobile App</span>
+                                    <span class="ec-tag urgent">Urgent</span>
+                                </div>
+                            </div>
+                            <div class="event-card milestone">
+                                <div class="ec-head">
+                                    <div class="ec-icon milestone"><i class="fas fa-flag"></i></div>
+                                    <span class="ec-time">18 Jul</span>
+                                </div>
+                                <div class="ec-title">Milestone: Payment Gateway</div>
+                                <div class="ec-desc">Testing & QA final</div>
+                                <div class="ec-meta">
+                                    <span class="ec-project">Payment Gateway</span>
+                                    <span class="ec-tag info">QA</span>
+                                </div>
+                            </div>
+                            <div class="event-card deadline">
+                                <div class="ec-head">
+                                    <div class="ec-icon deadline"><i class="fas fa-exclamation"></i></div>
+                                    <span class="ec-time">20 Jul</span>
+                                </div>
+                                <div class="ec-title">Deadline: Migrasi Database</div>
+                                <div class="ec-desc">Final delivery & handover</div>
+                                <div class="ec-meta">
+                                    <span class="ec-project">Migrasi Database</span>
+                                    <span class="ec-tag urgent">Final</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Timeline Project -->
+            <div class="section-header mb-16" style="margin-top:28px;">
+                <div>
+                    <h3>Timeline Semua Project</h3>
+                    <p>Overview deadline dan milestone seluruh project perusahaan</p>
+                </div>
+                <a href="/page/sponsor/project-create.html" class="btn btn-primary btn-sm">
+                    <i class="fas fa-plus"></i> Project Baru
+                </a>
+            </div>
+            <div class="timeline-project-list">
+                <div class="timeline-project-card">
+                    <div class="tp-left">
+                        <div class="tp-color purple"></div>
+                        <div class="tp-info">
+                            <div class="tp-name">Migrasi Database</div>
+                            <div class="tp-role">3 Freelance • Backend, DevOps, QA</div>
+                            <div class="tp-date"><i class="fas fa-calendar"></i> 10 - 20 Jul 2026</div>
+                        </div>
+                    </div>
+                    <div class="tp-right">
+                        <div class="tp-progress">
+                            <div class="tp-progress-head"><span>Progress</span><span class="tp-percent">65%</span></div>
+                            <div class="progress-bar"><div class="progress-fill purple" style="width:65%;"></div></div>
+                        </div>
+                        <span class="tp-days-left urgent"><i class="fas fa-exclamation-circle"></i> 5 hari</span>
+                    </div>
+                </div>
+                <div class="timeline-project-card">
+                    <div class="tp-left">
+                        <div class="tp-color pink"></div>
+                        <div class="tp-info">
+                            <div class="tp-name">Redesign Website Utama</div>
+                            <div class="tp-role">6 Freelance • UI/UX, Frontend, Backend</div>
+                            <div class="tp-date"><i class="fas fa-calendar"></i> 15 Jul - 28 Agu 2026</div>
+                        </div>
+                    </div>
+                    <div class="tp-right">
+                        <div class="tp-progress">
+                            <div class="tp-progress-head"><span>Progress</span><span class="tp-percent">20%</span></div>
+                            <div class="progress-bar"><div class="progress-fill pink" style="width:20%;"></div></div>
+                        </div>
+                        <span class="tp-days-left safe"><i class="fas fa-clock"></i> 44 hari</span>
+                    </div>
+                </div>
+                <div class="timeline-project-card">
+                    <div class="tp-left">
+                        <div class="tp-color emerald"></div>
+                        <div class="tp-info">
+                            <div class="tp-name">Audit Sistem Keamanan</div>
+                            <div class="tp-role">3 Freelance • Security, DevOps</div>
+                            <div class="tp-date"><i class="fas fa-calendar"></i> 20 Jul - 5 Agu 2026</div>
+                        </div>
+                    </div>
+                    <div class="tp-right">
+                        <div class="tp-progress">
+                            <div class="tp-progress-head"><span>Progress</span><span class="tp-percent">0%</span></div>
+                            <div class="progress-bar"><div class="progress-fill emerald" style="width:0%;"></div></div>
+                        </div>
+                        <span class="tp-days-left info"><i class="fas fa-play-circle"></i> Mulai 5 hari</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calendar Popup Modal -->
+<div class="admin-modal" id="calendarPopup" hidden>
+    <div class="admin-modal-panel" style="max-width:400px;">
+        <div class="admin-modal-head" style="background:linear-gradient(135deg, #1E3A8A, #2563EB);">
+            <div>
+                <h3 style="color:white;">Jadwal Kalender</h3>
+                <p style="color:rgba(255,255,255,0.6);" id="calPopupSubtitle">Juli 2026</p>
+            </div>
+            <button class="modal-icon-btn" style="background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.15);" onclick="document.getElementById('calendarPopup').hidden=true"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="admin-modal-body">
+            <div class="cal-nav">
+                <button class="cal-nav-btn" id="calPrevPopup"><i class="fas fa-chevron-left"></i></button>
+                <span class="cal-month" id="calMonthLabelPopup">Juli 2026</span>
+                <button class="cal-nav-btn" id="calNextPopup"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            <div class="calendar-grid" id="calendarGridPopup"></div>
+            <div class="popup-legend">
+                <span><span class="legend-dot deadline"></span> Deadline</span>
+                <span><span class="legend-dot milestone"></span> Milestone</span>
+                <span><span class="legend-dot mulai"></span> Mulai</span>
+                <span><span class="legend-dot laporan"></span> Laporan</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/public/js/jadwal-kalender.js"></script>
+</body>
+</html>

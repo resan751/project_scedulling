@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Sponsor - RiseGig</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
+    <link rel="stylesheet" href="/public/css/pengaturan-admin.css">
+    <link rel="stylesheet" href="/public/css/pengaturan-sponsor.css">
+</head>
+
+<body>
+    <div class="app-shell">
+        <!-- SIDEBAR SPONSOR -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                <div class="sidebar-brand-text">
+                    <div class="name">Rise<span>Gig</span></div>
+                    <div class="tagline">Scheduling System</div>
+                </div>
+            </div>
+            <div class="sidebar-user">
+                <div class="sidebar-avatar">NU</div>
+                <div class="sidebar-user-info">
+                    <div class="uname">nama_user</div>
+                    <div class="urole">role_user</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section-title">Menu Utama</div>
+                <a href="/page/sponsor/dashboard.html" class="nav-item">
+                    <i class="fas fa-briefcase"></i> Dashboard Project
+                </a>
+                <a href="/page/sponsor/project-create.html" class="nav-item">
+                    <i class="fas fa-plus-circle"></i> Buat Project Baru
+                </a>
+                <a href="/page/sponsor/jadwal-kalender.html" class="nav-item">
+                    <i class="fas fa-calendar-alt"></i> Jadwal Kalender
+                </a>
+                <div class="nav-section-title">Lainnya</div>
+                <!-- PENGATURAN ACCORDION (auto-expanded) -->
+                <div class="nav-parent expanded has-active-child" id="navPengaturan">
+                    <button class="nav-item-toggle" data-toggle="pengaturan">
+                        <i class="fas fa-cog nav-icon"></i>
+                        <span class="nav-label">Pengaturan</span>
+                        <i class="fas fa-chevron-down nav-arrow"></i>
+                    </button>
+                    <div class="nav-submenu">
+                        <a href="#perusahaan" class="nav-sub-item active" data-panel="perusahaan">
+                            <i class="fas fa-building"></i> Profil Perusahaan
+                        </a>
+                        <a href="#keamanan" class="nav-sub-item" data-panel="keamanan">
+                            <i class="fas fa-shield-alt"></i> Keamanan
+                        </a>
+                        <a href="#project" class="nav-sub-item" data-panel="project">
+                            <i class="fas fa-tasks"></i> Preferensi Project
+                        </a>
+                        <a href="#billing" class="nav-sub-item" data-panel="billing">
+                            <i class="fas fa-credit-card"></i> Billing & Escrow
+                        </a>
+                        <a href="#tim" class="nav-sub-item" data-panel="tim">
+                            <i class="fas fa-users"></i> Tim & Kolaborasi
+                        </a>
+                    </div>
+                </div>
+            </nav>
+            <div class="sidebar-logout">
+                <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+            <header class="topbar">
+                <div class="topbar-title">
+                    <h2 id="topbarTitle">Pengaturan Sponsor</h2>
+                    <div class="topbar-breadcrumb">
+                        <a href="/page/sponsor/dashboard.html">Dashboard</a>
+                        <i class="fas fa-chevron-right"></i>
+                        <a href="/page/sponsor/pengaturan.html">Pengaturan</a>
+                        <i class="fas fa-chevron-right"></i>
+                        <span id="breadcrumbCurrent">Profil Perusahaan</span>
+                    </div>
+                </div>
+                <div class="topbar-right">
+                    <div class="topbar-icon-btn">
+                        <i class="fas fa-bell"></i>
+                        <span class="notif-dot"></span>
+                    </div>
+                    <div class="topbar-avatar" style="background: linear-gradient(135deg, #2563EB, #06B6D4);">PT</div>
+                </div>
+            </header>
+
+            <div class="page-body">
+                <!-- Company Hero -->
+                <div class="sp-hero" id="spHero">
+                    <div class="sp-hero-bg"></div>
+                    <div class="sp-hero-content">
+                        <div class="sp-hero-left">
+                            <div class="sp-logo-wrap">
+                                <div class="sp-logo-large">
+                                    <i class="fas fa-building"></i>
+                                </div>
+                                <div class="sp-verify-badge" title="Perusahaan Terverifikasi">
+                                    <i class="fas fa-check-circle"></i>
+                                </div>
+                            </div>
+                            <div class="sp-hero-info">
+                                <div class="sp-name">PT. Teknologi Nusantara</div>
+                                <div class="sp-tagline">Software House & IT Consulting</div>
+                                <div class="sp-location">
+                                    <i class="fas fa-map-marker-alt"></i> Jakarta Selatan, ID
+                                    <span class="sp-divider">•</span>
+                                    <i class="fas fa-globe"></i> www.teknologinusantara.com
+                                </div>
+                            </div>
+                        </div>
+                        <div class="sp-hero-stats">
+                            <div class="sp-hero-stat">
+                                <div class="stat-icon-wrap blue"><i class="fas fa-folder-open"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-number">42</div>
+                                    <div class="stat-label">Project Dibuat</div>
+                                </div>
+                            </div>
+                            <div class="sp-hero-stat">
+                                <div class="stat-icon-wrap emerald"><i class="fas fa-user-tie"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-number">86</div>
+                                    <div class="stat-label">Freelance Direkrut</div>
+                                </div>
+                            </div>
+                            <div class="sp-hero-stat">
+                                <div class="stat-icon-wrap amber"><i class="fas fa-coins"></i></div>
+                                <div class="stat-info">
+                                    <div class="stat-number">245jt</div>
+                                    <div class="stat-label">Dana Disalurkan</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: PROFIL PERUSAHAAN -->
+                <div class="settings-panel active" id="panel-perusahaan">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Profil Perusahaan</h2>
+                        <p class="panel-subtitle">Kelola identitas organisasi dan informasi kontak perusahaan Anda</p>
+                    </div>
+
+                    <div class="settings-two-col">
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon blue"><i class="fas fa-landmark"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Informasi Organisasi</div>
+                                        <div class="settings-card-desc">Data resmi perusahaan</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Nama Perusahaan</label>
+                                    <input type="text" class="field-input" value="PT. Teknologi Nusantara">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Bidang Industri</label>
+                                    <select class="field-input field-select">
+                                        <option selected>Information Technology</option>
+                                        <option>Keuangan & Perbankan</option>
+                                        <option>E-Commerce & Retail</option>
+                                        <option>Pendidikan</option>
+                                    </select>
+                                </div>
+                                <div class="two-col" style="gap:10px;">
+                                    <div class="field-group" style="margin-bottom:0;">
+                                        <label class="field-label">Ukuran Perusahaan</label>
+                                        <select class="field-input field-select">
+                                            <option>1-10 karyawan</option>
+                                            <option selected>11-50 karyawan</option>
+                                            <option>51-200 karyawan</option>
+                                        </select>
+                                    </div>
+                                    <div class="field-group" style="margin-bottom:0;">
+                                        <label class="field-label">Tahun Berdiri</label>
+                                        <input type="number" class="field-input" value="2018">
+                                    </div>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Website Perusahaan</label>
+                                    <input type="url" class="field-input" value="https://www.teknologinusantara.com">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Deskripsi Singkat</label>
+                                    <textarea class="field-input field-textarea"
+                                        rows="3">Perusahaan IT konsultan yang berfokus pada pengembangan aplikasi web dan mobile untuk enterprise.</textarea>
+                                </div>
+                                <button class="btn btn-primary btn-sm"><i class="fas fa-save"></i> Simpan
+                                    Profil</button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="settings-card">
+                                <div class="settings-card-head">
+                                    <div class="settings-card-title-wrap">
+                                        <div class="settings-card-icon emerald"><i class="fas fa-address-book"></i>
+                                        </div>
+                                        <div>
+                                            <div class="settings-card-title">Kontak & Alamat</div>
+                                            <div class="settings-card-desc">Informasi operasional</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-card-body">
+                                    <div class="field-group">
+                                        <label class="field-label">Email Resmi Perusahaan</label>
+                                        <input type="email" class="field-input" value="hrd@teknologinusantara.com">
+                                    </div>
+                                    <div class="field-group">
+                                        <label class="field-label">No. Telepon Kantor</label>
+                                        <input type="tel" class="field-input" value="+62 21 555 1234">
+                                    </div>
+                                    <div class="field-group">
+                                        <label class="field-label">Alamat Kantor</label>
+                                        <textarea class="field-input field-textarea"
+                                            rows="2">Jl. Sudirman Kav. 52-53, Jakarta Selatan 12190</textarea>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <div class="settings-card-head">
+                                    <div class="settings-card-title-wrap">
+                                        <div class="settings-card-icon blue">
+                                            <i class="fas fa-file-signature"></i>
+                                        </div>
+                                        <div>
+                                            <div class="settings-card-title">Legalitas Perusahaan</div>
+                                            <div class="settings-card-desc">Dokumen resmi yang telah diverifikasi
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline btn-xs">
+                                        <i class="fas fa-plus"></i> Tambah Dokumen
+                                    </button>
+                                </div>
+                                <div class="settings-card-body" style="padding: 16px;">
+                                    <div class="legal-grid">
+                                        <!-- NIB & SIUP -->
+                                        <div class="legal-compact-card">
+                                            <div class="legal-compact-icon">
+                                                <i class="fas fa-shield-alt"></i>
+                                                <span class="legal-compact-dot"></span>
+                                            </div>
+                                            <div class="legal-compact-info">
+                                                <div class="legal-compact-name">NIB & SIUP</div>
+                                                <div class="legal-compact-meta">
+                                                    <span class="legal-compact-id">#9120108852120</span>
+                                                    <span class="legal-compact-date">15 Jan 2025</span>
+                                                </div>
+                                            </div>
+                                            <span class="legal-compact-badge verified">
+                                                <i class="fas fa-check"></i> Valid
+                                            </span>
+                                        </div>
+
+                                        <!-- NPWP -->
+                                        <div class="legal-compact-card">
+                                            <div class="legal-compact-icon amber">
+                                                <i class="fas fa-receipt"></i>
+                                                <span class="legal-compact-dot"></span>
+                                            </div>
+                                            <div class="legal-compact-info">
+                                                <div class="legal-compact-name">NPWP Perusahaan</div>
+                                                <div class="legal-compact-meta">
+                                                    <span class="legal-compact-id">#01.234.567.8-901</span>
+                                                    <span class="legal-compact-date">10 Feb 2024</span>
+                                                </div>
+                                            </div>
+                                            <span class="legal-compact-badge verified">
+                                                <i class="fas fa-check"></i> Valid
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: KEAMANAN -->
+                <div class="settings-panel" id="panel-keamanan">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Keamanan Akun</h2>
+                        <p class="panel-subtitle">Lindungi akses akun organisasi Anda dari pihak yang tidak berwenang
+                        </p>
+                    </div>
+                    <div class="settings-two-col">
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon pink"><i class="fas fa-key"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Ganti Password</div>
+                                        <div class="settings-card-desc">Perbarui password akun utama</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Password Lama</label>
+                                    <input type="password" class="field-input" placeholder="Masukkan password lama">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Password Baru</label>
+                                    <input type="password" class="field-input" placeholder="Min. 8 karakter"
+                                        id="newPassword">
+                                    <div class="password-strength" id="strengthBars">
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                    </div>
+                                    <div class="strength-text" id="strengthText"></div>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Konfirmasi Password</label>
+                                    <input type="password" class="field-input" placeholder="Ulangi password baru">
+                                </div>
+                                <button class="btn btn-primary btn-sm"><i class="fas fa-key"></i> Perbarui
+                                    Password</button>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="settings-card">
+                                <div class="settings-card-head">
+                                    <div class="settings-card-title-wrap">
+                                        <div class="settings-card-icon amber"><i class="fas fa-mobile-alt"></i></div>
+                                        <div>
+                                            <div class="settings-card-title">Autentikasi 2 Faktor (2FA)</div>
+                                            <div class="settings-card-desc">Sangat disarankan untuk akun korporat</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-card-body">
+                                    <div class="tfa-visual" style="background:#D1FAE5;">
+                                        <i class="fas fa-shield-alt" style="color:var(--emerald-500);"></i>
+                                        <div class="tfa-title" style="color:#065F46;">2FA Aktif</div>
+                                        <div class="tfa-desc" style="color:#047857;">Menggunakan Authenticator App</div>
+                                    </div>
+                                    <button class="btn btn-outline btn-sm"
+                                        style="width:100%;justify-content:center;color:var(--red-500);border-color:var(--red-200);">
+                                        <i class="fas fa-times-circle"></i> Nonaktifkan 2FA
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: PREFERENSI PROJECT -->
+                <div class="settings-panel" id="panel-project">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Preferensi Project & Rekrutmen</h2>
+                        <p class="panel-subtitle">Atur default pembuatan project dan bagaimana Anda menerima pelamar</p>
+                    </div>
+
+                    <div class="settings-two-col">
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon blue"><i class="fas fa-sliders-h"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Default Project Baru</div>
+                                        <div class="settings-card-desc">Pengaturan awal saat membuat project</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Tipe Kontrak Default</label>
+                                    <select class="field-input field-select">
+                                        <option selected>Fixed Price (Bayaran Tetap)</option>
+                                        <option>Hourly Rate (Per Jam)</option>
+                                    </select>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Visibilitas Project</label>
+                                    <select class="field-input field-select">
+                                        <option selected>Publik (Semua Freelance)</option>
+                                        <option>Undangan (Hanya Freelance Terpilih)</option>
+                                    </select>
+                                </div>
+                                <div class="setting-toggle-item">
+                                    <div>
+                                        <div class="setting-toggle-title">Wajibkan CV & Portfolio</div>
+                                        <div class="setting-toggle-desc">Pelamar harus mengunggah CV</div>
+                                    </div>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span
+                                            class="toggle-slider"></span></label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon emerald"><i class="fas fa-filter"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Filter & Persetujuan</div>
+                                        <div class="settings-card-desc">Otomatisasi rekrutmen</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="setting-toggle-item">
+                                    <div>
+                                        <div class="setting-toggle-title">Auto-Approve Freelance Premium</div>
+                                        <div class="setting-toggle-desc">Terima otomatis jika rating ≥ 4.8</div>
+                                    </div>
+                                    <label class="toggle-switch"><input type="checkbox"><span
+                                            class="toggle-slider"></span></label>
+                                </div>
+                                <div class="setting-toggle-item">
+                                    <div>
+                                        <div class="setting-toggle-title">Notifikasi Pelamar Baru</div>
+                                        <div class="setting-toggle-desc">Email real-time saat ada yang melamar</div>
+                                    </div>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span
+                                            class="toggle-slider"></span></label>
+                                </div>
+                                <div class="setting-toggle-item">
+                                    <div>
+                                        <div class="setting-toggle-title">Ringkasan Pelamar Harian</div>
+                                        <div class="setting-toggle-desc">Email rekapitulasi setiap sore</div>
+                                    </div>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span
+                                            class="toggle-slider"></span></label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: BILLING & ESCROW -->
+                <div class="settings-panel" id="panel-billing">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Billing & Escrow</h2>
+                        <p class="panel-subtitle">Kelola saldo rekening bersama (escrow) dan metode pembayaran
+                            perusahaan</p>
+                    </div>
+
+                    <!-- Escrow Balance -->
+                    <div class="escrow-balance-card">
+                        <div class="escrow-left">
+                            <div class="escrow-icon"><i class="fas fa-wallet"></i></div>
+                            <div>
+                                <div class="escrow-label">Saldo Escrow Tersedia</div>
+                                <div class="escrow-amount">Rp 45.500.000</div>
+                                <div class="escrow-sub">Dana aman untuk 3 project aktif</div>
+                            </div>
+                        </div>
+                        <div class="escrow-actions">
+                            <button class="btn btn-primary btn-sm"><i class="fas fa-plus"></i> Top Up Saldo</button>
+                            <button class="btn btn-outline btn-sm"
+                                style="background:rgba(255,255,255,0.2);border-color:rgba(255,255,255,0.4);color:white;"><i
+                                    class="fas fa-arrow-down"></i> Tarik Dana</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-two-col">
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon purple"><i class="fas fa-credit-card"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Metode Pembayaran</div>
+                                        <div class="settings-card-desc">Kartu untuk top-up otomatis</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="cc-visual">
+                                    <div class="cc-chip"><i class="fas fa-microchip"></i></div>
+                                    <div class="cc-number">•••• •••• •••• 8821</div>
+                                    <div class="cc-bottom">
+                                        <div class="cc-name">PT TEKNOLOGI NUSANTARA</div>
+                                        <div class="cc-brand"><i class="fab fa-cc-visa"></i></div>
+                                    </div>
+                                </div>
+                                <button class="btn btn-outline btn-sm"
+                                    style="width:100%;justify-content:center;margin-top:12px;">
+                                    <i class="fas fa-plus"></i> Tambah Kartu / Rekening
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon amber"><i class="fas fa-file-invoice-dollar"></i>
+                                    </div>
+                                    <div>
+                                        <div class="settings-card-title">Pajak & Invoice</div>
+                                        <div class="settings-card-desc">Informasi perpajakan perusahaan</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">NPWP Perusahaan</label>
+                                    <input type="text" class="field-input" value="01.234.567.8-901.000">
+                                </div>
+                                <div class="setting-toggle-item">
+                                    <div>
+                                        <div class="setting-toggle-title">Invoice Otomatis</div>
+                                        <div class="setting-toggle-desc">Kirim invoice tiap pencairan escrow</div>
+                                    </div>
+                                    <label class="toggle-switch"><input type="checkbox" checked><span
+                                            class="toggle-slider"></span></label>
+                                </div>
+                                <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;">
+                                    <i class="fas fa-download"></i> Download Rekening Koran
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANEL: TIM & KOLABORASI -->
+                <div class="settings-panel" id="panel-tim">
+                    <div class="panel-header">
+                        <h2 class="panel-title">Tim & Kolaborasi</h2>
+                        <p class="panel-subtitle">Undang manajer atau HRD untuk membantu mengelola project dan rekrutmen
+                        </p>
+                    </div>
+
+                    <div class="settings-card mb-20">
+                        <div class="settings-card-head">
+                            <div class="settings-card-title-wrap">
+                                <div class="settings-card-icon blue"><i class="fas fa-user-plus"></i></div>
+                                <div>
+                                    <div class="settings-card-title">Undang Anggota Baru</div>
+                                    <div class="settings-card-desc">Berikan akses ke tim internal Anda</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-card-body">
+                            <div class="flex gap-8" style="align-items:flex-end;">
+                                <div class="field-group" style="flex:2;margin-bottom:0;">
+                                    <label class="field-label">Email Anggota</label>
+                                    <input type="email" class="field-input" placeholder="manajer@perusahaan.com">
+                                </div>
+                                <div class="field-group" style="flex:1;margin-bottom:0;">
+                                    <label class="field-label">Role Internal</label>
+                                    <select class="field-input field-select">
+                                        <option>Project Manager</option>
+                                        <option>HRD / Recruiter</option>
+                                        <option>Finance</option>
+                                    </select>
+                                </div>
+                                <button class="btn btn-primary btn-sm" style="height:42px;"><i
+                                        class="fas fa-paper-plane"></i> Undang</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-card">
+                        <div class="settings-card-head">
+                            <div class="settings-card-title-wrap">
+                                <div class="settings-card-icon emerald"><i class="fas fa-users-cog"></i></div>
+                                <div>
+                                    <div class="settings-card-title">Anggota Tim Saat Ini</div>
+                                    <div class="settings-card-desc">Kelola hak akses tim</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settings-card-body" style="padding:0;">
+                            <div class="table-wrapper">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Anggota</th>
+                                            <th>Role Internal</th>
+                                            <th>Status</th>
+                                            <th>Bergabung</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="td-avatar">
+                                                    <div class="t-avatar v1">AD</div>
+                                                    <div>
+                                                        <div class="t-name">Admin Utama</div>
+                                                        <div class="t-sub">admin@teknologinusantara.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="role-tag manager">Owner</span></td>
+                                            <td><span class="status-badge done">Aktif</span></td>
+                                            <td>12 Jan 2024</td>
+                                            <td><span class="disabled-text">-</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="td-avatar">
+                                                    <div class="t-avatar v2">BW</div>
+                                                    <div>
+                                                        <div class="t-name">Budi Wijaya</div>
+                                                        <div class="t-sub">budi@teknologinusantara.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="role-tag manager">Project Manager</span></td>
+                                            <td><span class="status-badge done">Aktif</span></td>
+                                            <td>04 Mar 2024</td>
+                                            <td>
+                                                <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <div class="td-avatar">
+                                                    <div class="t-avatar v3">SL</div>
+                                                    <div>
+                                                        <div class="t-name">Siti Lestari</div>
+                                                        <div class="t-sub">siti.hr@teknologinusantara.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td><span class="role-tag karyawan">HRD / Recruiter</span></td>
+                                            <td><span class="status-badge pending">Menunggu</span></td>
+                                            <td>-</td>
+                                            <td>
+                                                <button class="action-btn detail"><i class="fas fa-redo"></i> Kirim
+                                                    Ulang</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="danger-zone">
+                        <div class="danger-zone-head">
+                            <div class="danger-zone-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div>
+                                <div class="danger-zone-title">Zona Berbahaya</div>
+                                <div class="danger-zone-desc">Tindakan permanen pada akun organisasi</div>
+                            </div>
+                        </div>
+                        <div class="danger-zone-actions">
+                            <button class="btn btn-danger btn-sm"><i class="fas fa-building-circle-xmark"></i> Tutup
+                                Akun Perusahaan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/public/js/pengaturan-sponsor.js"></script>
+</body>
+
+</html>

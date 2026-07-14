@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arsip Project - RiseGig</title>
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        .archive-filter-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .archive-filter-bar .field-input {
+            max-width: 260px;
+        }
+        .archive-filter-bar .field-select {
+            max-width: 180px;
+        }
+        .archive-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+        .archive-stat-card {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: 18px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid rgba(108, 61, 224, 0.06);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            transition: var(--transition);
+        }
+        .archive-stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+        .archive-stat-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .archive-stat-icon.purple { background: var(--purple-100); color: var(--purple-600); }
+        .archive-stat-icon.green { background: #D1FAE5; color: var(--emerald-500); }
+        .archive-stat-icon.amber { background: #FEF3C7; color: var(--amber-500); }
+        .archive-stat-icon.blue { background: #DBEAFE; color: var(--blue-500); }
+        .archive-stat-val {
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+        }
+        .archive-stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        .archive-row-detail {
+            display: none;
+            background: var(--purple-50);
+        }
+        .archive-row-detail.open {
+            display: table-row;
+        }
+        .archive-row-detail td {
+            padding: 16px 20px;
+        }
+        .archive-detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+        }
+        .archive-detail-item label {
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--purple-600);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .archive-detail-item span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .btn-restore {
+            color: #065F46;
+            background: #D1FAE5;
+            border-color: #A7F3D0;
+        }
+        .btn-restore:hover {
+            color: white;
+            background: var(--emerald-500);
+            border-color: var(--emerald-500);
+            box-shadow: 0 6px 16px rgba(16, 185, 129, 0.22);
+            transform: translateY(-1px);
+        }
+        .archive-date {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+        @media (max-width: 900px) {
+            .archive-detail-grid {
+                grid-template-columns: 1fr;
+            }
+            .archive-filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .archive-filter-bar .field-input,
+            .archive-filter-bar .field-select {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page active" id="page-arsip">
+        <div class="app-shell">
+            <!-- Sidebar -->
+            <aside class="sidebar" id="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-bolt"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Rise<span>Gig</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">NU</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
+                    </div>
+                </div>
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <a href="/page/admin/dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="/page/admin/kelola-user.html" class="nav-item">
+                        <i class="fas fa-users-cog"></i> Kelola User
+                    </a>
+                    <a href="/page/admin/arsip-project.html" class="nav-item active">
+                        <i class="fas fa-archive"></i> Arsip Project
+                        <span class="nav-badge" id="arsipBadge">0</span>
+                    </a>
+                    <div class="nav-section-title">Lainnya</div>
+                    <a href="/page/admin/jadwal-kalender.html" class="nav-item">
+                        <i class="fas fa-calendar-alt"></i> Jadwal Kalender
+                    </a>
+                    <a href="/page/admin/pengaturan.html" class="nav-item">
+                        <i class="fas fa-cog"></i> Pengaturan
+                    </a>
+                </nav>
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- Main -->
+            <div class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Arsip Project</h2>
+                        <p>Kelola project yang telah selesai atau diarsipkan</p>
+                    </div>
+                    <div class="topbar-right">
+                        <div class="topbar-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari arsip..." id="searchArsip">
+                        </div>
+                        <div class="topbar-icon-btn">
+                            <i class="fas fa-bell"></i>
+                            <span class="notif-dot"></span>
+                        </div>
+                        <div class="topbar-avatar">NU</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+                    <!-- Stats Arsip -->
+                    <div class="archive-stats">
+                        <div class="archive-stat-card">
+                            <div class="archive-stat-icon purple"><i class="fas fa-archive"></i></div>
+                            <div>
+                                <div class="archive-stat-val" id="totalArsip">0</div>
+                                <div class="archive-stat-label">Total Arsip</div>
+                            </div>
+                        </div>
+                        <div class="archive-stat-card">
+                            <div class="archive-stat-icon green"><i class="fas fa-check-circle"></i></div>
+                            <div>
+                                <div class="archive-stat-val" id="totalSelesai">0</div>
+                                <div class="archive-stat-label">Selesai</div>
+                            </div>
+                        </div>
+                        <div class="archive-stat-card">
+                            <div class="archive-stat-icon amber"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <div class="archive-stat-val" id="totalTepatWaktu">0</div>
+                                <div class="archive-stat-label">Tepat Waktu</div>
+                            </div>
+                        </div>
+                        <div class="archive-stat-card">
+                            <div class="archive-stat-icon blue"><i class="fas fa-money-bill-wave"></i></div>
+                            <div>
+                                <div class="archive-stat-val" id="totalBayaran">Rp 0</div>
+                                <div class="archive-stat-label">Total Bayaran</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Bar -->
+                    <div class="archive-filter-bar">
+                        <input type="text" class="field-input" placeholder="Cari nama project..." id="filterSearch">
+                        <select class="field-input field-select" id="filterBulan">
+                            <option value="">Semua Bulan</option>
+                            <option value="01">Januari</option>
+                            <option value="02">Februari</option>
+                            <option value="03">Maret</option>
+                            <option value="04">April</option>
+                            <option value="05">Mei</option>
+                            <option value="06">Juni</option>
+                            <option value="07">Juli</option>
+                            <option value="08">Agustus</option>
+                            <option value="09">September</option>
+                            <option value="10">Oktober</option>
+                            <option value="11">November</option>
+                            <option value="12">Desember</option>
+                        </select>
+                        <select class="field-input field-select" id="filterTahun">
+                            <option value="">Semua Tahun</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                        </select>
+                        <button class="btn btn-outline btn-sm" onclick="exportArsip()">
+                            <i class="fas fa-download"></i> Export
+                        </button>
+                    </div>
+
+                    <!-- Tabel Arsip -->
+                    <div class="table-card">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width:40px;"></th>
+                                        <th>ID</th>
+                                        <th>Nama Project</th>
+                                        <th>Pembuat</th>
+                                        <th>Role Project</th>
+                                        <th>Bayaran</th>
+                                        <th>Deadline</th>
+                                        <th>Tgl Selesai</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="arsipTableBody">
+                                    <tr>
+                                        <td colspan="10" class="empty-text">
+                                            <i class="fas fa-archive" style="font-size:28px;color:var(--purple-200);display:block;margin-bottom:8px;"></i>
+                                            Belum ada project yang diarsipkan
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <span id="arsipFooterInfo">Menampilkan 0 arsip</span>
+                            <div class="pagination" id="arsipPagination"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detail Arsip -->
+    <div class="admin-modal" id="detailArsipModal" hidden>
+        <div class="admin-modal-panel">
+            <div class="admin-modal-head">
+                <div>
+                    <h3 id="detailArsipTitle">Detail Arsip Project</h3>
+                    <p id="detailArsipSub">Informasi lengkap project yang telah diarsipkan</p>
+                </div>
+                <button class="modal-icon-btn" onclick="closeDetailArsip()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="admin-modal-body" id="detailArsipBody">
+                <!-- Dinamis -->
+            </div>
+            <div class="admin-modal-actions">
+                <button class="btn btn-outline" onclick="closeDetailArsip()">Tutup</button>
+                <button class="btn btn-success btn-restore" onclick="restoreProject()">
+                    <i class="fas fa-undo"></i> Kembalikan Project
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data arsip contoh
+        let arsipData = [];
+        let currentDetailId = null;
+
+        function loadArsip() {
+            const tbody = document.getElementById('arsipTableBody');
+            const search = document.getElementById('filterSearch').value.toLowerCase();
+
+            let filtered = arsipData.filter(p => {
+                if (search && !p.nama.toLowerCase().includes(search)) return false;
+                return true;
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10" class="empty-text">
+                    <i class="fas fa-archive" style="font-size:28px;color:var(--purple-200);display:block;margin-bottom:8px;"></i>
+                    Tidak ada arsip project ditemukan</td></tr>`;
+            } else {
+                tbody.innerHTML = filtered.map(p => `
+                    <tr>
+                        <td>
+                            <button class="action-btn detail" onclick="toggleDetailRow(${p.id})" title="Detail">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </td>
+                        <td><strong>#${p.id}</strong></td>
+                        <td>
+                            <div class="td-avatar">
+                                <div class="t-avatar v${(p.id % 4) + 1}">${p.nama.charAt(0)}</div>
+                                <div>
+                                    <div class="t-name">${p.nama}</div>
+                                    <div class="t-sub">${p.deskripsi || 'Tidak ada deskripsi'}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${p.pembuat}</td>
+                        <td><span class="role-badge">${p.role || 'N/A'}</span></td>
+                        <td><strong>${formatRupiah(p.bayaran)}</strong></td>
+                        <td class="archive-date">${p.deadline}</td>
+                        <td class="archive-date">${p.tglSelesai}</td>
+                        <td><span class="status-badge done"><i class="fas fa-check" style="margin-right:4px;font-size:9px;"></i>Selesai</span></td>
+                        <td>
+                            <div class="row-actions">
+                                <button class="action-btn detail" onclick="openDetailArsip(${p.id})" title="Detail">
+                                    <i class="fas fa-eye"></i> Detail
+                                </button>
+                                <button class="action-btn btn-restore" onclick="restoreSingle(${p.id})" title="Kembalikan">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="action-btn delete" onclick="hapusArsip(${p.id})" title="Hapus Permanen">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr class="archive-row-detail" id="detail-row-${p.id}">
+                        <td colspan="10">
+                            <div class="archive-detail-grid">
+                                <div class="archive-detail-item">
+                                    <label>Tanggal Mulai</label>
+                                    <span>${p.tglMulai}</span>
+                                </div>
+                                <div class="archive-detail-item">
+                                    <label>Deadline</label>
+                                    <span>${p.deadline}</span>
+                                </div>
+                                <div class="archive-detail-item">
+                                    <label>Tanggal Selesai</label>
+                                    <span>${p.tglSelesai}</span>
+                                </div>
+                                <div class="archive-detail-item">
+                                    <label>Pembuat</label>
+                                    <span>${p.pembuat}</span>
+                                </div>
+                                <div class="archive-detail-item">
+                                    <label>Bayaran</label>
+                                    <span>${formatRupiah(p.bayaran)}</span>
+                                </div>
+                                <div class="archive-detail-item">
+                                    <label>Role Project</label>
+                                    <span>${p.role || 'N/A'}</span>
+                                </div>
+                                <div class="archive-detail-item" style="grid-column: span 3;">
+                                    <label>Deskripsi</label>
+                                    <span>${p.deskripsi || 'Tidak ada deskripsi'}</span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            updateStats(filtered);
+        }
+
+        function toggleDetailRow(id) {
+            const row = document.getElementById(`detail-row-${id}`);
+            if (row) row.classList.toggle('open');
+        }
+
+        function updateStats(data) {
+            document.getElementById('totalArsip').textContent = data.length;
+            document.getElementById('totalSelesai').textContent = data.length;
+            document.getElementById('arsipBadge').textContent = data.length;
+
+            const tepatWaktu = data.filter(p => p.tepatWaktu).length;
+            document.getElementById('totalTepatWaktu').textContent = tepatWaktu;
+
+            const totalBayar = data.reduce((sum, p) => sum + (p.bayaran || 0), 0);
+            document.getElementById('totalBayaran').textContent = formatRupiah(totalBayar);
+            document.getElementById('arsipFooterInfo').textContent = `Menampilkan ${data.length} arsip`;
+        }
+
+        function formatRupiah(num) {
+            return 'Rp ' + (num || 0).toLocaleString('id-ID');
+        }
+
+        function openDetailArsip(id) {
+            currentDetailId = id;
+            const p = arsipData.find(x => x.id === id);
+            if (!p) return;
+
+            document.getElementById('detailArsipTitle').textContent = p.nama;
+            document.getElementById('detailArsipBody').innerHTML = `
+                <div class="archive-detail-grid">
+                    <div class="archive-detail-item"><label>ID Project</label><span>#${p.id}</span></div>
+                    <div class="archive-detail-item"><label>Status</label><span class="status-badge done">Selesai</span></div>
+                    <div class="archive-detail-item"><label>Bayaran</label><span>${formatRupiah(p.bayaran)}</span></div>
+                    <div class="archive-detail-item"><label>Pembuat</label><span>${p.pembuat}</span></div>
+                    <div class="archive-detail-item"><label>Tanggal Mulai</label><span>${p.tglMulai}</span></div>
+                    <div class="archive-detail-item"><label>Deadline</label><span>${p.deadline}</span></div>
+                    <div class="archive-detail-item"><label>Tanggal Selesai</label><span>${p.tglSelesai}</span></div>
+                    <div class="archive-detail-item"><label>Tepat Waktu</label><span>${p.tepatWaktu ? '✅ Ya' : '❌ Tidak'}</span></div>
+                    <div class="archive-detail-item"><label>Role Project</label><span>${p.role || 'N/A'}</span></div>
+                </div>
+                <div class="field-group" style="margin-top:8px;">
+                    <label class="field-label">Deskripsi</label>
+                    <p style="font-size:13px;color:var(--text-primary);line-height:1.6;">${p.deskripsi || 'Tidak ada deskripsi'}</p>
+                </div>
+            `;
+            document.getElementById('detailArsipModal').hidden = false;
+        }
+
+        function closeDetailArsip() {
+            document.getElementById('detailArsipModal').hidden = true;
+            currentDetailId = null;
+        }
+
+        function restoreProject() {
+            if (!currentDetailId) return;
+            restoreSingle(currentDetailId);
+            closeDetailArsip();
+        }
+
+        function restoreSingle(id) {
+            if (confirm('Kembalikan project ini ke daftar aktif?')) {
+                arsipData = arsipData.filter(p => p.id !== id);
+                loadArsip();
+            }
+        }
+
+        function hapusArsip(id) {
+            if (confirm('Hapus arsip ini secara permanen? Tindakan ini tidak dapat dibatalkan.')) {
+                arsipData = arsipData.filter(p => p.id !== id);
+                loadArsip();
+            }
+        }
+
+        function exportArsip() {
+            alert('Export arsip project akan segera dimulai...');
+        }
+
+        // Event listeners
+        document.getElementById('filterSearch').addEventListener('input', loadArsip);
+        document.getElementById('searchArsip').addEventListener('input', function () {
+            document.getElementById('filterSearch').value = this.value;
+            loadArsip();
+        });
+
+        // Init
+        loadArsip();
+    </script>
+</body>
+</html>

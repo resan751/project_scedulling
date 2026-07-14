@@ -1854,3 +1854,249 @@ tbody tr:last-child td {
   letter-spacing: 1px;
   text-transform: uppercase;
 }
+
+/* === NEW PAGES GLOBAL STYLES === */
+
+/* Settings row utility (used in multiple pages) */
+.settings-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+.settings-row.full {
+    grid-template-columns: 1fr;
+}
+
+/* Calendar popup trigger in sidebar */
+.nav-item .fa-calendar-alt {
+    color: var(--purple-400);
+}
+
+/* Archive badge pulse */
+.nav-badge {
+    animation: badgePulse 2s infinite;
+}
+@keyframes badgePulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+/* Responsive fix for new pages */
+@media (max-width: 900px) {
+    .settings-row {
+        grid-template-columns: 1fr;
+    }
+    .kalender-page-grid {
+        grid-template-columns: 1fr;
+    }
+    .archive-stats {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .archive-stats {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* === CALENDAR POPUP GLOBAL === */
+.calendar-popup-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 300;
+    background: rgba(26, 10, 60, 0.5);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.calendar-popup-overlay[hidden] {
+    display: none;
+}
+
+/* === NAV ITEM ARCHIVE BADGE === */
+.nav-badge.archive {
+    background: linear-gradient(135deg, var(--emerald-500), #059669);
+}
+
+/* === PAGE TRANSITION === */
+.page-body {
+    animation: fadeInPage 0.3s ease;
+}
+@keyframes fadeInPage {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   SIDEBAR COLLAPSIBLE / ACCORDION SUBMENU
+   (Untuk menu Pengaturan di semua halaman)
+   ============================================ */
+.nav-parent {
+    margin-bottom: 2px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+.nav-parent > .nav-item-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: var(--radius-md);
+    color: rgba(255, 255, 255, 0.55);
+    font-weight: 600;
+    font-size: 13.5px;
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    user-select: none;
+    width: 100%;
+    background: transparent;
+    border: none;
+    text-align: left;
+}
+.nav-parent > .nav-item-toggle:hover {
+    background: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.85);
+}
+.nav-parent.expanded > .nav-item-toggle {
+    background: linear-gradient(135deg, rgba(108, 61, 224, 0.35), rgba(124, 58, 237, 0.25));
+    color: white;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-bottom: none;
+}
+.nav-parent > .nav-item-toggle i.nav-icon {
+    font-size: 18px;
+    width: 20px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.nav-parent > .nav-item-toggle .nav-label {
+    flex: 1;
+}
+.nav-arrow {
+    font-size: 10px !important;
+    width: auto !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    color: rgba(255, 255, 255, 0.35);
+}
+.nav-parent.expanded > .nav-item-toggle .nav-arrow {
+    transform: rotate(180deg);
+    color: var(--purple-300);
+}
+.nav-submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background: rgba(0, 0, 0, 0.22);
+    border: 1px solid rgba(167, 139, 250, 0);
+    border-top: none;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    margin-top: -1px;
+}
+.nav-parent.expanded .nav-submenu {
+    max-height: 500px;
+    border-color: rgba(167, 139, 250, 0.2);
+    padding: 8px 0;
+}
+.nav-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px 9px 42px;
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 12.5px;
+    font-weight: 600;
+    border-radius: 6px;
+    margin: 2px 8px;
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    text-decoration: none;
+}
+.nav-sub-item::before {
+    content: '';
+    position: absolute;
+    left: 22px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(167, 139, 250, 0.35);
+    transition: var(--transition);
+}
+.nav-sub-item:hover {
+    color: white;
+    background: rgba(139, 92, 246, 0.15);
+}
+.nav-sub-item:hover::before {
+    background: var(--purple-400);
+    transform: translateY(-50%) scale(1.3);
+}
+.nav-sub-item.active {
+    color: white;
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(236, 72, 153, 0.2));
+}
+.nav-sub-item.active::before {
+    background: var(--pink-500);
+    box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.25);
+    width: 6px;
+    height: 6px;
+}
+.nav-sub-item i {
+    font-size: 13px;
+    width: 18px;
+    text-align: center;
+    opacity: 0.85;
+}
+.nav-sub-item.active i {
+    opacity: 1;
+}
+
+/* Active indicator di parent saat ada sub yang aktif */
+.nav-parent.has-active-child > .nav-item-toggle::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%;
+    height: 60%;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--purple-400), var(--pink-500));
+    border-radius: 0 3px 3px 0;
+}
+
+/* Breadcrumb in topbar */
+.topbar-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+.topbar-breadcrumb a {
+    color: var(--purple-500);
+    transition: var(--transition);
+    font-weight: 700;
+}
+.topbar-breadcrumb a:hover {
+    color: var(--purple-700);
+}
+.topbar-breadcrumb i {
+    font-size: 8px;
+    color: var(--text-light);
+}
+
+@media (max-width: 900px) {
+    .nav-sub-item {
+        padding-left: 36px;
+    }
+    .nav-sub-item::before {
+        left: 18px;
+    }
+}

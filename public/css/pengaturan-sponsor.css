@@ -1,0 +1,1312 @@
+/* ============================================
+   PENGATURAN SPONSOR - Modern Corporate Theme
+   Terintegrasi dengan global.css
+   ============================================ */
+
+/* === CORPORATE COLOR OVERRIDES === */
+:root {
+    --corp-blue-950: #0C1E4A;
+    --corp-blue-900: #1E3A8A;
+    --corp-blue-800: #1E40AF;
+    --corp-blue-700: #1D4ED8;
+    --corp-blue-600: #2563EB;
+    --corp-blue-500: #3B82F6;
+    --corp-blue-400: #60A5FA;
+    --corp-blue-300: #93C5FD;
+    --corp-blue-200: #BFDBFE;
+    --corp-blue-100: #DBEAFE;
+    --corp-blue-50: #EFF6FF;
+
+    --corp-cyan-600: #0891B2;
+    --corp-cyan-500: #06B6D4;
+    --corp-cyan-400: #22D3EE;
+
+    --corp-gold-500: #F59E0B;
+    --corp-gold-400: #FBBF24;
+
+    --corp-slate-900: #0F172A;
+    --corp-slate-800: #1E293B;
+    --corp-slate-700: #334155;
+    --corp-slate-600: #475569;
+    --corp-slate-500: #64748B;
+    --corp-slate-300: #CBD5E1;
+    --corp-slate-200: #E2E8F0;
+    --corp-slate-100: #F1F5F9;
+    --corp-slate-50: #F8FAFC;
+
+    /* Override variabel global untuk konteks sponsor */
+    --bg-primary-sponsor: var(--corp-slate-50);
+    --accent-sponsor: var(--corp-blue-600);
+    --accent-sponsor-dark: var(--corp-blue-900);
+    --accent-sponsor-light: var(--corp-blue-100);
+}
+
+/* === ROLE BANNER OVERRIDE === */
+.sponsor-banner {
+    background: linear-gradient(135deg, var(--corp-blue-900) 0%, var(--corp-blue-700) 50%, var(--corp-cyan-600) 100%);
+    color: white;
+    letter-spacing: 2px;
+    font-size: 10px;
+    padding: 6px 0;
+    box-shadow: 0 2px 8px rgba(30, 58, 138, 0.3);
+}
+
+/* === CORPORATE PAGE BODY === */
+body.sponsor-theme {
+    background: var(--bg-primary-sponsor);
+}
+
+body.sponsor-theme .main-content {
+    background: var(--bg-primary-sponsor);
+}
+
+body.sponsor-theme .topbar {
+    background: rgba(255, 255, 255, 0.95);
+    border-bottom: 1px solid var(--corp-slate-200);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05);
+}
+
+body.sponsor-theme .topbar-title h2 {
+    color: var(--corp-slate-900);
+    font-weight: 700;
+    letter-spacing: -0.3px;
+}
+
+body.sponsor-theme .topbar-title p {
+    color: var(--corp-slate-500);
+}
+
+/* === CORPORATE SIDEBAR === */
+body.sponsor-theme .sidebar {
+    background: linear-gradient(180deg, var(--corp-slate-900) 0%, var(--corp-blue-900) 100%);
+    border-right: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+body.sponsor-theme .sidebar::before {
+    background: linear-gradient(to bottom, transparent, rgba(59, 130, 246, 0.3), transparent);
+}
+
+body.sponsor-theme .sidebar-brand-icon {
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-cyan-500));
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+body.sponsor-theme .sidebar-avatar {
+    background: linear-gradient(135deg, var(--corp-blue-500), var(--corp-cyan-500));
+    border: 2px solid rgba(59, 130, 246, 0.4);
+}
+
+body.sponsor-theme .nav-item.active {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(6, 182, 212, 0.25));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+body.sponsor-theme .nav-item.active::before {
+    background: linear-gradient(to bottom, var(--corp-blue-400), var(--corp-cyan-400));
+}
+
+body.sponsor-theme .nav-badge {
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-cyan-500));
+}
+
+/* === ACCORDION SPONSOR STYLE === */
+body.sponsor-theme .nav-parent.expanded > .nav-item-toggle {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(6, 182, 212, 0.25));
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+body.sponsor-theme .nav-parent.expanded > .nav-item-toggle .nav-arrow {
+    color: var(--corp-blue-300);
+}
+
+body.sponsor-theme .nav-submenu {
+    background: rgba(0, 0, 0, 0.25);
+    border-color: rgba(59, 130, 246, 0.25);
+}
+
+body.sponsor-theme .nav-sub-item.active {
+    background: linear-gradient(135deg, rgba(37, 99, 235, 0.35), rgba(6, 182, 212, 0.25));
+}
+
+body.sponsor-theme .nav-sub-item.active::before {
+    background: var(--corp-cyan-400);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.25);
+}
+
+/* ============================================
+   SPONSOR HERO - Corporate Header
+   ============================================ */
+.sp-hero {
+    position: relative;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 28px;
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.08),
+        0 4px 12px rgba(30, 58, 138, 0.12);
+    animation: slideDownHero 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid rgba(37, 99, 235, 0.1);
+}
+.sp-hero.hidden-hero { display: none; }
+
+.sp-hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(135deg, var(--corp-blue-900) 0%, var(--corp-blue-700) 45%, var(--corp-cyan-600) 100%);
+}
+
+/* Pattern overlay untuk kesan premium */
+.sp-hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        radial-gradient(circle at 15% 20%, rgba(59, 130, 246, 0.4) 0%, transparent 35%),
+        radial-gradient(circle at 85% 80%, rgba(6, 182, 212, 0.35) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 60%);
+}
+
+/* Grid pattern untuk kesan tech */
+.sp-hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.sp-hero-content {
+    position: relative;
+    padding: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+}
+
+.sp-hero-left {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex: 1;
+    min-width: 320px;
+}
+
+/* === COMPANY LOGO === */
+.sp-logo-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.sp-logo-large {
+    width: 96px;
+    height: 96px;
+    border-radius: 20px;
+    background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: var(--corp-blue-700);
+    box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+    border: 4px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.sp-logo-large:hover {
+    transform: scale(1.03);
+}
+
+.sp-verify-badge {
+    position: absolute;
+    bottom: -6px;
+    right: -6px;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--corp-gold-500), var(--corp-gold-400));
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 3px solid white;
+    box-shadow:
+        0 2px 8px rgba(245, 158, 11, 0.5),
+        0 0 0 2px rgba(245, 158, 11, 0.2);
+    animation: pulseGold 2.5s infinite;
+}
+
+@keyframes pulseGold {
+    0%, 100% { box-shadow: 0 2px 8px rgba(245, 158, 11, 0.5), 0 0 0 2px rgba(245, 158, 11, 0.2); }
+    50% { box-shadow: 0 2px 8px rgba(245, 158, 11, 0.7), 0 0 0 6px rgba(245, 158, 11, 0.1); }
+}
+
+.sp-hero-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.sp-name {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+}
+
+.sp-tagline {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2px;
+}
+
+.sp-location {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.75);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    font-weight: 500;
+}
+
+.sp-location i {
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 11px;
+}
+
+.sp-divider {
+    color: rgba(255, 255, 255, 0.3);
+    margin: 0 4px;
+    font-size: 10px;
+}
+
+.sp-verified-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    border-radius: var(--radius-full);
+    color: var(--corp-gold-400);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-top: 10px;
+}
+
+/* === HERO STATS === */
+.sp-hero-stats {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.sp-hero-stat {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    min-width: 155px;
+    transition: var(--transition);
+}
+
+.sp-hero-stat:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+.stat-icon-wrap {
+    width: 42px;
+    height: 42px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.stat-icon-wrap.blue {
+    background: linear-gradient(135deg, var(--corp-blue-500), var(--corp-blue-700));
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+}
+
+.stat-icon-wrap.emerald {
+    background: linear-gradient(135deg, #10B981, #059669);
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+.stat-icon-wrap.amber {
+    background: linear-gradient(135deg, var(--corp-gold-500), #D97706);
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+}
+
+.stat-info .stat-number {
+    font-size: 20px;
+    font-weight: 800;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    line-height: 1;
+    margin-bottom: 3px;
+    letter-spacing: -0.3px;
+}
+
+.stat-info .stat-label {
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+}
+
+/* ============================================
+   CORPORATE CARDS OVERRIDE
+   ============================================ */
+body.sponsor-theme .settings-card {
+    border: 1px solid var(--corp-slate-200);
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.06);
+}
+
+body.sponsor-theme .settings-card:hover {
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    border-color: var(--corp-blue-200);
+}
+
+body.sponsor-theme .settings-card-head {
+    background: linear-gradient(180deg, var(--corp-slate-50), transparent);
+    border-bottom: 1px solid var(--corp-slate-200);
+}
+
+body.sponsor-theme .settings-card-icon.blue {
+    background: var(--corp-blue-100);
+    color: var(--corp-blue-700);
+}
+
+body.sponsor-theme .settings-card-icon.emerald {
+    background: #D1FAE5;
+    color: #059669;
+}
+
+body.sponsor-theme .settings-card-icon.amber {
+    background: #FEF3C7;
+    color: #D97706;
+}
+
+body.sponsor-theme .settings-card-icon.purple {
+    background: var(--corp-blue-100);
+    color: var(--corp-blue-700);
+}
+
+body.sponsor-theme .settings-card-icon.pink {
+    background: var(--corp-cyan-500);
+    background: linear-gradient(135deg, var(--corp-cyan-500), var(--corp-blue-500));
+    color: white;
+}
+
+body.sponsor-theme .settings-section-title {
+    color: var(--corp-slate-900);
+    border-bottom: 2px solid var(--corp-slate-200);
+}
+
+body.sponsor-theme .settings-section-title::after {
+    background: linear-gradient(90deg, var(--corp-blue-600), var(--corp-cyan-500));
+}
+
+body.sponsor-theme .settings-section-title i {
+    background: var(--corp-blue-100);
+    color: var(--corp-blue-700);
+}
+
+/* === FIELD INPUT CORPORATE === */
+body.sponsor-theme .field-input {
+    background: white;
+    border: 1.5px solid var(--corp-slate-200);
+    color: var(--corp-slate-900);
+    font-weight: 500;
+}
+
+body.sponsor-theme .field-input:focus {
+    border-color: var(--corp-blue-500);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+}
+
+body.sponsor-theme .field-label {
+    color: var(--corp-slate-700);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+/* === BUTTONS CORPORATE === */
+body.sponsor-theme .btn-primary {
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-blue-800));
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+}
+
+body.sponsor-theme .btn-primary:hover {
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5);
+    transform: translateY(-1px);
+}
+
+body.sponsor-theme .btn-outline {
+    color: var(--corp-blue-700);
+    border: 1.5px solid var(--corp-blue-300);
+}
+
+body.sponsor-theme .btn-outline:hover {
+    background: var(--corp-blue-50);
+    border-color: var(--corp-blue-500);
+}
+
+/* ============================================
+   ESCROW BALANCE CARD - Premium Finance UI
+   ============================================ */
+.escrow-balance-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px 32px;
+    background:
+        linear-gradient(135deg, var(--corp-slate-900) 0%, var(--corp-blue-900) 50%, var(--corp-blue-700) 100%);
+    border-radius: var(--radius-lg);
+    box-shadow:
+        0 10px 30px rgba(15, 23, 42, 0.2),
+        0 4px 12px rgba(30, 58, 138, 0.15);
+    margin-bottom: 28px;
+    flex-wrap: wrap;
+    gap: 24px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(59, 130, 246, 0.2);
+}
+
+/* Decorative elements */
+.escrow-balance-card::before {
+    content: '';
+    position: absolute;
+    top: -40%;
+    right: -5%;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.escrow-balance-card::after {
+    content: '';
+    position: absolute;
+    bottom: -30%;
+    left: 10%;
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* Grid pattern overlay */
+.escrow-pattern {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+}
+
+.escrow-left {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    position: relative;
+    z-index: 2;
+}
+
+.escrow-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.escrow-label {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.75);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    margin-bottom: 6px;
+}
+
+.escrow-amount {
+    font-size: 32px;
+    font-weight: 800;
+    color: white;
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -1px;
+    line-height: 1;
+    margin-bottom: 6px;
+    background: linear-gradient(135deg, #FFFFFF 0%, var(--corp-cyan-400) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.escrow-sub {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.8);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+}
+
+.escrow-sub::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--corp-cyan-400);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.3);
+    animation: pulseCyan 2s infinite;
+}
+
+@keyframes pulseCyan {
+    0%, 100% { box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.3); }
+    50% { box-shadow: 0 0 0 6px rgba(34, 211, 238, 0.1); }
+}
+
+.escrow-actions {
+    display: flex;
+    gap: 10px;
+    position: relative;
+    z-index: 2;
+    flex-wrap: wrap;
+}
+
+.escrow-actions .btn {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: white;
+}
+
+.escrow-actions .btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+}
+
+.escrow-actions .btn-primary {
+    background: linear-gradient(135deg, var(--corp-cyan-500), var(--corp-blue-500));
+    border-color: transparent;
+}
+
+/* ============================================
+   CREDIT CARD VISUAL - Premium Finance Card
+   ============================================ */
+.cc-visual {
+    width: 100%;
+    aspect-ratio: 1.586 / 1;
+    background:
+        linear-gradient(135deg, var(--corp-slate-900) 0%, var(--corp-blue-900) 50%, var(--corp-blue-700) 100%);
+    border-radius: var(--radius-lg);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    font-family: 'Outfit', monospace;
+    box-shadow:
+        0 15px 35px rgba(15, 23, 42, 0.3),
+        0 5px 15px rgba(30, 58, 138, 0.2);
+    position: relative;
+    overflow: hidden;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Card decorative elements */
+.cc-visual::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -20%;
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(6, 182, 212, 0.3) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.cc-visual::after {
+    content: '';
+    position: absolute;
+    bottom: -40%;
+    left: -10%;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.25) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+.cc-chip {
+    font-size: 32px;
+    color: var(--corp-gold-400);
+    position: relative;
+    z-index: 2;
+    filter: drop-shadow(0 2px 4px rgba(245, 158, 11, 0.4));
+}
+
+.cc-type {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    font-size: 10px;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    z-index: 2;
+}
+
+.cc-number {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    position: relative;
+    z-index: 2;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cc-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: relative;
+    z-index: 2;
+}
+
+.cc-info-group {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.cc-label {
+    font-size: 9px;
+    color: rgba(255, 255, 255, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 600;
+}
+
+.cc-name {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.95);
+}
+
+.cc-brand {
+    font-size: 32px;
+    background: white;
+    width: 56px;
+    height: 36px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--corp-blue-900);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ============================================
+   TEAM TABLE - Corporate Style
+   ============================================ */
+.td-avatar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+body.sponsor-theme .t-avatar {
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.1);
+}
+
+body.sponsor-theme .t-avatar.v1 {
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-blue-800));
+}
+
+body.sponsor-theme .t-avatar.v2 {
+    background: linear-gradient(135deg, var(--corp-cyan-500), var(--corp-blue-600));
+}
+
+body.sponsor-theme .t-avatar.v3 {
+    background: linear-gradient(135deg, var(--corp-blue-500), var(--corp-cyan-500));
+}
+
+.role-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.role-tag.manager {
+    background: linear-gradient(135deg, var(--corp-blue-100), var(--corp-cyan-500)20);
+    color: var(--corp-blue-800);
+    border: 1px solid var(--corp-blue-200);
+}
+
+.role-tag.karyawan {
+    background: var(--corp-slate-100);
+    color: var(--corp-slate-700);
+    border: 1px solid var(--corp-slate-200);
+}
+
+.role-tag.owner {
+    background: linear-gradient(135deg, var(--corp-gold-500), #D97706);
+    color: white;
+    box-shadow: 0 2px 6px rgba(245, 158, 11, 0.3);
+}
+
+/* === Action Buttons === */
+.action-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    transition: var(--transition);
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.action-btn.edit {
+    background: var(--corp-blue-50);
+    color: var(--corp-blue-700);
+    border-color: var(--corp-blue-200);
+}
+
+.action-btn.edit:hover {
+    background: var(--corp-blue-600);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+
+.action-btn.delete {
+    background: #FEF2F2;
+    color: #DC2626;
+    border-color: #FECACA;
+}
+
+.action-btn.delete:hover {
+    background: #EF4444;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.action-btn.detail {
+    background: var(--corp-slate-100);
+    color: var(--corp-slate-700);
+    border-color: var(--corp-slate-200);
+    width: auto;
+    padding: 0 12px;
+    font-size: 11px;
+    font-weight: 700;
+    gap: 6px;
+}
+
+.action-btn.detail:hover {
+    background: var(--corp-slate-800);
+    color: white;
+}
+
+/* ============================================
+   TOGGLE SWITCH - Corporate Override
+   ============================================ */
+body.sponsor-theme .toggle-switch input:checked + .toggle-slider {
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-cyan-500));
+}
+
+/* ============================================
+   INFO GRID - Corporate Style
+   ============================================ */
+body.sponsor-theme .info-item {
+    background: var(--corp-slate-50);
+    border: 1px solid var(--corp-slate-200);
+}
+
+body.sponsor-theme .info-label {
+    color: var(--corp-slate-500);
+}
+
+body.sponsor-theme .info-value {
+    color: var(--corp-slate-900);
+}
+
+/* ============================================
+   2FA VISUAL - Corporate
+   ============================================ */
+body.sponsor-theme .tfa-visual {
+    background: linear-gradient(135deg, var(--corp-blue-50), var(--corp-cyan-500)10);
+    border: 1px solid var(--corp-blue-200);
+}
+
+body.sponsor-theme .tfa-visual i {
+    color: var(--corp-blue-600);
+}
+
+/* ============================================
+   DANGER ZONE - Corporate Style
+   ============================================ */
+body.sponsor-theme .danger-zone {
+    background: linear-gradient(135deg, #FEF2F2, #FEE2E2);
+    border: 2px dashed #DC2626;
+}
+
+body.sponsor-theme .danger-zone-icon {
+    background: linear-gradient(135deg, #DC2626, #991B1B);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+/* ============================================
+   BREADCRUMB CORPORATE
+   ============================================ */
+body.sponsor-theme .topbar-breadcrumb a {
+    color: var(--corp-blue-600);
+    font-weight: 700;
+}
+
+body.sponsor-theme .topbar-breadcrumb a:hover {
+    color: var(--corp-blue-800);
+}
+
+/* ============================================
+   RESPONSIVE - CORPORATE
+   ============================================ */
+@media (max-width: 1100px) {
+    .sp-hero-content {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sp-hero-stats {
+        width: 100%;
+    }
+
+    .sp-hero-stat {
+        flex: 1;
+        min-width: 140px;
+    }
+
+    .escrow-balance-card {
+        flex-direction: column;
+        text-align: center;
+        padding: 24px;
+    }
+
+    .escrow-left {
+        flex-direction: column;
+    }
+
+    .escrow-actions {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .escrow-actions .btn {
+        flex: 1;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 900px) {
+    .sp-hero-left {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .sp-location {
+        justify-content: center;
+    }
+
+    .sp-hero-content {
+        padding: 28px 20px;
+    }
+
+    .sp-name {
+        font-size: 22px;
+    }
+
+    .escrow-amount {
+        font-size: 26px;
+    }
+
+    .cc-visual {
+        padding: 18px;
+    }
+
+    .cc-number {
+        font-size: 16px;
+        letter-spacing: 2px;
+    }
+}
+
+@media (max-width: 600px) {
+    .sp-hero-stats {
+        flex-direction: column;
+    }
+
+    .sp-hero-stat {
+        width: 100%;
+    }
+
+    .escrow-actions {
+        flex-direction: column;
+    }
+
+    .action-btn.detail {
+        font-size: 10px;
+    }
+}
+
+/* ============================================
+   ANIMATION - Corporate Entrance
+   ============================================ */
+@keyframes slideDownHero {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body.sponsor-theme .settings-panel.active {
+    animation: fadeInUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   UTILITY CLASSES - Corporate
+   ============================================ */
+.corp-gradient-text {
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-cyan-500));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.corp-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--corp-slate-200), transparent);
+    margin: 24px 0;
+}
+
+.corp-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.corp-badge.premium {
+    background: linear-gradient(135deg, var(--corp-gold-500), #D97706);
+    color: white;
+}
+
+.corp-badge.verified {
+    background: var(--corp-blue-100);
+    color: var(--corp-blue-800);
+    border: 1px solid var(--corp-blue-200);
+}
+
+.corp-badge.active {
+    background: #D1FAE5;
+    color: #065F46;
+    border: 1px solid #A7F3D0;
+}
+
+/* ============================================
+   LEGAL DOCUMENTS - Compact Corporate Cards
+   ============================================ */
+.legal-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.legal-compact-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    background: var(--corp-slate-50);
+    border: 1px solid var(--corp-slate-200);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.legal-compact-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: transparent;
+    transition: var(--transition);
+}
+
+.legal-compact-card:hover {
+    background: white;
+    border-color: var(--corp-blue-200);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.06);
+    transform: translateX(2px);
+}
+
+.legal-compact-card:hover::before {
+    background: linear-gradient(to bottom, var(--corp-blue-500), var(--corp-cyan-500));
+}
+
+/* Icon */
+.legal-compact-icon {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--corp-blue-600), var(--corp-cyan-500));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: white;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.25);
+}
+
+.legal-compact-icon.amber {
+    background: linear-gradient(135deg, var(--corp-gold-500), #D97706);
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+}
+
+.legal-compact-icon.pink {
+    background: linear-gradient(135deg, #64748B, #475569);
+    box-shadow: 0 2px 8px rgba(100, 116, 139, 0.25);
+}
+
+/* Verified dot indicator */
+.legal-compact-dot {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--emerald-500);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    animation: legalDotPulse 2.5s infinite;
+}
+
+@keyframes legalDotPulse {
+    0%, 100% { box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+    50% { box-shadow: 0 0 0 5px rgba(16, 185, 129, 0); }
+}
+
+/* Info section */
+.legal-compact-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.legal-compact-name {
+    font-size: 13px;
+    font-weight: 800;
+    color: var(--corp-slate-900);
+    font-family: 'Outfit', sans-serif;
+    margin-bottom: 3px;
+    letter-spacing: -0.2px;
+}
+
+.legal-compact-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--corp-slate-500);
+    font-weight: 600;
+    flex-wrap: wrap;
+}
+
+.legal-compact-id {
+    font-family: 'Outfit', monospace;
+    color: var(--corp-slate-700);
+    font-weight: 700;
+    letter-spacing: 0.3px;
+}
+
+.legal-compact-id.muted {
+    color: var(--corp-slate-400);
+    font-style: italic;
+    font-weight: 500;
+    font-family: inherit;
+}
+
+.legal-compact-date {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 1px 8px;
+    background: var(--corp-slate-100);
+    border-radius: var(--radius-full);
+    color: var(--corp-slate-600);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+/* Status badge */
+.legal-compact-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 5px 10px;
+    border-radius: var(--radius-full);
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    flex-shrink: 0;
+}
+
+.legal-compact-badge.verified {
+    background: linear-gradient(135deg, #D1FAE5, #A7F3D0);
+    color: #065F46;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.legal-compact-badge.verified i {
+    font-size: 9px;
+    background: var(--emerald-500);
+    color: white;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.legal-compact-badge.pending {
+    background: #FEF3C7;
+    color: #92400E;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.legal-compact-badge.expired {
+    background: #FEE2E2;
+    color: #991B1B;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+/* Action button (for upload) */
+.legal-compact-action {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: white;
+    border: 1.5px dashed var(--corp-slate-300);
+    color: var(--corp-slate-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: var(--transition);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.legal-compact-action:hover {
+    background: var(--corp-blue-600);
+    border-color: var(--corp-blue-600);
+    border-style: solid;
+    color: white;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+}
+
+/* === Responsive === */
+@media (max-width: 600px) {
+    .legal-compact-card {
+        flex-wrap: wrap;
+        padding: 12px;
+    }
+    
+    .legal-compact-info {
+        flex: 1 1 calc(100% - 60px);
+    }
+    
+    .legal-compact-badge,
+    .legal-compact-action {
+        margin-left: auto;
+    }
+}   

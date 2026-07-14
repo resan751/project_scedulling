@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Admin - RiseGig</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
+    <link rel="stylesheet" href="/public/css/pengaturan-admin.css">
+</head>
+<body>
+
+<div class="app-shell">
+    <!-- SIDEBAR UTAMA -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon"><i class="fas fa-bolt"></i></div>
+            <div class="sidebar-brand-text">
+                <div class="name">Rise<span>Gig</span></div>
+                <div class="tagline">Scheduling System</div>
+            </div>
+        </div>
+        <div class="sidebar-user">
+            <div class="sidebar-avatar">NU</div>
+            <div class="sidebar-user-info">
+                <div class="uname">nama_user</div>
+                <div class="urole">role_user</div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-title">Menu Utama</div>
+            <a href="/page/admin/dashboard.html" class="nav-item">
+                <i class="fas fa-th-large"></i> Dashboard
+            </a>
+            <a href="/page/admin/kelola-user.html" class="nav-item">
+                <i class="fas fa-users-cog"></i> Kelola User
+            </a>
+            <a href="/page/admin/arsip-project.html" class="nav-item">
+                <i class="fas fa-archive"></i> Arsip Project
+            </a>
+            <div class="nav-section-title">Lainnya</div>
+            <a href="/page/admin/jadwal-kalender.html" class="nav-item">
+                <i class="fas fa-calendar-alt"></i> Jadwal Kalender
+            </a>
+
+            <!-- PENGATURAN ACCORDION (auto-expanded di halaman ini) -->
+            <div class="nav-parent expanded has-active-child" id="navPengaturan">
+                <button class="nav-item-toggle" data-toggle="pengaturan">
+                    <i class="fas fa-cog nav-icon"></i>
+                    <span class="nav-label">Pengaturan</span>
+                    <i class="fas fa-chevron-down nav-arrow"></i>
+                </button>
+                <div class="nav-submenu">
+                    <a href="#profil" class="nav-sub-item active" data-panel="profil">
+                        <i class="fas fa-user-circle"></i> Profil
+                    </a>
+                    <a href="#tampilan" class="nav-sub-item" data-panel="tampilan">
+                        <i class="fas fa-palette"></i> Tampilan
+                    </a>
+                    <a href="#sistem" class="nav-sub-item" data-panel="sistem">
+                        <i class="fas fa-server"></i> Sistem
+                    </a>
+                </div>
+            </div>
+        </nav>
+        <div class="sidebar-logout">
+            <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <header class="topbar">
+            <div class="topbar-title">
+                <h2 id="topbarTitle">Pengaturan</h2>
+                <div class="topbar-breadcrumb">
+                    <a href="/page/admin/dashboard.html">Dashboard</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <a href="/page/admin/pengaturan.html">Pengaturan</a>
+                    <i class="fas fa-chevron-right"></i>
+                    <span id="breadcrumbCurrent">Profil</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="topbar-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Cari pengaturan...">
+                </div>
+                <div class="topbar-icon-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-dot"></span>
+                </div>
+                <div class="topbar-avatar">YS</div>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <!-- Profile Hero -->
+            <div class="profile-hero" id="profileHero">
+                <div class="profile-hero-bg"></div>
+                <div class="profile-hero-content">
+                    <div class="profile-avatar-large">
+                        YS
+                        <div class="avatar-edit-badge" title="Ganti Foto">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                    </div>
+                    <div class="profile-hero-info">
+                        <div class="profile-name">nama_user</div>
+                        <div class="profile-email">admin@risegig.com</div>
+                        <div class="profile-role-badge">
+                            <i class="fas fa-crown"></i> Administrator
+                        </div>
+                    </div>
+                    <div class="profile-hero-stats">
+                        <div class="profile-hero-stat">
+                            <div class="stat-number">127</div>
+                            <div class="stat-label">Project</div>
+                        </div>
+                        <div class="profile-hero-stat">
+                            <div class="stat-number">45</div>
+                            <div class="stat-label">User</div>
+                        </div>
+                        <div class="profile-hero-stat">
+                            <div class="stat-number">1.2 th</div>
+                            <div class="stat-label">Bergabung</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL: PROFIL (gabungan info pribadi + keamanan) -->
+            <div class="settings-panel active" id="panel-profil">
+                <div class="panel-header">
+                    <h2 class="panel-title">Profil & Keamanan</h2>
+                    <p class="panel-subtitle">Kelola informasi pribadi dan lindungi akun Anda</p>
+                </div>
+
+                <!-- Section: Informasi Pribadi -->
+                <div class="settings-section">
+                    <div class="settings-section-title">
+                        <i class="fas fa-id-card"></i> Informasi Pribadi
+                    </div>
+                    <div class="settings-two-col">
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon purple"><i class="fas fa-user-edit"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Data Utama</div>
+                                        <div class="settings-card-desc">Informasi profil Anda</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Nama Lengkap</label>
+                                    <input type="text" class="field-input" value="nama_user">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Email</label>
+                                    <input type="email" class="field-input" value="admin@risegig.com">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">No. Telepon</label>
+                                    <input type="tel" class="field-input" value="+62 812 3456 7890">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Alamat</label>
+                                    <textarea class="field-input field-textarea" rows="2">Jl. Merdeka No. 10, Jakarta Pusat</textarea>
+                                </div>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-save"></i> Simpan Perubahan
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon emerald"><i class="fas fa-info-circle"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Informasi Akun</div>
+                                        <div class="settings-card-desc">Detail read-only</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">User ID</div>
+                                        <div class="info-value">#ADM-001</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Role</div>
+                                        <div class="info-value">Administrator</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Terdaftar</div>
+                                        <div class="info-value">15 Jan 2025</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Status</div>
+                                        <div class="info-value online">Aktif</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Keamanan -->
+                <div class="settings-section">
+                    <div class="settings-section-title">
+                        <i class="fas fa-shield-alt"></i> Keamanan Akun
+                    </div>
+                    <div class="settings-two-col">
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon pink"><i class="fas fa-key"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Ganti Password</div>
+                                        <div class="settings-card-desc">Perbarui password Anda</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Password Lama</label>
+                                    <input type="password" class="field-input" placeholder="Masukkan password lama">
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Password Baru</label>
+                                    <input type="password" class="field-input" placeholder="Min. 8 karakter" id="newPassword">
+                                    <div class="password-strength" id="strengthBars">
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                        <div class="strength-bar"></div>
+                                    </div>
+                                    <div class="strength-text" id="strengthText"></div>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Konfirmasi Password</label>
+                                    <input type="password" class="field-input" placeholder="Ulangi password baru">
+                                </div>
+                                <button class="btn btn-primary btn-sm">
+                                    <i class="fas fa-key"></i> Perbarui Password
+                                </button>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="settings-card">
+                                <div class="settings-card-head">
+                                    <div class="settings-card-title-wrap">
+                                        <div class="settings-card-icon amber"><i class="fas fa-mobile-alt"></i></div>
+                                        <div>
+                                            <div class="settings-card-title">Autentikasi 2 Faktor</div>
+                                            <div class="settings-card-desc">Keamanan ekstra</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-card-body">
+                                    <div class="tfa-visual">
+                                        <i class="fas fa-shield-alt"></i>
+                                        <div class="tfa-title">2FA Tidak Aktif</div>
+                                        <div class="tfa-desc">Lindungi akun dengan verifikasi tambahan</div>
+                                    </div>
+                                    <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;">
+                                        <i class="fas fa-shield-alt"></i> Aktifkan 2FA
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="settings-card">
+                                <div class="settings-card-head">
+                                    <div class="settings-card-title-wrap">
+                                        <div class="settings-card-icon blue"><i class="fas fa-laptop"></i></div>
+                                        <div>
+                                            <div class="settings-card-title">Sesi Aktif</div>
+                                            <div class="settings-card-desc">Perangkat login</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="settings-card-body">
+                                    <div class="activity-list">
+                                        <div class="activity-item">
+                                            <div class="activity-icon login"><i class="fas fa-desktop"></i></div>
+                                            <div class="activity-content">
+                                                <div class="activity-title">
+                                                    Chrome - Windows
+                                                    <span class="active-now-badge">Aktif</span>
+                                                </div>
+                                                <div class="activity-meta">
+                                                    <span><i class="fas fa-map-marker-alt"></i> Jakarta</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="activity-item">
+                                            <div class="activity-icon login"><i class="fas fa-mobile-alt"></i></div>
+                                            <div class="activity-content">
+                                                <div class="activity-title">Safari - iPhone</div>
+                                                <div class="activity-meta">
+                                                    <span><i class="fas fa-clock"></i> 2 hari lalu</span>
+                                                    <span><i class="fas fa-map-marker-alt"></i> Bandung</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-danger btn-sm" style="width:100%;justify-content:center;margin-top:12px;">
+                                        <i class="fas fa-sign-out-alt"></i> Logout Semua
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section: Aktivitas Terbaru -->
+                <div class="settings-section">
+                    <div class="settings-section-title">
+                        <i class="fas fa-history"></i> Riwayat Aktivitas
+                    </div>
+                    <div class="settings-card">
+                        <div class="settings-card-body">
+                            <div class="activity-list">
+                                <div class="activity-item">
+                                    <div class="activity-icon login"><i class="fas fa-sign-in-alt"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Login berhasil</div>
+                                        <div class="activity-meta">
+                                            <span><i class="fas fa-clock"></i> 2 jam lalu</span>
+                                            <span><i class="fas fa-map-marker-alt"></i> Jakarta</span>
+                                            <span><i class="fas fa-desktop"></i> Chrome - Windows</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon update"><i class="fas fa-edit"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Memperbarui project "Migrasi DB"</div>
+                                        <div class="activity-meta">
+                                            <span><i class="fas fa-clock"></i> Kemarin, 14:20</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon update"><i class="fas fa-user-plus"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Menambahkan user baru</div>
+                                        <div class="activity-meta">
+                                            <span><i class="fas fa-clock"></i> 3 hari lalu</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="activity-item">
+                                    <div class="activity-icon login"><i class="fas fa-key"></i></div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">Password berhasil diubah</div>
+                                        <div class="activity-meta">
+                                            <span><i class="fas fa-clock"></i> 5 hari lalu</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL: TAMPILAN -->
+            <div class="settings-panel" id="panel-tampilan">
+                <div class="panel-header">
+                    <h2 class="panel-title">Tampilan</h2>
+                    <p class="panel-subtitle">Sesuaikan tema, bahasa, dan preferensi aksesibilitas</p>
+                </div>
+
+                <div class="settings-two-col">
+                    <div>
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon purple"><i class="fas fa-palette"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Tema Tampilan</div>
+                                        <div class="settings-card-desc">Pilih tema favorit</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="theme-options">
+                                    <div class="theme-option active">
+                                        <div class="theme-preview light"></div>
+                                        <div class="theme-name">Terang</div>
+                                    </div>
+                                    <div class="theme-option">
+                                        <div class="theme-preview dark"></div>
+                                        <div class="theme-name">Gelap</div>
+                                    </div>
+                                    <div class="theme-option">
+                                        <div class="theme-preview auto"></div>
+                                        <div class="theme-name">Otomatis</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon blue"><i class="fas fa-globe"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Bahasa & Wilayah</div>
+                                        <div class="settings-card-desc">Preferensi lokal</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="field-group">
+                                    <label class="field-label">Bahasa</label>
+                                    <select class="field-input field-select">
+                                        <option selected>🇮🇩 Indonesia</option>
+                                        <option>🇬🇧 English</option>
+                                    </select>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Zona Waktu</label>
+                                    <select class="field-input field-select">
+                                        <option selected>WIB (UTC+7)</option>
+                                        <option>WITA (UTC+8)</option>
+                                        <option>WIT (UTC+9)</option>
+                                    </select>
+                                </div>
+                                <div class="field-group">
+                                    <label class="field-label">Format Tanggal</label>
+                                    <select class="field-input field-select">
+                                        <option selected>DD/MM/YYYY</option>
+                                        <option>YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon pink"><i class="fas fa-universal-access"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Aksesibilitas</div>
+                                        <div class="settings-card-desc">Pengaturan tampilan tambahan</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="setting-toggle-list">
+                                    <div class="setting-toggle-item">
+                                        <div>
+                                            <div class="setting-toggle-title">Mode Kontras Tinggi</div>
+                                            <div class="setting-toggle-desc">Tingkatkan kontras warna</div>
+                                        </div>
+                                        <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+                                    </div>
+                                    <div class="setting-toggle-item">
+                                        <div>
+                                            <div class="setting-toggle-title">Kurangi Animasi</div>
+                                            <div class="setting-toggle-desc">Minimalkan efek animasi</div>
+                                        </div>
+                                        <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+                                    </div>
+                                    <div class="setting-toggle-item">
+                                        <div>
+                                            <div class="setting-toggle-title">Sidebar Selalu Terbuka</div>
+                                            <div class="setting-toggle-desc">Jangan auto-hide sidebar</div>
+                                        </div>
+                                        <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL: SISTEM -->
+            <div class="settings-panel" id="panel-sistem">
+                <div class="panel-header">
+                    <h2 class="panel-title">Sistem</h2>
+                    <p class="panel-subtitle">Informasi sistem, backup, dan tools administrator</p>
+                </div>
+
+                <div class="settings-two-col">
+                    <div>
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon emerald"><i class="fas fa-server"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Informasi Sistem</div>
+                                        <div class="settings-card-desc">Status performa</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="info-label">Versi</div>
+                                        <div class="info-value">v2.1.0</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Database</div>
+                                        <div class="info-value online">Online</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Total User</div>
+                                        <div class="info-value">156</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="info-label">Total Project</div>
+                                        <div class="info-value">89</div>
+                                    </div>
+                                </div>
+                                <div class="storage-indicator">
+                                    <div class="storage-head">
+                                        <div class="storage-title">Penyimpanan</div>
+                                        <div class="storage-percent">24%</div>
+                                    </div>
+                                    <div class="progress-bar" style="height:8px;">
+                                        <div class="progress-fill purple" style="width:24%;"></div>
+                                    </div>
+                                    <div class="storage-detail">2.4 GB dari 10 GB terpakai</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon blue"><i class="fas fa-cloud-upload-alt"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Backup & Restore</div>
+                                        <div class="settings-card-desc">Kelola backup data</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="backup-status">
+                                    <div class="backup-status-head">
+                                        <div class="backup-label">Backup Terakhir</div>
+                                        <div class="backup-success">
+                                            <i class="fas fa-check-circle"></i> Sukses
+                                        </div>
+                                    </div>
+                                    <div class="backup-time">14 Juli 2026, 03:00 WIB</div>
+                                </div>
+                                <div style="display:flex;gap:8px;">
+                                    <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center;">
+                                        <i class="fas fa-download"></i> Backup
+                                    </button>
+                                    <button class="btn btn-outline btn-sm" style="flex:1;justify-content:center;">
+                                        <i class="fas fa-upload"></i> Restore
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="settings-card">
+                            <div class="settings-card-head">
+                                <div class="settings-card-title-wrap">
+                                    <div class="settings-card-icon amber"><i class="fas fa-tools"></i></div>
+                                    <div>
+                                        <div class="settings-card-title">Tools Administrator</div>
+                                        <div class="settings-card-desc">Aksi maintenance</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="settings-card-body">
+                                <div class="tools-grid">
+                                    <button class="tool-btn">
+                                        <i class="fas fa-broom"></i>
+                                        Bersihkan Cache
+                                    </button>
+                                    <button class="tool-btn">
+                                        <i class="fas fa-database"></i>
+                                        Optimasi DB
+                                    </button>
+                                    <button class="tool-btn">
+                                        <i class="fas fa-file-export"></i>
+                                        Export CSV
+                                    </button>
+                                    <button class="tool-btn">
+                                        <i class="fas fa-envelope"></i>
+                                        Test Email
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="danger-zone">
+                            <div class="danger-zone-head">
+                                <div class="danger-zone-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                                <div>
+                                    <div class="danger-zone-title">Zona Berbahaya</div>
+                                    <div class="danger-zone-desc">Tindakan permanen yang tidak dapat dibatalkan</div>
+                                </div>
+                            </div>
+                            <div class="danger-zone-actions">
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-trash"></i> Hapus Semua Arsip
+                                </button>
+                                <button class="btn btn-danger btn-sm">
+                                    <i class="fas fa-user-times"></i> Reset User
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/public/js/pengaturan-admin.js"></script>
+</body>
+</html>

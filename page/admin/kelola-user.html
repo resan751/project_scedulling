@@ -4,25 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kelola User - RiseGig</title>
-
-    <link rel="stylesheet" href="/css/global.css">
-    <link rel="stylesheet" href="/css/dashboard-admin.css">
-
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/public/css/global.css">
+    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="page active" id="page-admin-users">
+    <div class="page active" id="page-kelola-user">
         <div class="app-shell">
-            <aside class="sidebar">
+            <!-- Sidebar (UPDATED) -->
+            <aside class="sidebar" id="sidebar">
                 <div class="sidebar-brand">
-                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-icon"><i class="fas fa-bolt"></i></div>
                     <div class="sidebar-brand-text">
                         <div class="name">Rise<span>Gig</span></div>
                         <div class="tagline">Scheduling System</div>
                     </div>
                 </div>
-
                 <div class="sidebar-user">
                     <div class="sidebar-avatar">NU</div>
                     <div class="sidebar-user-info">
@@ -30,93 +28,165 @@
                         <div class="urole">role_user</div>
                     </div>
                 </div>
-
                 <nav class="sidebar-nav">
                     <div class="nav-section-title">Menu Utama</div>
-                    <a href="/page/admin/dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
-                    <a href="/page/admin/kelola-user.html" class="nav-item active"><i class="fas fa-users-cog"></i> Kelola User</a>
-                    <div class="nav-item"><i class="fas fa-folder-open"></i> Daftar Project <span class="nav-badge">8</span></div>
-                    <div class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</div>
-
+                    <a href="/page/admin/dashboard.html" class="nav-item">
+                        <i class="fas fa-th-large"></i> Dashboard
+                    </a>
+                    <a href="/page/admin/kelola-user.html" class="nav-item active">
+                        <i class="fas fa-users-cog"></i> Kelola User
+                    </a>
+                    <a href="/page/admin/arsip-project.html" class="nav-item">
+                        <i class="fas fa-archive"></i> Arsip Project
+                    </a>
                     <div class="nav-section-title">Lainnya</div>
-                    <div class="nav-item"><i class="fas fa-bell"></i> Notifikasi <span class="nav-badge">2</span></div>
-                    <div class="nav-item"><i class="fas fa-cog"></i> Pengaturan</div>
+                    <a href="/page/admin/jadwal-kalender.html" class="nav-item">
+                        <i class="fas fa-calendar-alt"></i> Jadwal Kalender
+                    </a>
+                    <a href="/page/admin/pengaturan.html" class="nav-item">
+                        <i class="fas fa-cog"></i> Pengaturan
+                    </a>
                 </nav>
-
                 <div class="sidebar-logout">
                     <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
                 </div>
             </aside>
 
-            <main class="main-content">
+            <!-- Main Content -->
+            <div class="main-content">
                 <header class="topbar">
                     <div class="topbar-title">
                         <h2>Kelola User</h2>
                         <p>Kelola data admin, sponsor, dan freelance RiseGig</p>
                     </div>
                     <div class="topbar-right">
-                        <a href="/page/admin/dashboard.html" class="btn btn-outline btn-sm">
-                            <i class="fas fa-arrow-left"></i> Dashboard
-                        </a>
-                        <button class="topbar-icon-btn">
+                        <div class="topbar-search">
+                            <i class="fas fa-search"></i>
+                            <input type="text" placeholder="Cari user...">
+                        </div>
+                        <div class="topbar-icon-btn">
                             <i class="fas fa-bell"></i>
                             <span class="notif-dot"></span>
-                        </button>
-                        <div class="topbar-avatar">YS</div>
+                        </div>
+                        <div class="topbar-avatar">NU</div>
                     </div>
                 </header>
 
                 <div class="page-body">
-                    <div class="section-header">
-                        <div>
-                            <h3>Status User</h3>
-                            <p>Ringkasan jumlah user berdasarkan role</p>
-                        </div>
+                    <!-- Breadcrumb -->
+                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;font-size:12px;color:var(--text-muted);font-weight:600;">
+                        <a href="/page/admin/dashboard.html" style="color:var(--purple-500);">Dashboard</a>
+                        <i class="fas fa-chevron-right" style="font-size:9px;"></i>
+                        <span>Kelola User</span>
                     </div>
-                    <div class="stats-grid">
+
+                    <!-- Stats User -->
+                    <div class="stats-grid" style="grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));">
                         <div class="stat-card purple">
                             <div class="stat-icon purple"><i class="fas fa-user-shield"></i></div>
-                            <div class="stat-value" id="totalAdminCount">0</div>
+                            <div class="stat-value" id="totalAdmin">0</div>
                             <div class="stat-label">Total Admin</div>
                         </div>
+                        <div class="stat-card pink">
+                            <div class="stat-icon pink"><i class="fas fa-user-tie"></i></div>
+                            <div class="stat-value" id="totalSponsor">0</div>
+                            <div class="stat-label">Total Sponsor</div>
+                        </div>
                         <div class="stat-card green">
-                            <div class="stat-icon green"><i class="fas fa-user-tie"></i></div>
-                            <div class="stat-value" id="totalFreelanceCount">0</div>
+                            <div class="stat-icon green"><i class="fas fa-user"></i></div>
+                            <div class="stat-value" id="totalFreelance">0</div>
                             <div class="stat-label">Total Freelance</div>
+                        </div>
+                        <div class="stat-card amber">
+                            <div class="stat-icon amber"><i class="fas fa-users"></i></div>
+                            <div class="stat-value" id="totalUser">0</div>
+                            <div class="stat-label">Total User</div>
                         </div>
                     </div>
 
-                    <div class="mb-24">
-                        <div class="section-header">
-                            <div>
-                                <h3>Data User</h3>
-                                <p>Daftar user lengkap dengan aksi update dan hapus data</p>
-                            </div>
+                    <!-- User Table -->
+                    <div class="section-header mb-16">
+                        <div>
+                            <h3>Data User</h3>
+                            <p>Daftar user lengkap dengan aksi update dan hapus data</p>
                         </div>
-                        <div class="table-card">
-                            <div id="userMessage"></div>
-                            <div class="table-wrapper">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Nama User</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Aksi</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="userTableBody">
-                                    </tbody>
-                                </table>
-                            </div>
+                        <button class="btn btn-primary btn-sm">
+                            <i class="fas fa-plus"></i> Tambah User
+                        </button>
+                    </div>
+
+                    <div class="table-card">
+                        <div class="table-wrapper">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nama User</th>
+                                        <th>Email</th>
+                                        <th>Role</th>
+                                        <th>Status</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="userTableBody">
+                                    <tr>
+                                        <td colspan="6" class="empty-text">Belum ada data user</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="table-footer">
+                            <span id="userFooterInfo">Menampilkan 0 user</span>
+                            <div class="pagination"></div>
                         </div>
                     </div>
+                    <div id="userMessage"></div>
                 </div>
-            </main>
+            </div>
         </div>
     </div>
-    <script src="/js/dashboard-admin.js"></script>
-    <script src="/js/sidebar-user.js"></script>
+
+    <script>
+        let users = [];
+
+        function loadUsers() {
+            const tbody = document.getElementById('userTableBody');
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-text">Belum ada data user</td></tr>';
+            } else {
+                tbody.innerHTML = users.map((u, i) => `
+                    <tr>
+                        <td><strong>#${i + 1}</strong></td>
+                        <td>
+                            <div class="td-avatar">
+                                <div class="t-avatar v${((i % 4) + 1)}">${(u.nama || 'U').charAt(0)}</div>
+                                <div>
+                                    <div class="t-name">${u.nama}</div>
+                                    <div class="t-sub">${u.username || ''}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${u.email || '-'}</td>
+                        <td><span class="role-tag ${u.role || 'karyawan'}">${u.role || 'N/A'}</span></td>
+                        <td><span class="status-badge done">Aktif</span></td>
+                        <td>
+                            <div class="row-actions">
+                                <button class="action-btn edit"><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            }
+
+            document.getElementById('totalAdmin').textContent = users.filter(u => u.role === 'admin').length;
+            document.getElementById('totalSponsor').textContent = users.filter(u => u.role === 'sponsor').length;
+            document.getElementById('totalFreelance').textContent = users.filter(u => u.role === 'freelance').length;
+            document.getElementById('totalUser').textContent = users.length;
+            document.getElementById('userFooterInfo').textContent = `Menampilkan ${users.length} user`;
+        }
+
+        loadUsers();
+    </script>
 </body>
 </html>
