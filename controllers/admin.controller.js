@@ -298,6 +298,18 @@ export const registerPage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', 'register.html'))
 }
 
+export const adminPengaturanPage = (req, res) => {
+    setNoCache(res)
+    if (!requireAdmin(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'admin', 'pengaturan.html'))
+}
+
+export const adminJadwalKalenderPage = (req, res) => {
+    setNoCache(res)
+    if (!requireAdmin(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'admin', 'jadwal-kalender.html'))
+}
+
 export const getUsers = async (req, res) => {
     if (!requireAdminApi(req, res)) return
 

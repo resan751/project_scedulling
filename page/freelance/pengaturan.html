@@ -7,27 +7,27 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="/public/css/global.css">
-    <link rel="stylesheet" href="/public/css/dashboard-admin.css">
-    <link rel="stylesheet" href="/public/css/pengaturan-admin.css">
-    <link rel="stylesheet" href="/public/css/pengaturan-freelance.css">
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-admin.css">
+    <link rel="stylesheet" href="/css/pengaturan-admin.css">
+    <link rel="stylesheet" href="/css/pengaturan-freelance.css">
 </head>
 <body>
 <div class="app-shell">
     <!-- SIDEBAR FREELANCER -->
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-brand">
-            <div class="sidebar-brand-icon"><i class="fas fa-bolt"></i></div>
+            <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
             <div class="sidebar-brand-text">
                 <div class="name">Rise<span>Gig</span></div>
                 <div class="tagline">Scheduling System</div>
             </div>
         </div>
         <div class="sidebar-user">
-            <div class="sidebar-avatar">RD</div>
+            <div class="sidebar-avatar" id="sidebarAvatar">RD</div>
             <div class="sidebar-user-info">
-                <div class="uname">nama_user</div>
-                <div class="urole">freelance</div>
+                <div class="uname" id="sidebarName">nama_user</div>
+                <div class="urole" id="sidebarRole">role_user</div>
             </div>
         </div>
         <nav class="sidebar-nav">
@@ -100,7 +100,7 @@
                     <i class="fas fa-bell"></i>
                     <span class="notif-dot"></span>
                 </div>
-                <div class="topbar-avatar">RD</div>
+                <div class="topbar-avatar" id="topbarAvatar">RD</div>
             </div>
         </header>
 
@@ -111,7 +111,7 @@
                 <div class="fl-hero-content">
                     <div class="fl-hero-left">
                         <div class="fl-avatar-wrap">
-                            <div class="fl-avatar-large">
+                            <div class="fl-avatar-large" id="heroAvatar">
                                 RD
                                 <div class="avatar-edit-badge" title="Ganti Foto">
                                     <i class="fas fa-camera"></i>
@@ -122,57 +122,19 @@
                             </div>
                         </div>
                         <div class="fl-hero-info">
-                            <div class="fl-name">nama_user</div>
-                            <div class="fl-tagline">Full-Stack Developer & UI/UX Designer</div>
-                            <div class="fl-location">
-                                <i class="fas fa-map-marker-alt"></i> Jakarta, Indonesia
-                                <span class="fl-divider">•</span>
-                                <i class="fas fa-clock"></i> Bergabung Jan 2025
-                            </div>
-                            <div class="fl-rating">
-                                <div class="fl-stars">
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star"></i>
-                                    <i class="fas fa-star-half-alt"></i>
-                                </div>
-                                <span class="fl-rating-text">4.8 (32 ulasan)</span>
-                            </div>
+                            <div class="fl-name" id="heroName">nama_user</div>
+                            <div class="fl-tagline" id="heroTagline">-</div>
                         </div>
                     </div>
                     <div class="fl-hero-stats">
                         <div class="fl-hero-stat">
                             <div class="stat-icon-wrap purple"><i class="fas fa-briefcase"></i></div>
                             <div class="stat-info">
-                                <div class="stat-number">24</div>
+                                <div class="stat-number" id="heroProjectCount">0</div>
                                 <div class="stat-label">Project Selesai</div>
                             </div>
                         </div>
-                        <div class="fl-hero-stat">
-                            <div class="stat-icon-wrap emerald"><i class="fas fa-star"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-number">4.8</div>
-                                <div class="stat-label">Rating</div>
-                            </div>
-                        </div>
-                        <div class="fl-hero-stat">
-                            <div class="stat-icon-wrap amber"><i class="fas fa-dollar-sign"></i></div>
-                            <div class="stat-info">
-                                <div class="stat-number">15.2jt</div>
-                                <div class="stat-label">Pendapatan</div>
-                            </div>
-                        </div>
                     </div>
-                </div>
-                <div class="fl-availability-bar">
-                    <div class="fl-avail-status">
-                        <span class="fl-avail-dot online"></span>
-                        <span class="fl-avail-text">Tersedia untuk project baru</span>
-                    </div>
-                    <button class="fl-avail-change-btn">
-                        <i class="fas fa-edit"></i> Ubah Status
-                    </button>
                 </div>
             </div>
 
@@ -200,23 +162,20 @@
                                 </div>
                             </div>
                             <div class="settings-card-body">
+                                <div id="profileMessage" style="display:none; margin-bottom: 12px;"></div>
                                 <div class="field-group">
                                     <label class="field-label">Nama Lengkap</label>
-                                    <input type="text" class="field-input" value="nama_user">
+                                    <input type="text" class="field-input" id="inputNamaLengkap" placeholder="Masukkan nama lengkap">
                                 </div>
                                 <div class="field-group">
                                     <label class="field-label">Email</label>
-                                    <input type="email" class="field-input" value="freelancer@email.com">
+                                    <input type="email" class="field-input" id="inputEmail" placeholder="Masukkan email">
                                 </div>
                                 <div class="field-group">
                                     <label class="field-label">No. Telepon</label>
-                                    <input type="tel" class="field-input" value="+62 812 3456 7890">
+                                    <input type="tel" class="field-input" id="inputNoTelp" placeholder="Masukkan no. telepon">
                                 </div>
-                                <div class="field-group">
-                                    <label class="field-label">Lokasi</label>
-                                    <input type="text" class="field-input" value="Jakarta, Indonesia">
-                                </div>
-                                <button class="btn btn-primary btn-sm">
+                                <button class="btn btn-primary btn-sm" id="btnSaveProfileInfo">
                                     <i class="fas fa-save"></i> Simpan Perubahan
                                 </button>
                             </div>
@@ -233,22 +192,22 @@
                                 </div>
                             </div>
                             <div class="settings-card-body">
+                                <div id="professionalMessage" style="display:none; margin-bottom: 12px;"></div>
                                 <div class="field-group">
                                     <label class="field-label">Headline / Tagline</label>
-                                    <input type="text" class="field-input" value="Full-Stack Developer & UI/UX Designer">
+                                    <input type="text" class="field-input" id="inputHeadline" placeholder="Masukkan headline/tagline">
                                 </div>
                                 <div class="field-group">
                                     <label class="field-label">Bio Singkat</label>
-                                    <textarea class="field-input field-textarea" rows="3">Developer berpengalaman 5+ tahun dengan spesialisasi React, Node.js, dan desain UI modern. Passionate dengan produk digital berkualitas.</textarea>
-                                </div>
-                                <div class="field-group">
-                                    <label class="field-label">Website / Portfolio URL</label>
-                                    <input type="url" class="field-input" value="https://myportfolio.com">
+                                    <textarea class="field-input field-textarea" id="inputBio" rows="3" placeholder="Masukkan bio singkat"></textarea>
                                 </div>
                                 <div class="field-group">
                                     <label class="field-label">LinkedIn</label>
-                                    <input type="url" class="field-input" placeholder="https://linkedin.com/in/username">
+                                    <input type="url" class="field-input" id="inputLinkedin" placeholder="https://linkedin.com/in/username">
                                 </div>
+                                <button class="btn btn-primary btn-sm" id="btnSaveProfessionalInfo">
+                                    <i class="fas fa-save"></i> Simpan Perubahan
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -261,194 +220,87 @@
                     </div>
                     <div class="settings-card">
                         <div class="settings-card-body">
-                            <div class="cv-status-card">
+                            <div id="cvMessage"></div>
+
+                            <!-- State: sudah ada CV -->
+                            <div class="cv-status-card" id="cvHasFile" style="display: none;">
                                 <div class="cv-status-left">
                                     <div class="cv-file-icon">
                                         <i class="fas fa-file-pdf"></i>
                                     </div>
                                     <div class="cv-file-info">
-                                        <div class="cv-file-name">CV_nama_user_2026.pdf</div>
+                                        <div class="cv-file-name" id="cvFileName">-</div>
                                         <div class="cv-file-meta">
-                                            <span><i class="fas fa-calendar"></i> Diperbarui 12 Jul 2026</span>
-                                            <span><i class="fas fa-weight-hanging"></i> 2.4 MB</span>
+                                            <span><i class="fas fa-calendar"></i> <span id="cvUpdatedAt">-</span></span>
+                                            <span><i class="fas fa-weight-hanging"></i> <span id="cvFileSize">-</span></span>
                                             <span class="cv-verified">
-                                                <i class="fas fa-check-circle"></i> Terverifikasi
+                                                <i class="fas fa-check-circle"></i> Terunggah
                                             </span>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="cv-status-actions">
-                                    <button class="btn btn-outline btn-xs">
+                                    <a id="cvLinkView" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-xs">
                                         <i class="fas fa-eye"></i> Lihat
-                                    </button>
-                                    <button class="btn btn-outline btn-xs">
+                                    </a>
+                                    <a id="cvLinkDownload" href="#" download class="btn btn-outline btn-xs">
                                         <i class="fas fa-download"></i> Download
-                                    </button>
-                                    <button class="btn btn-primary btn-xs">
+                                    </a>
+                                    <button class="btn btn-primary btn-xs" id="btnChangeCv">
                                         <i class="fas fa-upload"></i> Ganti CV
                                     </button>
                                 </div>
                             </div>
-                            <div class="cv-upload-hint">
+
+                            <!-- State: belum ada CV -->
+                            <div class="cv-status-card" id="cvNoFile" style="display: none;">
+                                <div class="cv-status-left">
+                                    <div class="cv-file-icon" style="opacity: 0.4;">
+                                        <i class="fas fa-file-pdf"></i>
+                                    </div>
+                                    <div class="cv-file-info">
+                                        <div class="cv-file-name" style="color: var(--text-muted);">Belum ada CV yang diunggah</div>
+                                        <div class="cv-file-meta">
+                                            <span>Unggah CV Anda untuk meningkatkan peluang diterima di project</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cv-status-actions">
+                                    <button class="btn btn-primary btn-xs" id="btnUploadCv">
+                                        <i class="fas fa-upload"></i> Upload CV
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Loading state -->
+                            <div class="cv-status-card" id="cvLoading">
+                                <div class="cv-status-left">
+                                    <div class="cv-file-icon" style="opacity: 0.4;">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                    </div>
+                                    <div class="cv-file-info">
+                                        <div class="cv-file-name" style="color: var(--text-muted);">Memuat data CV...</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- File picker preview row (muncul setelah file dipilih) -->
+                            <div id="cvPickedRow" style="display: none; align-items: center; gap: 12px; margin-top: 12px; flex-wrap: wrap;">
+                                <span id="cvPickedName" style="font-size: 13px; font-style: italic; color: var(--text-muted);"></span>
+                                <button type="button" class="btn btn-primary btn-xs" id="btnSubmitCv">
+                                    <i class="fas fa-cloud-upload-alt"></i> Simpan &amp; Unggah
+                                </button>
+                                <button type="button" class="btn btn-outline btn-xs" id="btnCancelCv">
+                                    <i class="fas fa-times"></i> Batal
+                                </button>
+                            </div>
+
+                            <input type="file" id="cvInput" name="cv" accept=".pdf,.jpg,.jpeg,.png" hidden>
+
+                            <div class="cv-upload-hint" style="margin-top: 16px;">
                                 <i class="fas fa-info-circle"></i>
                                 <div>
                                     <strong>Tips:</strong> Gunakan format PDF dengan ukuran maksimal 5MB. CV yang lengkap meningkatkan peluang diterima di project hingga 70%.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section: Skills -->
-                <div class="settings-section">
-                    <div class="settings-section-title">
-                        <i class="fas fa-tools"></i> Keahlian & Skills
-                    </div>
-                    <div class="settings-card">
-                        <div class="settings-card-body">
-                            <div class="skills-header">
-                                <div>
-                                    <div class="skills-title">Skills Anda</div>
-                                    <div class="skills-subtitle">Tambahkan keahlian untuk menarik project yang relevan</div>
-                                </div>
-                                <button class="btn btn-primary btn-xs">
-                                    <i class="fas fa-plus"></i> Tambah Skill
-                                </button>
-                            </div>
-                            <div class="skills-list">
-                                <div class="skill-item">
-                                    <div class="skill-info">
-                                        <div class="skill-name">React.js</div>
-                                        <div class="skill-bar-wrap">
-                                            <div class="skill-bar">
-                                                <div class="skill-fill" style="width: 90%"></div>
-                                            </div>
-                                            <span class="skill-level expert">Expert</span>
-                                        </div>
-                                    </div>
-                                    <div class="skill-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="skill-item">
-                                    <div class="skill-info">
-                                        <div class="skill-name">Node.js</div>
-                                        <div class="skill-bar-wrap">
-                                            <div class="skill-bar">
-                                                <div class="skill-fill" style="width: 85%"></div>
-                                            </div>
-                                            <span class="skill-level expert">Expert</span>
-                                        </div>
-                                    </div>
-                                    <div class="skill-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="skill-item">
-                                    <div class="skill-info">
-                                        <div class="skill-name">UI/UX Design (Figma)</div>
-                                        <div class="skill-bar-wrap">
-                                            <div class="skill-bar">
-                                                <div class="skill-fill" style="width: 75%"></div>
-                                            </div>
-                                            <span class="skill-level advanced">Advanced</span>
-                                        </div>
-                                    </div>
-                                    <div class="skill-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="skill-item">
-                                    <div class="skill-info">
-                                        <div class="skill-name">PostgreSQL</div>
-                                        <div class="skill-bar-wrap">
-                                            <div class="skill-bar">
-                                                <div class="skill-fill" style="width: 65%"></div>
-                                            </div>
-                                            <span class="skill-level intermediate">Intermediate</span>
-                                        </div>
-                                    </div>
-                                    <div class="skill-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="skill-item">
-                                    <div class="skill-info">
-                                        <div class="skill-name">Docker & Kubernetes</div>
-                                        <div class="skill-bar-wrap">
-                                            <div class="skill-bar">
-                                                <div class="skill-fill" style="width: 50%"></div>
-                                            </div>
-                                            <span class="skill-level intermediate">Intermediate</span>
-                                        </div>
-                                    </div>
-                                    <div class="skill-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Section: Portfolio -->
-                <div class="settings-section">
-                    <div class="settings-section-title">
-                        <i class="fas fa-images"></i> Portfolio
-                    </div>
-                    <div class="settings-card">
-                        <div class="settings-card-body">
-                            <div class="portfolio-grid">
-                                <div class="portfolio-item">
-                                    <div class="portfolio-img">
-                                        <i class="fas fa-shopping-cart"></i>
-                                    </div>
-                                    <div class="portfolio-info">
-                                        <div class="portfolio-title">E-Commerce Platform</div>
-                                        <div class="portfolio-desc">Full-stack marketplace dengan 10k+ user</div>
-                                    </div>
-                                    <div class="portfolio-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="portfolio-item">
-                                    <div class="portfolio-img pink">
-                                        <i class="fas fa-mobile-alt"></i>
-                                    </div>
-                                    <div class="portfolio-info">
-                                        <div class="portfolio-title">Mobile Banking App</div>
-                                        <div class="portfolio-desc">UI/UX design untuk fintech startup</div>
-                                    </div>
-                                    <div class="portfolio-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="portfolio-item">
-                                    <div class="portfolio-img emerald">
-                                        <i class="fas fa-chart-line"></i>
-                                    </div>
-                                    <div class="portfolio-info">
-                                        <div class="portfolio-title">Dashboard Analytics</div>
-                                        <div class="portfolio-desc">Real-time data visualization</div>
-                                    </div>
-                                    <div class="portfolio-actions">
-                                        <button class="skill-action-btn"><i class="fas fa-edit"></i></button>
-                                        <button class="skill-action-btn delete"><i class="fas fa-times"></i></button>
-                                    </div>
-                                </div>
-                                <div class="portfolio-add">
-                                    <div class="portfolio-add-content">
-                                        <i class="fas fa-plus"></i>
-                                        <div class="portfolio-add-title">Tambah Project</div>
-                                        <div class="portfolio-add-desc">Pamerkan karya terbaik Anda</div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1152,6 +1004,8 @@
     </div>
 </div>
 
-<script src="/public/js/pengaturan-freelance.js"></script>
+<script src="/js/pengaturan-freelance.js"></script>
+<script src="/js/sidebar-user.js"></script>
+    <script src="/js/logout.js"></script>
 </body>
 </html>

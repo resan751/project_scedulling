@@ -13,17 +13,36 @@ document.addEventListener('DOMContentLoaded', () => {
                    'Juli','Agustus','September','Oktober','November','Desember'];
     const hari = ['Min','Sen','Sel','Rab','Kam','Jum','Sab'];
 
-    // Sample events (bisa diganti dengan data dari API)
-    const events = [
-        { date: '2026-07-10', type: 'purple', label: 'Migrasi DB Start' },
-        { date: '2026-07-15', type: 'pink', label: 'Redesign Start' },
-        { date: '2026-07-17', type: 'amber', label: 'Deadline Migrasi' },
-        { date: '2026-07-20', type: 'green', label: 'Migrasi Selesai' },
-        { date: '2026-07-20', type: 'purple', label: 'Audit Start' },
-        { date: '2026-07-23', type: 'amber', label: 'Milestone Redesign' },
-        { date: '2026-07-28', type: 'amber', label: 'Deadline Redesign' },
-        { date: '2026-08-05', type: 'amber', label: 'Deadline Audit' },
-    ];
+    let events = [];
+
+    function dateKey(value) {
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return '';
+        return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+    }
+
+    async function loadProjectEvents() {
+        try {
+            const [projectsResponse, meResponse] = await Promise.all([
+                fetch('/api/freelance/projects', { credentials: 'same-origin' }),
+                fetch('/api/me', { credentials: 'same-origin' }),
+            ]);
+            if (!projectsResponse.ok || !meResponse.ok) throw new Error('Gagal memuat jadwal project.');
+
+            const { projects = [] } = await projectsResponse.json();
+            const { user } = await meResponse.json();
+            const myProjects = projects.filter((project) =>
+                (project.id_user || []).some((id) => String(id) === String(user.id_user))
+            );
+            events = myProjects.flatMap((project) => [
+                { date: dateKey(project.tgl_mulai), type: 'purple', label: `${project.nama_project} dimulai` },
+                { date: dateKey(project.deadline), type: 'amber', label: `Deadline ${project.nama_project}` },
+            ]).filter((event) => event.date);
+            renderCalendar(currentDate);
+        } catch (error) {
+            console.error(error);
+        }
+    }
 
     function getEventsForDate(dateStr) {
         return events.filter(e => e.date === dateStr);
@@ -110,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         todayDate.textContent = `${now.getDate()} ${months[now.getMonth()]} ${now.getFullYear()}`;
     }
 
-    // Initial render
+    // Render immediately, then replace placeholders with the user's project data.
     renderCalendar(currentDate);
+    loadProjectEvents();
 });

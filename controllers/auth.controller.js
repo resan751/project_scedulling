@@ -35,7 +35,7 @@ function signPayload(payload) {
     return createHmac('sha256', sessionSecret).update(payload).digest('base64url')
 }
 
-function createSessionToken(user) {
+export function createSessionToken(user) {
     const payload = Buffer.from(JSON.stringify({
         id_user: user.id_user,
         nama_user: user.nama_user,

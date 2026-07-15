@@ -215,6 +215,18 @@ export const sponsorDetailProjectPage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', 'sponsor', 'detail-project.html'))
 }
 
+export const sponsorPengaturanPage = (req, res) => {
+    setNoCache(res)
+    if (!requireSponsor(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'sponsor', 'pengaturan.html'))
+}
+
+export const sponsorJadwalKalenderPage = (req, res) => {
+    setNoCache(res)
+    if (!requireSponsor(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'sponsor', 'jadwal-kalender.html'))
+}
+
 export const getSponsorProject = async (req, res) => {
     const session = requireSponsorApi(req, res)
     if (!session) return

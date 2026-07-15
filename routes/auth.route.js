@@ -21,6 +21,8 @@ import {
   userCreatePage,
   userUpdatePage,
   getProjects as getAdminProjects,
+  adminPengaturanPage,
+  adminJadwalKalenderPage,
 } from '../controllers/admin.controller.js';
 import {
   createProject,
@@ -33,18 +35,25 @@ import {
   sponsorDetailProjectPage,
   updateProject,
   updateSponsorProjectLaporanStatus,
+  sponsorPengaturanPage,
+  sponsorJadwalKalenderPage,
 } from '../controllers/sponsor.controller.js';
 import {
   getProjects as getFreelanceProjects,
   getProject as getFreelanceProject,
   getProjectLaporan,
+  getFreelanceLaporan,
   registerProject,
   detailProjectPage,
   createLaporanPage,
   createLaporan,
   getFreelanceProfile,
+  updateFreelanceProfile,
+  updateFreelanceProfessionalProfile,
   uploadFreelanceCv,
   listLaporanPage,
+  freelancePengaturanPage,
+  freelanceJadwalKalenderPage,
 } from '../controllers/freelance.controller.js';
 import { upload } from '../config/multer.js'
 
@@ -78,15 +87,24 @@ AuthRouter.delete('/api/sponsor/projects/:id', deleteProject)
 AuthRouter.get('/api/freelance/projects', getFreelanceProjects)
 AuthRouter.get('/api/freelance/projects/:id', getFreelanceProject)
 AuthRouter.get('/api/freelance/projects/:id/laporan', getProjectLaporan)
+AuthRouter.get('/api/freelance/laporan', getFreelanceLaporan)
 AuthRouter.post('/api/freelance/projects/:id/register', registerProject)
 AuthRouter.get('/api/freelance/profile', getFreelanceProfile)
+AuthRouter.put('/api/freelance/profile', updateFreelanceProfile)
+AuthRouter.put('/api/freelance/profile/professional', updateFreelanceProfessionalProfile)
 AuthRouter.post('/api/freelance/profile/cv', upload.single('cv'), uploadFreelanceCv)
 
 AuthRouter.get('/page/sponsor/project-create.html', projectCreatePage)
 AuthRouter.get('/page/sponsor/detail-project.html', sponsorDetailProjectPage)
+AuthRouter.get('/page/sponsor/pengaturan.html', sponsorPengaturanPage)
+AuthRouter.get('/page/sponsor/jadwal-kalender.html', sponsorJadwalKalenderPage)
+
 AuthRouter.get('/page/admin/kelola-user.html', kelolaUserPage)
 AuthRouter.get('/page/admin/user-create.html', userCreatePage)
 AuthRouter.get('/page/admin/user-update.html', userUpdatePage)
+AuthRouter.get('/page/admin/pengaturan.html', adminPengaturanPage)
+AuthRouter.get('/page/admin/jadwal-kalender.html', adminJadwalKalenderPage)
+
 AuthRouter.get('/register.html', registerPage)
 AuthRouter.get('/page/register.html', registerPage)
 AuthRouter.get('/page/admin/dashboard.html', dashboardPage('admin'))
@@ -98,6 +116,8 @@ AuthRouter.get('/freelance/dashboard.html', dashboardPage('freelance'))
 AuthRouter.get('/page/freelance/detail-project.html', detailProjectPage)
 AuthRouter.get('/page/freelance/create-laporan.html', createLaporanPage)
 AuthRouter.get('/page/freelance/laporan.html', listLaporanPage)
+AuthRouter.get('/page/freelance/pengaturan.html', freelancePengaturanPage)
+AuthRouter.get('/page/freelance/jadwal-kalender.html', freelanceJadwalKalenderPage)
 AuthRouter.post('/api/freelance/laporan/create', upload.single('bukti'), createLaporan)
 AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 

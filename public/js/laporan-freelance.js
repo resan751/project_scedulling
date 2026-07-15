@@ -85,38 +85,12 @@ document.addEventListener('DOMContentLoaded', () => {
             totalProjectRegistered.textContent = myProjects.length;
             totalProjectFinished.textContent = myProjects.filter(p => p.status_project === 'selesai').length;
 
-            // Load all laporan created by this user
-            const profileResponse = await fetch('/api/freelance/profile', { credentials: 'same-origin' });
-            const profileResult = await readJson(profileResponse);
-
-            if (!profileResponse.ok) {
-                throw new Error(profileResult.message || 'Gagal memuat profil freelance.');
+            const laporanResponse = await fetch('/api/freelance/laporan', { credentials: 'same-origin' });
+            const laporanResult = await readJson(laporanResponse);
+            if (!laporanResponse.ok) {
+                throw new Error(laporanResult.message || 'Gagal memuat laporan freelance.');
             }
-
-            const nama_user = profileResult.user?.nama_user;
-            
-            // We fetch the list of user's laporan by fetching project details for projects they belong to
-            // or we request a custom endpoint if there is one. Since we do not have a dedicated "/api/freelance/laporan" endpoint,
-            // we can fetch the laporan details for each registered project and filter by their user name.
-            let allLaporan = [];
-
-            for (const project of myProjects) {
-                try {
-                    const lapsResponse = await fetch(`/api/freelance/projects/${project.id_project}/laporan`, { credentials: 'same-origin' });
-                    if (lapsResponse.ok) {
-                        const lapsResult = await readJson(lapsResponse);
-                        const projectLaporans = lapsResult.laporan || [];
-                        // Filter laporan specifically made by this user
-                        const userLaporans = projectLaporans.filter(l => l.nama_user === nama_user);
-                        allLaporan.push(...userLaporans);
-                    }
-                } catch (e) {
-                    console.error(`Gagal memuat laporan project ID ${project.id_project}:`, e);
-                }
-            }
-
-            // Sort by id_laporan descending
-            allLaporan.sort((a, b) => b.id_laporan - a.id_laporan);
+            const allLaporan = laporanResult.laporan || [];
 
             totalLaporanCreated.textContent = allLaporan.length;
 

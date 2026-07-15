@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { prisma } from '../prisma/lib/prisma.js'
-import { readSession, setNoCache } from './auth.controller.js'
+import { readSession, setNoCache, createSessionToken } from './auth.controller.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -43,6 +43,18 @@ export const listLaporanPage = (req, res) => {
     if (!requireFreelance(req, res)) return
 
     res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'laporan.html'))
+}
+
+export const freelancePengaturanPage = (req, res) => {
+    setNoCache(res)
+    if (!requireFreelance(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'pengaturan.html'))
+}
+
+export const freelanceJadwalKalenderPage = (req, res) => {
+    setNoCache(res)
+    if (!requireFreelance(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'jadwal-kalender.html'))
 }
 
 function requireFreelanceApi(req, res) {
@@ -89,7 +101,9 @@ export async function getFreelanceProfile(req, res) {
                 nama_user: true,
                 role_user: true,
                 email: true,
+                no_telp: true,
                 cv: true,
+                profil_freelance: true,
             },
         })
 
@@ -101,6 +115,92 @@ export async function getFreelanceProfile(req, res) {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Gagal memuat profil freelance.' })
+    }
+}
+
+export async function updateFreelanceProfile(req, res) {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    const { nama_user, email, no_telp } = req.body
+
+    if (!nama_user || !email) {
+        return res.status(400).json({ message: 'Nama lengkap dan email wajib diisi.' })
+    }
+
+    try {
+        const existing = await prisma.user.findFirst({
+            where: {
+                nama_user: { equals: nama_user },
+                NOT: { id_user: session.id_user }
+            }
+        })
+        if (existing) {
+            return res.status(400).json({ message: 'Nama lengkap / username sudah digunakan.' })
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id_user: session.id_user },
+            data: {
+                nama_user,
+                email,
+                no_telp: no_telp || null
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                role_user: true,
+                email: true,
+                no_telp: true,
+            }
+        })
+
+        // Keep the display name on older reports synchronized after a rename.
+        await prisma.laporan.updateMany({
+            where: { id_user: session.id_user },
+            data: { nama_user: updatedUser.nama_user },
+        })
+
+        res.cookie('auth_token', createSessionToken(updatedUser), {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 1000 * 60 * 60 * 8,
+        })
+
+        res.json({ message: 'Profil berhasil diperbarui.', user: updatedUser })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui profil.' })
+    }
+}
+
+export async function updateFreelanceProfessionalProfile(req, res) {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    const { headline, bio, linkedin } = req.body
+
+    try {
+        const updatedProfile = await prisma.profil_freelance.upsert({
+            where: { id_user: session.id_user },
+            update: {
+                headline: headline || null,
+                bio: bio || null,
+                linkedin: linkedin || null,
+            },
+            create: {
+                id_user: session.id_user,
+                headline: headline || null,
+                bio: bio || null,
+                linkedin: linkedin || null,
+            }
+        })
+
+        res.json({ message: 'Profil profesional berhasil diperbarui.', profile: updatedProfile })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui profil profesional.' })
     }
 }
 
@@ -328,6 +428,22 @@ export const getProjectLaporan = async (req, res) => {
     }
 }
 
+export const getFreelanceLaporan = async (req, res) => {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    try {
+        const laporan = await prisma.laporan.findMany({
+            where: { id_user: session.id_user },
+            orderBy: { id_laporan: 'desc' },
+        })
+        res.json({ laporan })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Data laporan gagal dimuat.' })
+    }
+}
+
 function parseSelectedRoles(rawRoles) {
     const roles = Array.isArray(rawRoles) ? rawRoles : [rawRoles]
     return [...new Set(roles
@@ -497,6 +613,7 @@ export const createLaporan = async (req, res) => {
             data: {
                 nama_project,
                 nama_user: currentUser.nama_user,
+                id_user: session.id_user,
                 role_project,
                 bukti: buktiPath,
                 jenis_laporan,
