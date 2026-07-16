@@ -57,8 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     checkAuth();
-    const navParent = document.getElementById('navPengaturan');
-    const toggleBtn = navParent?.querySelector('[data-toggle="pengaturan"]');
     const subItems = document.querySelectorAll('.nav-sub-item');
     const panels = document.querySelectorAll('.settings-panel');
     const breadcrumbCurrent = document.getElementById('breadcrumbCurrent');
@@ -68,7 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // Tab metadata
     const tabMeta = {
         profil: { title: 'Profil & CV', breadcrumb: 'Profil & CV', showHero: true },
-        keamanan: { title: 'Keamanan', breadcrumb: 'Keamanan', showHero: false },
         kerja: { title: 'Preferensi Kerja', breadcrumb: 'Preferensi Kerja', showHero: false },
         pembayaran: { title: 'Pembayaran', breadcrumb: 'Pembayaran', showHero: false },
         privasi: { title: 'Privasi', breadcrumb: 'Privasi', showHero: false }
@@ -97,13 +94,26 @@ document.addEventListener('DOMContentLoaded', () => {
         window.history.replaceState(null, '', `#${panelName}`);
     }
 
-    // Accordion toggle
-    if (toggleBtn && navParent) {
-        toggleBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            navParent.classList.toggle('expanded');
+    const profileSubtabs = document.querySelectorAll('.profile-subtab');
+    const profileSubpanels = document.querySelectorAll('.profile-subpanel');
+
+    function switchProfileSubtab(tabName, updateHash = true) {
+        profileSubtabs.forEach((tab) => {
+            const active = tab.dataset.profileTab === tabName;
+            tab.classList.toggle('active', active);
+            tab.setAttribute('aria-selected', String(active));
         });
+        profileSubpanels.forEach((panel) => {
+            const active = panel.id === `profile-tab-${tabName}`;
+            panel.classList.toggle('active', active);
+            panel.hidden = !active;
+        });
+        if (updateHash) window.history.replaceState(null, '', `#${tabName === 'keamanan' ? 'keamanan' : 'profil'}`);
     }
+
+    profileSubtabs.forEach((tab) => {
+        tab.addEventListener('click', () => switchProfileSubtab(tab.dataset.profileTab));
+    });
 
     // Sub-item click
     subItems.forEach(sub => {
@@ -179,10 +189,64 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    const confirmPassword = document.getElementById('confirmPassword');
+    const btnUpdatePassword = document.getElementById('btnUpdatePassword');
+    const passwordMessage = document.getElementById('passwordMessage');
+
+    function showPasswordMessage(message, type) {
+        if (!passwordMessage) return;
+        passwordMessage.textContent = message;
+        passwordMessage.className = `message ${type || ''}`.trim();
+        passwordMessage.style.display = message ? 'block' : 'none';
+    }
+
+    if (btnUpdatePassword) {
+        btnUpdatePassword.addEventListener('click', async () => {
+            const password = newPassword?.value || '';
+            const confirmation = confirmPassword?.value || '';
+            if (password.length < 8) {
+                showPasswordMessage('Password baru harus terdiri dari minimal 8 karakter.', 'error');
+                return;
+            }
+            if (password !== confirmation) {
+                showPasswordMessage('Konfirmasi password tidak sama.', 'error');
+                return;
+            }
+
+            btnUpdatePassword.disabled = true;
+            btnUpdatePassword.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memperbarui...';
+            showPasswordMessage('', '');
+            try {
+                const response = await fetch('/api/freelance/profile/password', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ password }),
+                });
+                const result = await readJson(response);
+                if (!response.ok) throw new Error(result.message || 'Gagal memperbarui password.');
+                newPassword.value = '';
+                confirmPassword.value = '';
+                newPassword.dispatchEvent(new Event('input'));
+                showPasswordMessage('Password berhasil diperbarui.', 'success');
+            } catch (error) {
+                showPasswordMessage(error.message, 'error');
+            } finally {
+                btnUpdatePassword.disabled = false;
+                btnUpdatePassword.innerHTML = '<i class="fas fa-key"></i> Perbarui Password';
+            }
+        });
+    }
+
     // Load from hash
     const hash = window.location.hash.substring(1);
-    if (hash && tabMeta[hash]) switchPanel(hash);
-    else switchPanel('profil');
+    if (hash === 'keamanan') {
+        switchPanel('profil');
+        switchProfileSubtab('keamanan', false);
+    } else {
+        switchPanel(hash && tabMeta[hash] ? hash : 'profil');
+        switchProfileSubtab('informasi', false);
+    }
 
     // ──────────────────────────────────────────────────
     // CV MANAGEMENT

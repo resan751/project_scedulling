@@ -44,23 +44,10 @@ async function syncSidebarUser() {
                     ? `<div class="nav-section-title">${label}</div>`
                     : `<a href="${href}" class="nav-item${key === activePage ? ' active' : ''}"><i class="fas ${icon}"></i> ${label}</a>`
                 ).join('');
-                const settingsExpanded = activePage === 'settings' ? ' expanded has-active-child' : '';
                 nav.innerHTML = `${menuItems}
-                    <div class="nav-parent${settingsExpanded}" id="navPengaturan">
-                        <button type="button" class="nav-item-toggle" data-toggle="pengaturan">
-                            <i class="fas fa-cog nav-icon"></i><span class="nav-label">Pengaturan</span><i class="fas fa-chevron-down nav-arrow"></i>
-                        </button>
-                        <div class="nav-submenu">
-                            <a href="/page/freelance/pengaturan.html#profil" class="nav-sub-item"><i class="fas fa-user-circle"></i> Profil &amp; CV</a>
-                            <a href="/page/freelance/pengaturan.html#keamanan" class="nav-sub-item"><i class="fas fa-shield-alt"></i> Keamanan</a>
-                            <a href="/page/freelance/pengaturan.html#kerja" class="nav-sub-item"><i class="fas fa-bullseye"></i> Preferensi Kerja</a>
-                            <a href="/page/freelance/pengaturan.html#pembayaran" class="nav-sub-item"><i class="fas fa-wallet"></i> Pembayaran</a>
-                            <a href="/page/freelance/pengaturan.html#privasi" class="nav-sub-item"><i class="fas fa-user-shield"></i> Privasi</a>
-                        </div>
-                    </div>`;
-                nav.querySelector('[data-toggle="pengaturan"]')?.addEventListener('click', () => {
-                    nav.querySelector('#navPengaturan')?.classList.toggle('expanded');
-                });
+                    <a href="/page/freelance/pengaturan.html" class="nav-item${activePage === 'settings' ? ' active' : ''}">
+                        <i class="fas fa-cog"></i> Pengaturan
+                    </a>`;
             });
             document.querySelectorAll('.sidebar-brand-icon i').forEach((icon) => {
                 icon.className = 'fas fa-briefcase';

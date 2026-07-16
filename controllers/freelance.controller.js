@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { prisma } from '../prisma/lib/prisma.js'
-import { readSession, setNoCache, createSessionToken } from './auth.controller.js'
+import { hashPassword, readSession, setNoCache, createSessionToken } from './auth.controller.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -57,6 +57,12 @@ export const freelanceJadwalKalenderPage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'jadwal-kalender.html'))
 }
 
+export const profilSponsorPage = (req, res) => {
+    setNoCache(res)
+    if (!requireFreelance(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'freelance', 'profil-sponsor.html'))
+}
+
 function requireFreelanceApi(req, res) {
     const session = readSession(req)
     if (!session) {
@@ -86,6 +92,101 @@ function getListValue(value) {
         return Array.isArray(parsedValue) ? parsedValue : [value]
     } catch {
         return [value]
+    }
+}
+
+function requireSponsorViewerApi(req, res) {
+    const session = readSession(req)
+    if (!session) {
+        res.status(401).json({ message: 'Belum login.' })
+        return null
+    }
+
+    if (session.role !== 'sponsor') {
+        res.status(403).json({ message: 'Akses ditolak. Hanya sponsor yang dapat mengakses halaman ini.' })
+        return null
+    }
+
+    return session
+}
+
+export async function getFreelanceProfileForSponsor(req, res) {
+    const session = requireSponsorViewerApi(req, res)
+    if (!session) return
+
+    const freelanceUserId = Number(req.params.id)
+    if (!Number.isInteger(freelanceUserId) || freelanceUserId <= 0) {
+        return res.status(400).json({ message: 'ID freelancer tidak valid.' })
+    }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id_user: freelanceUserId },
+            select: {
+                id_user: true,
+                nama_user: true,
+                role_user: true,
+                email: true,
+                no_telp: true,
+                cv: true,
+                profil_freelance: true,
+            },
+        })
+
+        if (!user || user.role_user !== 'freelance') {
+            return res.status(404).json({ message: 'Freelancer tidak ditemukan.' })
+        }
+
+        const completedProjects = await prisma.project.findMany({
+            where: { status_project: 'selesai' },
+            select: { id_user: true },
+        })
+
+        const completedProjectCount = completedProjects.filter((project) =>
+            getListValue(project.id_user).some((id) => String(id) === String(freelanceUserId))
+        ).length
+
+        res.json({ user, completedProjectCount })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memuat profil freelance.' })
+    }
+}
+
+export async function getSponsorProfileForFreelance(req, res) {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    const sponsorUserId = Number(req.params.id)
+    if (!Number.isInteger(sponsorUserId) || sponsorUserId <= 0) {
+        return res.status(400).json({ message: 'ID sponsor tidak valid.' })
+    }
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id_user: sponsorUserId },
+            select: {
+                id_user: true,
+                nama_user: true,
+                role_user: true,
+                email: true,
+                no_telp: true,
+                profil_usaha: true,
+            },
+        })
+
+        if (!user || user.role_user !== 'sponsor') {
+            return res.status(404).json({ message: 'Sponsor tidak ditemukan.' })
+        }
+
+        const projectCount = await prisma.project.count({
+            where: { pembuat: user.nama_user },
+        })
+
+        res.json({ user, projectCount })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memuat profil sponsor.' })
     }
 }
 
@@ -201,6 +302,27 @@ export async function updateFreelanceProfessionalProfile(req, res) {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Gagal memperbarui profil profesional.' })
+    }
+}
+
+export async function updateFreelancePassword(req, res) {
+    const session = requireFreelanceApi(req, res)
+    if (!session) return
+
+    const password = String(req.body?.password || '')
+    if (password.length < 8) {
+        return res.status(400).json({ message: 'Password baru harus terdiri dari minimal 8 karakter.' })
+    }
+
+    try {
+        await prisma.user.update({
+            where: { id_user: session.id_user },
+            data: { password: await hashPassword(password) },
+        })
+        res.json({ message: 'Password berhasil diperbarui.' })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui password.' })
     }
 }
 
@@ -383,7 +505,14 @@ export const getProject = async (req, res) => {
 
         const [project] = await attachProjectUserNames([syncedProject])
 
-        res.json({ project: { ...project, userApplications: normalizedApplications } })
+        // Find the sponsor (creator) ID
+        const sponsorUser = await prisma.user.findUnique({
+            where: { nama_user: project.pembuat },
+            select: { id_user: true }
+        })
+        const id_sponsor = sponsorUser ? sponsorUser.id_user : null;
+
+        res.json({ project: { ...project, userApplications: normalizedApplications, id_sponsor } })
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Data project gagal dimuat.' })

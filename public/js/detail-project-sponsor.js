@@ -327,7 +327,7 @@ async function loadProjectApplications() {
             const nameCell = document.createElement('td');
             const emailCell = document.createElement('td');
             const statusCell = document.createElement('td');
-            const cvCell = document.createElement('td');
+            const profilCell = document.createElement('td');
             const actionCell = document.createElement('td');
 
             roleCell.textContent = app.role_project;
@@ -335,16 +335,14 @@ async function loadProjectApplications() {
             emailCell.textContent = app.user?.email || '-';
             statusCell.textContent = renderApplicationStatus(app.status);
 
-            if (app.user?.cv) {
-                const cvLink = document.createElement('a');
-                cvLink.href = app.user.cv;
-                cvLink.target = '_blank';
-                cvLink.rel = 'noopener noreferrer';
-                cvLink.className = 'link-btn';
-                cvLink.textContent = 'Lihat CV';
-                cvCell.appendChild(cvLink);
+            if (app.user?.id_user) {
+                const profilBtn = document.createElement('a');
+                profilBtn.href = `/page/sponsor/profil-freelance.html?userId=${app.user.id_user}`;
+                profilBtn.className = 'link-btn';
+                profilBtn.innerHTML = '<i class="fas fa-user"></i> Lihat Profil';
+                profilCell.appendChild(profilBtn);
             } else {
-                cvCell.textContent = 'Tidak ada CV';
+                profilCell.textContent = '-';
             }
 
             if (app.status === 'pending') {
@@ -357,7 +355,7 @@ async function loadProjectApplications() {
                 actionCell.textContent = '-';
             }
 
-            row.append(roleCell, nameCell, emailCell, statusCell, cvCell, actionCell);
+            row.append(roleCell, nameCell, emailCell, statusCell, profilCell, actionCell);
             applicationsTableBody.appendChild(row);
         });
 

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Freelance - RiseGig</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-sponsor.css">
+    <link rel="stylesheet" href="/css/pengaturan-admin.css">
+    <link rel="stylesheet" href="/css/pengaturan-freelance.css">
+</head>
+<body>
+    <div class="page active" id="page-sponsor-profil-freelance">
+        <div class="app-shell">
+
+            <!-- SIDEBAR SPONSOR -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Rise<span>Gig</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">SP</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">Sponsor</div>
+                        <div class="urole">role_user</div>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <div class="nav-section-title">Menu Utama</div>
+                    <a href="/page/sponsor/dashboard.html" class="nav-item"><i class="fas fa-th-large"></i> Dashboard</a>
+                    <a href="/page/sponsor/project-create.html" class="nav-item"><i class="fas fa-plus-circle"></i> Buat Project Baru</a>
+                    <div class="nav-item active"><i class="fas fa-folder-open"></i> Detail Project</div>
+                    <a href="/page/sponsor/jadwal-kalender.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</a>
+                    <div class="nav-section-title">Lainnya</div>
+                    <a href="/page/sponsor/pengaturan.html" class="nav-item"><i class="fas fa-cog"></i> Pengaturan</a>
+                </nav>
+
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Profil Freelance</h2>
+                        <p>Informasi profil, data diri, dan CV freelancer</p>
+                    </div>
+                    <div class="topbar-right">
+                        <button type="button" class="btn btn-outline btn-sm" id="btnBack">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
+                        <div class="topbar-avatar">SP</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+
+                    <div id="pageMessage"></div>
+
+                    <!-- Freelancer Hero Profile (read-only) -->
+                    <div class="fl-hero" id="flHero">
+                        <div class="fl-hero-bg"></div>
+                        <div class="fl-hero-content">
+                            <div class="fl-hero-left">
+                                <div class="fl-avatar-wrap">
+                                    <div class="fl-avatar-large" id="heroAvatar">--</div>
+                                </div>
+                                <div class="fl-hero-info">
+                                    <div class="fl-name" id="heroName">Memuat...</div>
+                                    <div class="fl-tagline" id="heroTagline">-</div>
+                                </div>
+                            </div>
+                            <div class="fl-hero-stats">
+                                <div class="fl-hero-stat">
+                                    <div class="stat-icon-wrap purple"><i class="fas fa-briefcase"></i></div>
+                                    <div class="stat-info">
+                                        <div class="stat-number" id="heroProjectCount">0</div>
+                                        <div class="stat-label">Project Selesai</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PANEL: PROFIL -->
+                    <div class="settings-panel active" id="panel-profil">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Profil &amp; CV</h2>
+                            <p class="panel-subtitle">Data diri, profil profesional, dan CV freelancer (hanya lihat)</p>
+                        </div>
+
+                        <!-- Section: Informasi Pribadi -->
+                        <div class="settings-section">
+                            <div class="settings-section-title">
+                                <i class="fas fa-id-card"></i> Informasi Pribadi
+                            </div>
+                            <div class="settings-two-col">
+                                <div class="settings-card">
+                                    <div class="settings-card-head">
+                                        <div class="settings-card-title-wrap">
+                                            <div class="settings-card-icon purple"><i class="fas fa-user"></i></div>
+                                            <div>
+                                                <div class="settings-card-title">Data Diri</div>
+                                                <div class="settings-card-desc">Informasi kontak utama</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-card-body">
+                                        <div class="field-group">
+                                            <label class="field-label">Nama Lengkap</label>
+                                            <input type="text" class="field-input" id="inputNamaLengkap" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">Email</label>
+                                            <input type="email" class="field-input" id="inputEmail" value="-" readonly>
+                                        </div>
+                                        <div class="field-group" style="margin-bottom: 0;">
+                                            <label class="field-label">No. Telepon</label>
+                                            <input type="tel" class="field-input" id="inputNoTelp" value="-" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="settings-card">
+                                    <div class="settings-card-head">
+                                        <div class="settings-card-title-wrap">
+                                            <div class="settings-card-icon pink"><i class="fas fa-address-card"></i></div>
+                                            <div>
+                                                <div class="settings-card-title">Profil Profesional</div>
+                                                <div class="settings-card-desc">Identitas di marketplace</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-card-body">
+                                        <div class="field-group">
+                                            <label class="field-label">Headline / Tagline</label>
+                                            <input type="text" class="field-input" id="inputHeadline" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">Bio Singkat</label>
+                                            <textarea class="field-input field-textarea" id="inputBio" rows="3" readonly>-</textarea>
+                                        </div>
+                                        <div class="field-group" style="margin-bottom: 0;">
+                                            <label class="field-label">LinkedIn</label>
+                                            <input type="text" class="field-input" id="inputLinkedin" value="-" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: CV -->
+                        <div class="settings-section">
+                            <div class="settings-section-title">
+                                <i class="fas fa-file-pdf"></i> Curriculum Vitae
+                            </div>
+                            <div class="settings-card">
+                                <div class="settings-card-body">
+                                    <div id="cvMessage"></div>
+
+                                    <!-- State: sudah ada CV -->
+                                    <div class="cv-status-card" id="cvHasFile" style="display: none;">
+                                        <div class="cv-status-left">
+                                            <div class="cv-file-icon">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </div>
+                                            <div class="cv-file-info">
+                                                <div class="cv-file-name" id="cvFileName">-</div>
+                                                <div class="cv-file-meta">
+                                                    <span class="cv-verified">
+                                                        <i class="fas fa-check-circle"></i> Terunggah
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="cv-status-actions">
+                                            <a id="cvLinkView" href="#" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-xs">
+                                                <i class="fas fa-eye"></i> Lihat
+                                            </a>
+                                            <a id="cvLinkDownload" href="#" download class="btn btn-outline btn-xs">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <!-- State: belum ada CV -->
+                                    <div class="cv-status-card" id="cvNoFile" style="display: none;">
+                                        <div class="cv-status-left">
+                                            <div class="cv-file-icon" style="opacity: 0.4;">
+                                                <i class="fas fa-file-pdf"></i>
+                                            </div>
+                                            <div class="cv-file-info">
+                                                <div class="cv-file-name" style="color: var(--text-muted);">Freelancer belum mengunggah CV</div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Loading state -->
+                                    <div class="cv-status-card" id="cvLoading">
+                                        <div class="cv-status-left">
+                                            <div class="cv-file-icon" style="opacity: 0.4;">
+                                                <i class="fas fa-spinner fa-spin"></i>
+                                            </div>
+                                            <div class="cv-file-info">
+                                                <div class="cv-file-name" style="color: var(--text-muted);">Memuat data CV...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/js/profil-freelance.js"></script>
+    <script src="/js/sidebar-user.js"></script>
+    <script src="/js/logout.js"></script>
+</body>
+</html>

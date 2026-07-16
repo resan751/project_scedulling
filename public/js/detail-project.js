@@ -270,6 +270,14 @@ async function loadProjectDetails() {
         if (projectMaker) projectMaker.value = projectData.pembuat || '-';
         if (projectPayment) projectPayment.value = formatRupiah(projectData.bayaran);
         
+        const btnLihatProfilSponsor = document.getElementById('btnLihatProfilSponsor');
+        if (btnLihatProfilSponsor && projectData.id_sponsor) {
+            btnLihatProfilSponsor.href = `/page/freelance/profil-sponsor.html?sponsorId=${projectData.id_sponsor}`;
+            btnLihatProfilSponsor.style.display = 'inline-flex';
+        } else if (btnLihatProfilSponsor) {
+            btnLihatProfilSponsor.style.display = 'none';
+        }
+        
         projectStartDate.value = formatDate(projectData.tgl_mulai);
         projectDeadline.value = formatDate(projectData.deadline);
 

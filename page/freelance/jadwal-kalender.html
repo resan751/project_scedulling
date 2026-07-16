@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="/css/global.css">
     <link rel="stylesheet" href="/css/dashboard-admin.css">
-    <link rel="stylesheet" href="/css/jadwal-kalender.css">
+    
 </head>
 <body>
+
 <div class="app-shell">
     <!-- SIDEBAR FREELANCER -->
     <aside class="sidebar" id="sidebar">
@@ -23,21 +24,16 @@
             </div>
         </div>
         <div class="sidebar-user">
-            <div class="sidebar-avatar">RD</div>
+            <div class="sidebar-avatar" id="sidebarAvatar">RD</div>
             <div class="sidebar-user-info">
-                <div class="uname">nama_user</div>
-                <div class="urole">role_user</div>
+                <div class="uname" id="sidebarName">nama_user</div>
+                <div class="urole" id="sidebarRole">role_user</div>
             </div>
         </div>
         <nav class="sidebar-nav">
             <div class="nav-section-title">Menu Utama</div>
             <a href="/page/freelance/dashboard.html" class="nav-item">
                 <i class="fas fa-briefcase"></i> Project Saya
-            </a>
-
-            <div class="nav-section-title">Jadwal</div>
-            <a href="/page/freelance/jadwal-kalender.html" class="nav-item active">
-                <i class="fas fa-calendar-alt"></i> Jadwal Kalender
             </a>
 
             <div class="nav-section-title">Laporan</div>
@@ -47,223 +43,131 @@
             <a href="/page/freelance/laporan.html" class="nav-item">
                 <i class="fas fa-file-alt"></i> Laporan Saya
             </a>
-
-            <div class="nav-section-title">Pengaturan</div>
-            <div class="nav-parent" id="navPengaturan">
-                <button class="nav-item-toggle" data-toggle="pengaturan">
-                    <i class="fas fa-cog nav-icon"></i>
-                    <span class="nav-label">Pengaturan</span>
-                    <i class="fas fa-chevron-down nav-arrow"></i>
-                </button>
-                <div class="nav-submenu">
-                    <a href="/page/freelance/pengaturan.html#profil" class="nav-sub-item"><i class="fas fa-user-circle"></i> Profil & CV</a>
-                    <a href="/page/freelance/pengaturan.html#keamanan" class="nav-sub-item"><i class="fas fa-shield-alt"></i> Keamanan</a>
-                    <a href="/page/freelance/pengaturan.html#kerja" class="nav-sub-item"><i class="fas fa-bullseye"></i> Preferensi Kerja</a>
-                    <a href="/page/freelance/pengaturan.html#pembayaran" class="nav-sub-item"><i class="fas fa-wallet"></i> Pembayaran</a>
-                    <a href="/page/freelance/pengaturan.html#privasi" class="nav-sub-item"><i class="fas fa-user-shield"></i> Privasi</a>
-                </div>
-            </div>
+            <a href="/page/freelance/jadwal-kalender.html" class="nav-item active">
+                <i class="fas fa-calendar-alt"></i> Jadwal Kalender
+            </a>
+            <div class="nav-section-title">Lainnya</div>
+            <a href="/page/freelance/pengaturan.html" class="nav-item">
+                <i class="fas fa-cog"></i> Pengaturan
+            </a>
         </nav>
         <div class="sidebar-logout">
             <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
         </div>
     </aside>
-
-    <!-- MAIN CONTENT -->
+    <!-- Main Content -->
     <div class="main-content">
         <header class="topbar">
             <div class="topbar-title">
                 <h2>Jadwal Kalender</h2>
-                <p>Pantau deadline project dan jadwal laporan Anda</p>
+                <p>Lihat dan kelola jadwal project dalam tampilan kalender</p>
             </div>
             <div class="topbar-right">
-                <button class="btn btn-primary btn-sm" id="btnBukaKalender">
-                    <i class="fas fa-expand"></i> Pop-up
-                </button>
-                <div class="topbar-icon-btn"><i class="fas fa-bell"></i><span class="notif-dot"></span></div>
-                <div class="topbar-avatar">RD</div>
+                <div class="topbar-icon-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notif-dot"></span>
+                </div>
+                <div class="topbar-avatar">YS</div>
             </div>
         </header>
-
-        <!-- WRAPPER DENGAN CLASS ROLE SPECIFIC -->
-        <div class="page-body kalender-freelance">
-            
-            <!-- Stats -->
-            <div class="stats-grid">
-                <div class="stat-card purple">
-                    <div class="stat-icon purple"><i class="fas fa-calendar-check"></i></div>
-                    <div class="stat-value">3</div>
-                    <div class="stat-label">Project Aktif</div>
-                </div>
-                <div class="stat-card amber">
-                    <div class="stat-icon amber"><i class="fas fa-exclamation-triangle"></i></div>
-                    <div class="stat-value">2</div>
-                    <div class="stat-label">Deadline Minggu Ini</div>
-                </div>
-                <div class="stat-card pink">
-                    <div class="stat-icon pink"><i class="fas fa-file-alt"></i></div>
-                    <div class="stat-value">1</div>
-                    <div class="stat-label">Laporan Pending</div>
-                </div>
-                <div class="stat-card green">
-                    <div class="stat-icon green"><i class="fas fa-check-circle"></i></div>
-                    <div class="stat-value">5</div>
-                    <div class="stat-label">Tugas Selesai</div>
-                </div>
-            </div>
-
-            <!-- Layout: Calendar Left + Sidebar Right -->
-            <div class="kalender-layout">
-                <!-- Compact Calendar -->
-                <div class="kalender-main-card">
-                    <div class="kalender-card-head">
-                        <h3><i class="fas fa-calendar-alt"></i> Kalender Saya</h3>
-                        <div class="kalender-legend">
-                            <span class="legend-item"><span class="legend-dot deadline"></span> Deadline</span>
-                            <span class="legend-item"><span class="legend-dot laporan"></span> Laporan</span>
-                            <span class="legend-item"><span class="legend-dot mulai"></span> Mulai</span>
-                        </div>
+        <div class="page-body">
+            <!-- Kalender Besar -->
+            <div class="two-col mb-24">
+                <div class="card">
+                    <div class="card-head">
+                        <h3><i class="fas fa-calendar-alt text-purple" style="margin-right:8px;"></i>Kalender Project</h3>
+                        <button class="btn btn-primary btn-sm" id="btnBukaKalender">
+                            <i class="fas fa-expand"></i> Pop-up Kalender
+                        </button>
                     </div>
-                    <div class="kalender-card-body">
+                    <div class="card-body">
                         <div class="cal-nav">
-                            <button class="cal-nav-btn" id="calPrev"><i class="fas fa-chevron-left"></i></button>
-                            <span class="cal-month" id="calMonthLabel">Juli 2026</span>
-                            <button class="cal-nav-btn" id="calNext"><i class="fas fa-chevron-right"></i></button>
+                            <button class="cal-nav-btn" id="calPrevMain"><i class="fas fa-chevron-left"></i></button>
+                            <span class="cal-month" id="calMonthLabelMain">Juli 2026</span>
+                            <button class="cal-nav-btn" id="calNextMain"><i class="fas fa-chevron-right"></i></button>
                         </div>
-                        <div class="calendar-grid" id="calendarGrid"></div>
+                        <div class="calendar-grid" id="calendarGridMain">
+                            <!-- Diisi oleh JS -->
+                        </div>
                     </div>
                 </div>
 
-                <!-- Sticky Event Sidebar -->
-                <div class="event-sidebar">
-                    <div class="event-sidebar-head">
-                        <h3><i class="fas fa-clock"></i> Hari Ini</h3>
-                        <span class="event-date" id="todayDate">15 Jul 2026</span>
+                <!-- Event List -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3>Event Hari Ini</h3>
                     </div>
-                    <div class="event-list">
-                        <div class="event-item deadline">
-                            <div class="event-time">09:00</div>
-                            <div class="event-info">
-                                <div class="event-title">Deadline: Migrasi DB</div>
-                                <div class="event-desc">Submit laporan progress mingguan</div>
-                                <span class="event-tag urgent">Urgent</span>
-                            </div>
-                        </div>
-                        <div class="event-item laporan">
-                            <div class="event-time">14:00</div>
-                            <div class="event-info">
-                                <div class="event-title">Laporan: Redesign Web</div>
-                                <div class="event-desc">Kirim laporan ke manajer</div>
-                                <span class="event-tag pending">Pending</span>
-                            </div>
-                        </div>
-                        <div class="event-item mulai">
-                            <div class="event-time">16:00</div>
-                            <div class="event-info">
-                                <div class="event-title">Kick-off: Audit Security</div>
-                                <div class="event-desc">Meeting awal dengan tim</div>
-                                <span class="event-tag info">Info</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="event-sidebar-head" style="margin-top:20px;">
-                        <h3><i class="fas fa-hourglass-half"></i> Mendatang</h3>
-                    </div>
-                    <div class="event-list">
-                        <div class="event-item deadline">
-                            <div class="event-time">18 Jul</div>
-                            <div class="event-info">
-                                <div class="event-title">Deadline: Redesign Web</div>
-                                <div class="event-desc">Finalisasi mockup halaman utama</div>
-                            </div>
-                        </div>
-                        <div class="event-item deadline">
-                            <div class="event-time">20 Jul</div>
-                            <div class="event-info">
-                                <div class="event-title">Deadline: Migrasi DB</div>
-                                <div class="event-desc">Selesaikan migrasi data tahap 2</div>
+                    <div class="card-body">
+                        <div class="project-list" id="eventList">
+                            <div class="empty-state" style="padding:24px;">
+                                <i class="fas fa-calendar-check" style="font-size:28px;"></i>
+                                <h3 style="font-size:14px;">Tidak ada event</h3>
+                                <p style="font-size:12px;">Belum ada project terjadwal hari ini</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Timeline Project -->
-            <div class="section-header mb-16" style="margin-top:28px;">
-                <div>
-                    <h3>Timeline Project Aktif</h3>
-                    <p>Progress dan deadline project yang sedang dikerjakan</p>
-                </div>
             </div>
-            <div class="timeline-project-list">
-                <div class="timeline-project-card">
-                    <div class="tp-left">
-                        <div class="tp-color purple"></div>
-                        <div class="tp-info">
-                            <div class="tp-name">Migrasi Database</div>
-                            <div class="tp-role">Backend Developer</div>
-                            <div class="tp-date"><i class="fas fa-calendar"></i> 10 - 20 Jul 2026</div>
-                        </div>
-                    </div>
-                    <div class="tp-right">
-                        <div class="tp-progress">
-                            <div class="tp-progress-head"><span>Progress</span><span class="tp-percent">65%</span></div>
-                            <div class="progress-bar"><div class="progress-fill purple" style="width:65%;"></div></div>
-                        </div>
-                        <span class="tp-days-left urgent"><i class="fas fa-exclamation-circle"></i> 5 hari</span>
-                    </div>
-                </div>
-                <div class="timeline-project-card">
-                    <div class="tp-left">
-                        <div class="tp-color pink"></div>
-                        <div class="tp-info">
-                            <div class="tp-name">Redesign Website Utama</div>
-                            <div class="tp-role">UI/UX Designer</div>
-                            <div class="tp-date"><i class="fas fa-calendar"></i> 15 Jul - 28 Agu 2026</div>
-                        </div>
-                    </div>
-                    <div class="tp-right">
-                        <div class="tp-progress">
-                            <div class="tp-progress-head"><span>Progress</span><span class="tp-percent">20%</span></div>
-                            <div class="progress-bar"><div class="progress-fill pink" style="width:20%;"></div></div>
-                        </div>
-                        <span class="tp-days-left safe"><i class="fas fa-clock"></i> 44 hari</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
 
 <!-- Calendar Popup Modal -->
 <div class="admin-modal" id="calendarPopup" hidden>
-    <div class="admin-modal-panel" style="max-width:400px;">
+    <div class="admin-modal-panel" style="max-width:440px;">
         <div class="admin-modal-head" style="background:linear-gradient(135deg, var(--purple-950), var(--purple-800));">
             <div>
                 <h3 style="color:white;">Jadwal Kalender</h3>
                 <p style="color:rgba(255,255,255,0.6);" id="calPopupSubtitle">Juli 2026</p>
             </div>
-            <button class="modal-icon-btn" style="background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.15);" onclick="document.getElementById('calendarPopup').hidden=true"><i class="fas fa-times"></i></button>
+            <button class="modal-icon-btn" style="background:rgba(255,255,255,0.1);color:white;border-color:rgba(255,255,255,0.15);" onclick="document.getElementById('calendarPopup').hidden=true">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="admin-modal-body">
             <div class="cal-nav">
-                <button class="cal-nav-btn" id="calPrevPopup"><i class="fas fa-chevron-left"></i></button>
-                <span class="cal-month" id="calMonthLabelPopup">Juli 2026</span>
-                <button class="cal-nav-btn" id="calNextPopup"><i class="fas fa-chevron-right"></i></button>
+                <button class="cal-nav-btn" id="calPrev"><i class="fas fa-chevron-left"></i></button>
+                <span class="cal-month" id="calMonthLabel">Juli 2026</span>
+                <button class="cal-nav-btn" id="calNext"><i class="fas fa-chevron-right"></i></button>
             </div>
-            <div class="calendar-grid" id="calendarGridPopup"></div>
-            <div class="popup-legend">
-                <span><span class="legend-dot deadline"></span> Deadline</span>
-                <span><span class="legend-dot laporan"></span> Laporan</span>
-                <span><span class="legend-dot mulai"></span> Mulai</span>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Diisi oleh JS -->
+            </div>
+            <div style="margin-top:12px;padding:12px;background:var(--purple-50);border-radius:var(--radius-md);">
+                <div style="font-size:12px;font-weight:800;color:var(--purple-700);margin-bottom:6px;">
+                    <i class="fas fa-info-circle"></i> Keterangan
+                </div>
+                <div style="display:flex;gap:16px;font-size:11px;color:var(--text-muted);font-weight:600;">
+                    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--purple-600);margin-right:4px;"></span>Hari Ini</span>
+                    <span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--pink-500);margin-right:4px;"></span>Ada Event</span>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="/js/jadwal-kalender.js"></script>
-<script src="/js/sidebar-user.js"></script>
+<script src="/js/calendar-popup.js"></script>
+<script>
+    function initTabPanels(container) {
+        const tabs = container.querySelectorAll('.tab-btn');
+        const panels = container.querySelectorAll('.tab-panel');
+        tabs.forEach((tab) => {
+            tab.addEventListener('click', () => {
+                tabs.forEach((btn) => btn.classList.toggle('active', btn === tab));
+                panels.forEach((panel) => panel.classList.toggle('active', panel.id === tab.dataset.tab));
+            });
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        initTabPanels(document.querySelector('.page-tabs'));
+        document.getElementById('calendarPopup').hidden = false;
+        document.getElementById('btnBukaKalender')?.addEventListener('click', () => {
+            document.getElementById('calendarPopup').hidden = false;
+        });
+    });
+</script>
+    <script src="/js/dashboard-freelance.js"></script>
+    <script src="/js/sidebar-user.js"></script>
     <script src="/js/logout.js"></script>
 </body>
 </html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil Sponsor - RiseGig</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet" href="/css/global.css">
+    <link rel="stylesheet" href="/css/dashboard-freelance.css">
+    <link rel="stylesheet" href="/css/pengaturan-admin.css">
+    <link rel="stylesheet" href="/css/pengaturan-freelance.css">
+</head>
+<body>
+    <div class="page active" id="page-freelance-profil-sponsor">
+        <div class="app-shell">
+
+            <!-- SIDEBAR FREELANCE -->
+            <aside class="sidebar">
+                <div class="sidebar-brand">
+                    <div class="sidebar-brand-icon"><i class="fas fa-briefcase"></i></div>
+                    <div class="sidebar-brand-text">
+                        <div class="name">Rise<span>Gig</span></div>
+                        <div class="tagline">Scheduling System</div>
+                    </div>
+                </div>
+
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar">NU</div>
+                    <div class="sidebar-user-info">
+                        <div class="uname">nama_user</div>
+                        <div class="urole">role_user</div>
+                    </div>
+                </div>
+
+                <nav class="sidebar-nav">
+                    <a href="/page/freelance/dashboard.html" class="nav-item"><i class="fas fa-folder-open"></i> Project Saya</a>
+
+                    <div class="nav-section-title">Laporan</div>
+                    <a href="/page/freelance/create-laporan.html" class="nav-item"><i class="fas fa-paper-plane"></i> Kirim Laporan</a>
+                    <a href="/page/freelance/laporan.html" class="nav-item"><i class="fas fa-file-alt"></i> Laporan Saya</a>
+                    <a href="/page/freelance/jadwal-kalender.html" class="nav-item"><i class="fas fa-calendar-alt"></i> Jadwal Kalender</a>
+                    <div class="nav-section-title">Lainnya</div>
+                    <a href="/page/freelance/pengaturan.html" class="nav-item"><i class="fas fa-cog"></i> Pengaturan</a>
+                </nav>
+
+                <div class="sidebar-logout">
+                    <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
+                </div>
+            </aside>
+
+            <!-- MAIN CONTENT -->
+            <main class="main-content">
+                <header class="topbar">
+                    <div class="topbar-title">
+                        <h2>Profil Sponsor</h2>
+                        <p>Informasi profil dan data usaha sponsor</p>
+                    </div>
+                    <div class="topbar-right">
+                        <button type="button" class="btn btn-outline btn-sm" id="btnBack">
+                            <i class="fas fa-arrow-left"></i> Kembali
+                        </button>
+                        <div class="topbar-avatar">NU</div>
+                    </div>
+                </header>
+
+                <div class="page-body">
+
+                    <div id="pageMessage"></div>
+
+                    <!-- Sponsor Hero Profile (read-only) -->
+                    <div class="fl-hero" id="spHero">
+                        <div class="fl-hero-bg"></div>
+                        <div class="fl-hero-content">
+                            <div class="fl-hero-left">
+                                <div class="fl-avatar-wrap">
+                                    <div class="fl-avatar-large" id="heroAvatar">--</div>
+                                </div>
+                                <div class="fl-hero-info">
+                                    <div class="fl-name" id="heroName">Memuat...</div>
+                                    <div class="fl-tagline" id="heroTagline">-</div>
+                                </div>
+                            </div>
+                            <div class="fl-hero-stats">
+                                <div class="fl-hero-stat">
+                                    <div class="stat-icon-wrap purple"><i class="fas fa-briefcase"></i></div>
+                                    <div class="stat-info">
+                                        <div class="stat-number" id="heroProjectCount">0</div>
+                                        <div class="stat-label">Total Project</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PANEL: PROFIL SPONSOR -->
+                    <div class="settings-panel active" id="panel-profil">
+                        <div class="panel-header">
+                            <h2 class="panel-title">Profil Sponsor</h2>
+                            <p class="panel-subtitle">Data kontak dan informasi usaha sponsor (hanya lihat)</p>
+                        </div>
+
+                        <!-- Section: Informasi Pribadi -->
+                        <div class="settings-section">
+                            <div class="settings-section-title">
+                                <i class="fas fa-id-card"></i> Informasi Pribadi
+                            </div>
+                            <div class="settings-two-col">
+                                <div class="settings-card">
+                                    <div class="settings-card-head">
+                                        <div class="settings-card-title-wrap">
+                                            <div class="settings-card-icon purple"><i class="fas fa-user"></i></div>
+                                            <div>
+                                                <div class="settings-card-title">Data Diri</div>
+                                                <div class="settings-card-desc">Informasi kontak utama</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-card-body">
+                                        <div class="field-group">
+                                            <label class="field-label">Nama Lengkap</label>
+                                            <input type="text" class="field-input" id="inputNamaLengkap" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">Email</label>
+                                            <input type="email" class="field-input" id="inputEmail" value="-" readonly>
+                                        </div>
+                                        <div class="field-group" style="margin-bottom: 0;">
+                                            <label class="field-label">No. Telepon</label>
+                                            <input type="tel" class="field-input" id="inputNoTelp" value="-" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="settings-card">
+                                    <div class="settings-card-head">
+                                        <div class="settings-card-title-wrap">
+                                            <div class="settings-card-icon pink"><i class="fas fa-building"></i></div>
+                                            <div>
+                                                <div class="settings-card-title">Informasi Usaha</div>
+                                                <div class="settings-card-desc">Detail bisnis sponsor</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="settings-card-body">
+                                        <div class="field-group">
+                                            <label class="field-label">Nama Usaha</label>
+                                            <input type="text" class="field-input" id="inputNamaUsaha" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">Bidang Usaha</label>
+                                            <input type="text" class="field-input" id="inputBidangUsaha" value="-" readonly>
+                                        </div>
+                                        <div class="field-group" style="margin-bottom: 0;">
+                                            <label class="field-label">Tahun Berdiri</label>
+                                            <input type="text" class="field-input" id="inputTahunBerdiri" value="-" readonly>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Section: Detail Usaha -->
+                        <div class="settings-section">
+                            <div class="settings-section-title">
+                                <i class="fas fa-store"></i> Detail Usaha
+                            </div>
+                            <div class="settings-card">
+                                <div class="settings-card-body">
+                                    <div class="settings-two-col">
+                                        <div class="field-group">
+                                            <label class="field-label">Email Usaha</label>
+                                            <input type="email" class="field-input" id="inputEmailUsaha" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">No. Telepon Usaha</label>
+                                            <input type="tel" class="field-input" id="inputNoTlpUsaha" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">Jumlah Karyawan</label>
+                                            <input type="text" class="field-input" id="inputJumlahKaryawan" value="-" readonly>
+                                        </div>
+                                        <div class="field-group">
+                                            <label class="field-label">Alamat Usaha</label>
+                                            <input type="text" class="field-input" id="inputAlamatUsaha" value="-" readonly>
+                                        </div>
+                                    </div>
+                                    <div class="field-group" style="margin-bottom: 0; margin-top: 4px;">
+                                        <label class="field-label">Deskripsi Usaha</label>
+                                        <textarea class="field-input field-textarea" id="inputDeskripsiUsaha" rows="3" readonly>-</textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </main>
+        </div>
+    </div>
+    <script src="/js/profil-sponsor.js"></script>
+    <script src="/js/sidebar-user.js"></script>
+    <script src="/js/logout.js"></script>
+</body>
+</html>

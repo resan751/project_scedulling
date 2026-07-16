@@ -17,6 +17,7 @@ model user {
 
   pendaftaran      pendaftaran[]
   profil_freelance profil_freelance?
+  profil_usaha profil_usaha?
   laporan          laporan[]
 }
 
@@ -28,6 +29,20 @@ model profil_freelance {
   linkedin            String? @db.VarChar(255)
 
   user                user    @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
+}
+model profil_usaha {
+  id_profil_usaha Int     @id @default(autoincrement())
+  id_user         Int     @unique
+  nama_usaha      String  @db.VarChar(100)
+  bidang_usaha    String  @db.VarChar(100)
+  deskripsi_usaha String? @db.VarChar(1000)
+  jumlah_karyawan Int?
+  tahun_berdiri   Int?
+  email_usaha     String? @db.VarChar(100)
+  no_tlp_usaha    String? @db.VarChar(20)
+  alamat_usaha    String? @db.VarChar(255)
+
+  user            user    @relation(fields: [id_user], references: [id_user], onDelete: Cascade)
 }
 
 model project {

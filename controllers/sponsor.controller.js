@@ -1,7 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { prisma } from '../prisma/lib/prisma.js'
-import { readSession, setNoCache } from './auth.controller.js'
+import { hashPassword, readSession, setNoCache, createSessionToken } from './auth.controller.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -227,6 +227,179 @@ export const sponsorJadwalKalenderPage = (req, res) => {
     res.sendFile(path.join(__dirname, '..', 'page', 'sponsor', 'jadwal-kalender.html'))
 }
 
+export const sponsorProfilFreelancePage = (req, res) => {
+    setNoCache(res)
+    if (!requireSponsor(req, res)) return
+    res.sendFile(path.join(__dirname, '..', 'page', 'sponsor', 'profil-freelance.html'))
+}
+
+function toNullableString(value) {
+    const trimmed = String(value ?? '').trim()
+    return trimmed === '' ? null : trimmed
+}
+
+function toNullableInt(value) {
+    if (value === undefined || value === null || String(value).trim() === '') {
+        return null
+    }
+
+    const num = Number(value)
+    return Number.isInteger(num) ? num : NaN
+}
+
+export async function updateSponsorProfile(req, res) {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const { nama_user, email, no_telp } = req.body
+
+    if (!nama_user || !email) {
+        return res.status(400).json({ message: 'Nama lengkap dan email wajib diisi.' })
+    }
+
+    try {
+        const existing = await prisma.user.findFirst({
+            where: {
+                nama_user: { equals: nama_user },
+                NOT: { id_user: session.id_user }
+            }
+        })
+        if (existing) {
+            return res.status(400).json({ message: 'Nama lengkap / username sudah digunakan.' })
+        }
+
+        const updatedUser = await prisma.user.update({
+            where: { id_user: session.id_user },
+            data: {
+                nama_user,
+                email,
+                no_telp: no_telp || null
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                role_user: true,
+                email: true,
+                no_telp: true,
+            }
+        })
+
+        // Keep existing projects' "pembuat" field synchronized after a rename,
+        // since project ownership checks compare against nama_user.
+        await prisma.project.updateMany({
+            where: { pembuat: session.nama_user },
+            data: { pembuat: updatedUser.nama_user },
+        })
+
+        res.cookie('auth_token', createSessionToken(updatedUser), {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 1000 * 60 * 60 * 8,
+        })
+
+        res.json({ message: 'Profil berhasil diperbarui.', user: updatedUser })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui profil.' })
+    }
+}
+
+export async function getSponsorBusinessProfile(req, res) {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id_user: session.id_user },
+            select: {
+                id_user: true,
+                nama_user: true,
+                role_user: true,
+                email: true,
+                no_telp: true,
+                profil_usaha: true,
+            },
+        })
+
+        if (!user) {
+            return res.status(404).json({ message: 'User tidak ditemukan.' })
+        }
+
+        res.json({ user })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memuat profil usaha.' })
+    }
+}
+
+export async function updateSponsorBusinessProfile(req, res) {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const nama_usaha = String(req.body.nama_usaha || '').trim()
+    const bidang_usaha = String(req.body.bidang_usaha || '').trim()
+
+    if (!nama_usaha || !bidang_usaha) {
+        return res.status(400).json({ message: 'Nama usaha dan bidang usaha wajib diisi.' })
+    }
+
+    const jumlah_karyawan = toNullableInt(req.body.jumlah_karyawan)
+    const tahun_berdiri = toNullableInt(req.body.tahun_berdiri)
+
+    if (Number.isNaN(jumlah_karyawan) || Number.isNaN(tahun_berdiri)) {
+        return res.status(400).json({ message: 'Jumlah karyawan dan tahun berdiri harus berupa angka.' })
+    }
+
+    const data = {
+        nama_usaha,
+        bidang_usaha,
+        jumlah_karyawan,
+        tahun_berdiri,
+        deskripsi_usaha: toNullableString(req.body.deskripsi_usaha),
+        email_usaha: toNullableString(req.body.email_usaha),
+        no_tlp_usaha: toNullableString(req.body.no_tlp_usaha),
+        alamat_usaha: toNullableString(req.body.alamat_usaha),
+    }
+
+    try {
+        const updatedProfile = await prisma.profil_usaha.upsert({
+            where: { id_user: session.id_user },
+            update: data,
+            create: {
+                id_user: session.id_user,
+                ...data,
+            },
+        })
+
+        res.json({ message: 'Informasi usaha berhasil diperbarui.', profile: updatedProfile })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui informasi usaha.' })
+    }
+}
+
+export async function updateSponsorPassword(req, res) {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const password = String(req.body?.password || '')
+    if (password.length < 8) {
+        return res.status(400).json({ message: 'Password baru harus terdiri dari minimal 8 karakter.' })
+    }
+
+    try {
+        await prisma.user.update({
+            where: { id_user: session.id_user },
+            data: { password: await hashPassword(password) },
+        })
+        res.json({ message: 'Password berhasil diperbarui.' })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memperbarui password.' })
+    }
+}
+
 export const getSponsorProject = async (req, res) => {
     const session = requireSponsorApi(req, res)
     if (!session) return
@@ -414,6 +587,71 @@ export const getSponsorProjectApplications = async (req, res) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({ message: 'Data aplikasi gagal dimuat.' })
+    }
+}
+
+export const getSponsorFreelanceProfile = async (req, res) => {
+    const session = requireSponsorApi(req, res)
+    if (!session) return
+
+    const id_user = Number(req.params.id)
+    if (!Number.isInteger(id_user) || id_user <= 0) {
+        return res.status(400).json({ message: 'ID freelancer tidak valid.' })
+    }
+
+    try {
+        // Sponsor hanya boleh melihat profil freelancer yang pernah mendaftar ke project miliknya.
+        const hasApplied = await prisma.pendaftaran.findFirst({
+            where: {
+                id_user,
+                project: {
+                    pembuat: session.nama_user,
+                },
+            },
+            select: {
+                id_pendaftaran: true,
+            },
+        })
+
+        if (!hasApplied) {
+            return res.status(403).json({ message: 'Anda hanya dapat melihat profil freelancer yang mendaftar ke project Anda.' })
+        }
+
+        const user = await prisma.user.findUnique({
+            where: {
+                id_user,
+            },
+            select: {
+                id_user: true,
+                nama_user: true,
+                email: true,
+                no_telp: true,
+                cv: true,
+                profil_freelance: true,
+            },
+        })
+
+        if (!user) {
+            return res.status(404).json({ message: 'Freelancer tidak ditemukan.' })
+        }
+
+        const selesaiProjects = await prisma.project.findMany({
+            where: {
+                status_project: 'selesai',
+            },
+            select: {
+                id_user: true,
+            },
+        })
+
+        const completedProjectCount = selesaiProjects.filter((project) => (
+            getStoredListValue(project.id_user).map(String).includes(String(id_user))
+        )).length
+
+        res.json({ user, completedProjectCount })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ message: 'Gagal memuat profil freelancer.' })
     }
 }
 

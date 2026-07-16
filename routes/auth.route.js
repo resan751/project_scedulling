@@ -37,6 +37,11 @@ import {
   updateSponsorProjectLaporanStatus,
   sponsorPengaturanPage,
   sponsorJadwalKalenderPage,
+  sponsorProfilFreelancePage,
+  getSponsorBusinessProfile,
+  updateSponsorBusinessProfile,
+  updateSponsorProfile,
+  updateSponsorPassword,
 } from '../controllers/sponsor.controller.js';
 import {
   getProjects as getFreelanceProjects,
@@ -48,12 +53,16 @@ import {
   createLaporanPage,
   createLaporan,
   getFreelanceProfile,
+  getFreelanceProfileForSponsor,
+  getSponsorProfileForFreelance,
   updateFreelanceProfile,
   updateFreelanceProfessionalProfile,
+  updateFreelancePassword,
   uploadFreelanceCv,
   listLaporanPage,
   freelancePengaturanPage,
   freelanceJadwalKalenderPage,
+  profilSponsorPage,
 } from '../controllers/freelance.controller.js';
 import { upload } from '../config/multer.js'
 
@@ -84,20 +93,28 @@ AuthRouter.put('/api/sponsor/projects/:id/applications/:applicationId/approve', 
 AuthRouter.post('/api/sponsor/projects', createProject)
 AuthRouter.put('/api/sponsor/projects/:id', updateProject)
 AuthRouter.delete('/api/sponsor/projects/:id', deleteProject)
+AuthRouter.get('/api/sponsor/profile', getSponsorBusinessProfile)
+AuthRouter.put('/api/sponsor/profile', updateSponsorProfile)
+AuthRouter.put('/api/sponsor/profile/usaha', updateSponsorBusinessProfile)
+AuthRouter.put('/api/sponsor/profile/password', updateSponsorPassword)
 AuthRouter.get('/api/freelance/projects', getFreelanceProjects)
 AuthRouter.get('/api/freelance/projects/:id', getFreelanceProject)
 AuthRouter.get('/api/freelance/projects/:id/laporan', getProjectLaporan)
 AuthRouter.get('/api/freelance/laporan', getFreelanceLaporan)
 AuthRouter.post('/api/freelance/projects/:id/register', registerProject)
 AuthRouter.get('/api/freelance/profile', getFreelanceProfile)
+AuthRouter.get('/api/sponsor/freelance/:id/profile', getFreelanceProfileForSponsor)
+AuthRouter.get('/api/freelance/sponsor/:id/profile', getSponsorProfileForFreelance)
 AuthRouter.put('/api/freelance/profile', updateFreelanceProfile)
 AuthRouter.put('/api/freelance/profile/professional', updateFreelanceProfessionalProfile)
+AuthRouter.put('/api/freelance/profile/password', updateFreelancePassword)
 AuthRouter.post('/api/freelance/profile/cv', upload.single('cv'), uploadFreelanceCv)
 
 AuthRouter.get('/page/sponsor/project-create.html', projectCreatePage)
 AuthRouter.get('/page/sponsor/detail-project.html', sponsorDetailProjectPage)
 AuthRouter.get('/page/sponsor/pengaturan.html', sponsorPengaturanPage)
 AuthRouter.get('/page/sponsor/jadwal-kalender.html', sponsorJadwalKalenderPage)
+AuthRouter.get('/page/sponsor/profil-freelance.html', sponsorProfilFreelancePage)
 
 AuthRouter.get('/page/admin/kelola-user.html', kelolaUserPage)
 AuthRouter.get('/page/admin/user-create.html', userCreatePage)
@@ -118,6 +135,7 @@ AuthRouter.get('/page/freelance/create-laporan.html', createLaporanPage)
 AuthRouter.get('/page/freelance/laporan.html', listLaporanPage)
 AuthRouter.get('/page/freelance/pengaturan.html', freelancePengaturanPage)
 AuthRouter.get('/page/freelance/jadwal-kalender.html', freelanceJadwalKalenderPage)
+AuthRouter.get('/page/freelance/profil-sponsor.html', profilSponsorPage)
 AuthRouter.post('/api/freelance/laporan/create', upload.single('bukti'), createLaporan)
 AuthRouter.get(/^\/page\/(?!login\.html$|register\.html$).*/, protectedPageFallback)
 

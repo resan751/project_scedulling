@@ -47,31 +47,9 @@
                 <i class="fas fa-calendar-alt"></i> Jadwal Kalender
             </a>
             <div class="nav-section-title">Lainnya</div>
-            <!-- PENGATURAN ACCORDION (auto-expanded) -->
-            <div class="nav-parent expanded has-active-child" id="navPengaturan">
-                <button class="nav-item-toggle" data-toggle="pengaturan">
-                    <i class="fas fa-cog nav-icon"></i>
-                    <span class="nav-label">Pengaturan</span>
-                    <i class="fas fa-chevron-down nav-arrow"></i>
-                </button>
-                <div class="nav-submenu">
-                    <a href="#profil" class="nav-sub-item active" data-panel="profil">
-                        <i class="fas fa-user-circle"></i> Profil & CV
-                    </a>
-                    <a href="#keamanan" class="nav-sub-item" data-panel="keamanan">
-                        <i class="fas fa-shield-alt"></i> Keamanan
-                    </a>
-                    <a href="#kerja" class="nav-sub-item" data-panel="kerja">
-                        <i class="fas fa-bullseye"></i> Preferensi Kerja
-                    </a>
-                    <a href="#pembayaran" class="nav-sub-item" data-panel="pembayaran">
-                        <i class="fas fa-wallet"></i> Pembayaran
-                    </a>
-                    <a href="#privasi" class="nav-sub-item" data-panel="privasi">
-                        <i class="fas fa-user-shield"></i> Privasi
-                    </a>
-                </div>
-            </div>
+            <a href="/page/freelance/pengaturan.html" class="nav-item active">
+                <i class="fas fa-cog"></i> Pengaturan
+            </a>
         </nav>
         <div class="sidebar-logout">
             <button class="btn-logout"><i class="fas fa-sign-out-alt"></i> Keluar</button>
@@ -145,6 +123,15 @@
                     <p class="panel-subtitle">Kelola identitas profesional dan CV Anda untuk menarik lebih banyak project</p>
                 </div>
 
+                <div class="profile-subtabs" role="tablist" aria-label="Pengaturan profil">
+                    <button type="button" class="profile-subtab active" data-profile-tab="informasi" role="tab" aria-selected="true">
+                        <i class="fas fa-id-card"></i> Informasi Pribadi
+                    </button>
+                    <button type="button" class="profile-subtab" data-profile-tab="keamanan" role="tab" aria-selected="false">
+                        <i class="fas fa-shield-alt"></i> Keamanan
+                    </button>
+                </div>
+                <div class="profile-subpanel active" id="profile-tab-informasi" role="tabpanel">
                 <!-- Section: Informasi Pribadi -->
                 <div class="settings-section">
                     <div class="settings-section-title">
@@ -308,7 +295,7 @@
                 </div>
 
                 <!-- Section: Aktivitas -->
-                <div class="settings-section">
+                <div class="settings-section obsolete-profile-section">
                     <div class="settings-section-title">
                         <i class="fas fa-history"></i> Riwayat Aktivitas
                     </div>
@@ -349,16 +336,10 @@
                 </div>
             </div>
 
-            <!-- PANEL: KEAMANAN -->
-            <div class="settings-panel" id="panel-keamanan">
-                <div class="panel-header">
-                    <h2 class="panel-title">Keamanan</h2>
-                    <p class="panel-subtitle">Lindungi akun Anda dengan password kuat dan autentikasi dua faktor</p>
-                </div>
-
-                <div class="settings-two-col">
-                    <div>
-                        <div class="settings-card">
+                <div class="profile-subpanel" id="profile-tab-keamanan" role="tabpanel" hidden>
+                    <div class="settings-section">
+                        <div class="settings-section-title"><i class="fas fa-shield-alt"></i> Keamanan</div>
+                        <div class="settings-card security-password-card">
                             <div class="settings-card-head">
                                 <div class="settings-card-title-wrap">
                                     <div class="settings-card-icon pink"><i class="fas fa-key"></i></div>
@@ -369,13 +350,10 @@
                                 </div>
                             </div>
                             <div class="settings-card-body">
-                                <div class="field-group">
-                                    <label class="field-label">Password Lama</label>
-                                    <input type="password" class="field-input" placeholder="Masukkan password lama">
-                                </div>
+                                <div id="passwordMessage" style="display:none; margin-bottom: 12px;"></div>
                                 <div class="field-group">
                                     <label class="field-label">Password Baru</label>
-                                    <input type="password" class="field-input" placeholder="Min. 8 karakter" id="newPassword">
+                                    <input type="password" class="field-input" placeholder="Min. 8 karakter" id="newPassword" autocomplete="new-password">
                                     <div class="password-strength" id="strengthBars">
                                         <div class="strength-bar"></div>
                                         <div class="strength-bar"></div>
@@ -386,77 +364,14 @@
                                 </div>
                                 <div class="field-group">
                                     <label class="field-label">Konfirmasi Password</label>
-                                    <input type="password" class="field-input" placeholder="Ulangi password baru">
+                                    <input type="password" class="field-input" placeholder="Ulangi password baru" id="confirmPassword" autocomplete="new-password">
                                 </div>
-                                <button class="btn btn-primary btn-sm">
+                                <button type="button" class="btn btn-primary btn-sm" id="btnUpdatePassword">
                                     <i class="fas fa-key"></i> Perbarui Password
                                 </button>
                             </div>
                         </div>
                     </div>
-
-                    <div>
-                        <div class="settings-card">
-                            <div class="settings-card-head">
-                                <div class="settings-card-title-wrap">
-                                    <div class="settings-card-icon amber"><i class="fas fa-mobile-alt"></i></div>
-                                    <div>
-                                        <div class="settings-card-title">Autentikasi 2 Faktor</div>
-                                        <div class="settings-card-desc">Keamanan ekstra</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-card-body">
-                                <div class="tfa-visual">
-                                    <i class="fas fa-shield-alt"></i>
-                                    <div class="tfa-title">2FA Tidak Aktif</div>
-                                    <div class="tfa-desc">Lindungi akun dengan verifikasi tambahan</div>
-                                </div>
-                                <button class="btn btn-outline btn-sm" style="width:100%;justify-content:center;">
-                                    <i class="fas fa-shield-alt"></i> Aktifkan 2FA
-                                </button>
-                            </div>
-                        </div>
-
-                        <div class="settings-card">
-                            <div class="settings-card-head">
-                                <div class="settings-card-title-wrap">
-                                    <div class="settings-card-icon blue"><i class="fas fa-laptop"></i></div>
-                                    <div>
-                                        <div class="settings-card-title">Sesi Aktif</div>
-                                        <div class="settings-card-desc">Perangkat login</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-card-body">
-                                <div class="activity-list">
-                                    <div class="activity-item">
-                                        <div class="activity-icon login"><i class="fas fa-desktop"></i></div>
-                                        <div class="activity-content">
-                                            <div class="activity-title">
-                                                Chrome - Windows
-                                                <span class="active-now-badge">Aktif</span>
-                                            </div>
-                                            <div class="activity-meta">
-                                                <span><i class="fas fa-map-marker-alt"></i> Jakarta</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="activity-item">
-                                        <div class="activity-icon login"><i class="fas fa-mobile-alt"></i></div>
-                                        <div class="activity-content">
-                                            <div class="activity-title">Safari - iPhone</div>
-                                            <div class="activity-meta">
-                                                <span><i class="fas fa-clock"></i> 2 hari lalu</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="btn btn-danger btn-sm" style="width:100%;justify-content:center;margin-top:12px;">
-                                    <i class="fas fa-sign-out-alt"></i> Logout Semua
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
